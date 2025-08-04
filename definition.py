@@ -175,6 +175,12 @@ class Clause:
     
     def is_empty(self):
         return len(self.literals) == 0
+    
+    def __eq__(self, other):
+        return isinstance(other, Clause) and self.literals == other.literals
+    
+    def __hash__(self):
+        return hash(frozenset(self.literals))
 
 class KnowledgeBase:
     def __init__(self):
@@ -206,8 +212,12 @@ class KnowledgeBase:
         new_clauses = set()
         kb_clauses = set(self.clauses.union({negated_query}))
         while True:
-            pairs = [ (c1, c2) for c1 in kb_clauses for c2 in kb_clauses if c1 != c2 ]
+            pairs = [ (c1, c2) for c1 in kb_clauses for c2 in kb_clauses if c1 != c2 
+                     and next(iter(c1.literals)).name == next(iter(c2.literals)).name]
             for (ci, cj) in pairs:
+                # print(ci)
+                # print(cj)
+                # print()
                 resolvents = self.resolve(ci, cj)
                 for res in resolvents:
                     if res.is_empty():
