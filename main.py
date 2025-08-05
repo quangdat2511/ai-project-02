@@ -16,4 +16,7 @@ def main():
     else:
         print("(" + str(x) + ", " + str(y) + ") is not safe")
 
-main()
+# Generate Environment
+world = WumpusWorld()
+agent = Agent(world.N)
+world.display_with_agent(agent)

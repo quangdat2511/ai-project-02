@@ -1,6 +1,8 @@
 from typing import List, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
+import random
+from queue import PriorityQueue
 
 class Direction(Enum):
     NORTH = (1, 0)
@@ -133,10 +135,67 @@ class WumpusWorld:
         self.initialize_world()
 
     def initialize_world(self):
-        pass  # Logic to initialize the world with pits, wumpus, and gold
+        # Logic to initialize the world with pits, wumpus, and gold
+        count = 0
+        # Create Wumpus in random
+        while count < self.K:
+            x, y = random.randint(0, self.N - 1), random.randint(0, self.N - 1)
+            if (x, y) != (0, 0) and not self.grid[x][y].has_wumpus:
+                self.grid[x][y].has_wumpus = True
+                count += 1
+
+        # Create pits
+        for x in range(self.N):
+            for y in range(self.N):
+                if (x, y) != (0, 0) and not self.grid[x][y].has_wumpus:
+                    if random.random() < self.p:
+                        self.grid[x][y].has_pit = True
+
+        # Create Gold
+        while True:
+            x, y, = random.randint(0, self.N - 1), random.randint(0, self.N - 1)
+            if (x, y) != (0, 0) and not self.grid[x][y].has_pit and not self.grid[x][y].has_wumpus:
+                self.grid[x][y].has_gold = True
+                break
 
     def perform_action(self, agent: Agent, action: Action) -> Percept:
         pass
+    
+    def __str__(self):
+        result = ""
+        for y in reversed(range(self.N)):  # từ trên xuống dưới
+            for x in range(self.N):
+                cell = self.grid[x][y]
+                content = "."
+                if cell.has_wumpus:
+                    content = "W"
+                elif cell.has_pit:
+                    content = "P"
+                elif cell.has_gold:
+                    content = "G"
+                result += f"{content} "
+            result += "\n"
+        result += "\n"
+        return result
+    
+    def display_with_agent(self, agent: Agent):
+        result = ""
+        for y in reversed(range(self.N)):
+            for x in range(self.N):
+                if (x, y) == agent.position:
+                    result += "A "  # Agent's current position
+                else:
+                    cell = self.grid[x][y]
+                    if cell.has_wumpus:
+                        result += "W "
+                    elif cell.has_pit:
+                        result += "P "
+                    elif cell.has_gold:
+                        result += "G "
+                    else:
+                        result += ". "
+            result += "\n"
+        print(result)
 
 
 class Literal:
@@ -263,3 +322,47 @@ class KnowledgeBase:
     #             simplified.add(Clause(new_literals))
 
     #     self.clauses = simplified
+
+class Planner:
+    def __init__(self, agent: Agent):
+        self.agent = agent
+
+    def heuristic(self, a: Tuple[int, int], b: Tuple[int, int]) -> int:
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+    
+    def reconstruct_path(self, came_from, start, goal):
+        path = []
+        current = goal
+        while current != start:
+            path.append(current)
+            if current not in came_from or came_from[current] is None:
+                return []
+            current = came_from[current]
+
+        path.reverse()
+        return path
+    
+    def a_star(self, start, goal, is_safe):
+        N = self.agent.size
+        frontier = PriorityQueue()
+        frontier.put((0, start))
+        came_from = {start: None}
+        cost_so_far = {start: 0}
+
+        while not frontier.empty():
+            _, current = frontier.get()
+
+            if current == goal:
+                break
+
+            for next in self.agent._neighbors(*current):
+                if not is_safe(next):
+                    continue
+                new_cost = cost_so_far[current] + 1
+                if next not in cost_so_far or new_cost < cost_so_far[next]:
+                    cost_so_far[next] = new_cost
+                    priority = new_cost + self.heuristic(next, goal)
+                    frontier.put((priority, next))
+                    came_from[next] = current
+
+        return self.reconstruct_path(came_from, start, goal)
