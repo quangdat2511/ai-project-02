@@ -1,10 +1,13 @@
-from definition import*
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from definition import *
 import pygame
 import sys
-from .config import *
-from .game_manager import GameManager
-from .selection_screen import SelectionScreen
-from .gameplay_screen import GameplayScreen
+from config import *
+from game_manager import GameManager
+from selection_screen import SelectionScreen
+from gameplay_screen import GameplayScreen
 # Luồng game chính
 class App:
     def __init__(self):

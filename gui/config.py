@@ -15,7 +15,17 @@ FONT_SIZE_LARGE = int(30 * FONT_SIZE_SCALE)  # Large font size
 
 
 # Resource paths
-BACKGROUND_IMAGE = 'gui/assets/background.jpg'
-TARGET_CAR_IMAGE = 'gui/assets/car_player.png'
-CAR_IMAGE_FORMAT = 'gui/assets/cars/car_{}.png'
-TRUCK_IMAGE_FORMAT = 'gui/assets/trucks/truck_{}.png'
+BACKGROUND_IMAGE = 'gui/assets/background.png'
+DESCRIPTION_BACKGROUND_IMAGE = 'gui/assets/description_background.png'
+GAME_BACKGROUND_IMAGE = 'gui/assets/game_background.png'
+#AGENT
+AGENT_IMAGE = 'gui/assets/agent.png'
+AGENT_VICTORY_IMAGE = 'gui/assets/agent_victory.png'
+AGENT_SIDE_IMAGE = 'gui/assets/agent_side.png'
+WUMPUS_IMAGE = 'gui/assets/wumpus.png'
+ARROW_IMAGE = 'gui/assets/arrow.png'
+GOLD_IMAGE = 'gui/assets/gold.png'
+PIT_IMAGE = 'gui/assets/pit.png'
+STENCH_IMAGE = 'gui/assets/cell_stench.png'
+BREEZE_IMAGE = 'gui/assets/cell_breeze.png'
+BREEZE_STENCH_IMAGE = 'gui/assets/cell_breeze_stench.png'
