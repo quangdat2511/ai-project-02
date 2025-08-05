@@ -2,12 +2,15 @@ from state.logic import *
 from enum import Enum
 from dataclasses import dataclass
 from typing import Optional
+from state.environment import Environment
+from state.logic import KnowledgeBase, Clause, Literal
+from state.planner import Planner
 
 class Direction(Enum):
-    NORTH = (1, 0)
-    EAST = (0, 1)
-    SOUTH = (-1, 0)
-    WEST = (0, -1)
+    NORTH = (0, 1)
+    EAST = (1, 0)
+    SOUTH = (0, -1)
+    WEST = (-1, 0)
 
     def turn_left(self):
         dirs = [Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST]
@@ -32,12 +35,12 @@ class Percept:
     glitter: bool = False
     bump: bool = False
     scream: bool = False
-    def __init__(self, s: bool, b: bool):
-        self.stench = s
-        self.breeze = b
-        glitter: bool = False
-        bump: bool = False
-        scream: bool = False
+    def __init__(self, stench: bool=False, breeze: bool=False, glitter: bool=False, bump: bool=False, scream: bool=False):
+        self.stench = stench
+        self.breeze = breeze
+        self.glitter = glitter
+        self.bump = bump
+        self.scream = scream
 
 class Agent:
     def __init__(self, N: int):
@@ -47,6 +50,7 @@ class Agent:
         self.has_arrow = True
         self.is_alive = True
         self.kb = KnowledgeBase()
+        self.planner = Planner(self)
         self.score = 0
         self.size = N
 
@@ -108,3 +112,6 @@ class Agent:
             nx, ny = x + dx, y + dy
             if self._valid(nx, ny):
                 yield (nx, ny)
+
+    def play(self, environment: Environment):
+        pass

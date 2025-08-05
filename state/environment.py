@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 from state.agent import *
 
 class Cell:
@@ -10,7 +11,7 @@ class Cell:
     def is_safe(self) -> bool:
         return not (self.has_pit or self.has_wumpus)
 
-class WumpusWorld:
+class Environment:
     def __init__(self, N: int = 8, K: int = 2, p: float = 0.2, advanced_mode: bool = False):
         self.N = N
         self.K = K
@@ -23,10 +24,10 @@ class WumpusWorld:
 
         self.grid = [[Cell() for _ in range(N)] for _ in range(N)]
 
-        self.initialize_world()
+        self.initialize_environment()
 
-    def initialize_world(self):
-        # Logic to initialize the world with pits, wumpus, and gold
+    def initialize_environment(self):
+        # Logic to initialize the environment with pits, wumpus, and gold
         count = 0
         # Create Wumpus in random
         while count < self.K:
@@ -49,9 +50,50 @@ class WumpusWorld:
                 self.grid[x][y].has_gold = True
                 break
 
-    def perform_action(self, agent: Agent, action: Action) -> Percept:
-        pass
+    def perform_action(self, position: Tuple[int, int], direction: Direction, action: Action) -> Percept:
+        x, y = position
+        dx, dy = direction.value
+        if action == Action.FORWARD:
+            # Move the agent forward
+            new_position = (x + dx, y + dy)
+            return self._get_percept_in_cell(new_position)
+
+        if action == Action.GRAB:
+            self.grid[x][y].has_gold = False  # Agent grabs gold
+            return self._get_percept_in_cell(position)
+
+        percept = self._get_percept_in_cell(position)
+        if action == Action.SHOOT:
+            percept = self._get_percept_in_cell(position)
+            for step in range(1, self.N):
+                target_x, target_y = x + dx * step, y + dy * step
+                if not self._valid(target_x, target_y):
+                    break
+                if self.grid[target_x][target_y].has_wumpus:
+                    self.grid[target_x][target_y].has_wumpus = False
+                    percept.scream = True
+                    return percept  # Wumpus killed
+            return percept
+
+        return percept
+
+    def _get_percept_in_cell(self, position: Tuple[int, int]) -> Percept:
+        x, y = position
+        if not self._valid(x, y):
+            return Percept(bump=True)
+
+        cell = self.grid[x][y]
+        neighbors = self._neighbors(x, y)
+        percept = Percept(
+            stench=any(self.grid[nx][ny].has_wumpus for nx, ny in neighbors),
+            breeze=any(self.grid[nx][ny].has_pit for nx, ny in neighbors),
+            glitter=cell.has_gold
+        )
+        return percept
     
+    def _valid(self, x: int, y: int) -> bool:
+        return 0 <= x < self.N and 0 <= y < self.N
+
     def __str__(self):
         result = ""
         for y in reversed(range(self.N)):  # từ trên xuống dưới
