@@ -56,15 +56,15 @@ class Environment:
         if action == Action.FORWARD:
             # Move the agent forward
             new_position = (x + dx, y + dy)
-            return self._get_percept_in_cell(new_position)
+            return self.get_percept_in_cell(new_position)
 
         if action == Action.GRAB:
             self.grid[x][y].has_gold = False  # Agent grabs gold
-            return self._get_percept_in_cell(position)
+            return self.get_percept_in_cell(position)
 
-        percept = self._get_percept_in_cell(position)
+        percept = self.get_percept_in_cell(position)
         if action == Action.SHOOT:
-            percept = self._get_percept_in_cell(position)
+            percept = self.get_percept_in_cell(position)
             for step in range(1, self.N):
                 target_x, target_y = x + dx * step, y + dy * step
                 if not self._valid(target_x, target_y):
@@ -77,7 +77,7 @@ class Environment:
 
         return percept
 
-    def _get_percept_in_cell(self, position: Tuple[int, int]) -> Percept:
+    def get_percept_in_cell(self, position: Tuple[int, int]) -> Percept:
         x, y = position
         if not self._valid(x, y):
             return Percept(bump=True)
@@ -90,7 +90,11 @@ class Environment:
             glitter=cell.has_gold
         )
         return percept
-    
+
+    def is_agent_dead(self, position: Tuple[int, int]) -> bool:
+        x, y = position
+        return (self.grid[x][y].has_pit or self.grid[x][y].has_wumpus)
+
     def _valid(self, x: int, y: int) -> bool:
         return 0 <= x < self.N and 0 <= y < self.N
     

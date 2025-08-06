@@ -47,6 +47,10 @@ class Clause:
 class KnowledgeBase:
     def __init__(self):
         self.clauses = set()
+        self.has_wumpus = set()  # các ô có Wumpus
+        self.has_pit = set()  # các ô có Pit
+        self.not_has_wumpus = set()  # các ô không có Wumpus
+        self.not_has_pit = set()  # các ô không có Pit
 
     # def simplify_clause(self, clause):
     #     unit_literals = {next(iter(c.literals)) for c in self.clauses if len(c.literals) == 1}
