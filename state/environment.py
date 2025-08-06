@@ -1,6 +1,6 @@
 import random
 from typing import Tuple
-from state.types import *
+from .types import *
 
 class Cell:
     def __init__(self, has_pit: bool = False, has_wumpus: bool = False, has_gold: bool = False):
