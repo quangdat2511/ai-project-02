@@ -1,13 +1,10 @@
 import pygame
 from typing import List, Tuple, Optional
-from .config import *
+from gui.config import *
 from .button import Button
-from game.game import Game
-from game.state import GameState
-from game.loader import GameLoader
-from solvers.get_solvers import GetSolver
+# from state.agent import *
+# from state.environment import *
 import copy
-
 class GameplayScreen:
     def __init__(self, game_manager):
         self.game_manager = game_manager
@@ -15,8 +12,14 @@ class GameplayScreen:
         self.small_font = self.game_manager.fonts['normal']
 
         # Game state
+        #This blongs to project 01
+        # self.game: Optional[Game] = None
+        # self.game_loader = GameLoader()
+        # self.current_state: Optional[GameState] = None
+        # self.initial_state: Optional[GameState] = None
 
-        
+        self.current_state = None  # Current game state
+        self.initial_state = None  # Initial game state
         # Solution data
 
         
@@ -73,41 +76,6 @@ class GameplayScreen:
     def initialize(self):
         self.game = None
         self.initial_state = None
-
-    def solve_game(self):
-        if not self.game or self.search_completed:
-            return
-            
-        # Get the solver
-        solver = GetSolver.get_solver(self.algorithm)
-        
-        # Solve the puzzle
-        self.search_result = solver.solve(self.initial_state)
-        
-        if self.search_result and self.search_result.solution:
-            self.solution_path = self.search_result.solution
-            self.total_steps = len(self.solution_path)
-            self.generate_solution_states()
-        else:
-            self.solution_path = []
-            self.solution_states = []
-            self.total_steps = 0
-            self.current_step = 0
-            self.cost_list = []
-
-        self.search_completed = True
-
-    def generate_solution_states(self):
-        self.solution_states = [copy.deepcopy(self.initial_state)]
-        current_state = copy.deepcopy(self.initial_state)
-        
-        for vehicle_idx, direction, cost in self.solution_path:
-            # Apply the move to get the next state
-            self.cost_list.append(cost)
-            next_state = current_state.try_move(vehicle_idx, direction)
-            if next_state:
-                self.solution_states.append(copy.deepcopy(next_state))
-                current_state = next_state
                 
     def start_animation(self):
         if self.solution_path and not self.is_animating:
@@ -179,8 +147,6 @@ class GameplayScreen:
         surface.blit(self.game_manager.get_image('background'), (0, 0))
         
         # Draw the current game state
-        if self.current_state:
-            self.game_manager.draw_vehicles(surface, self.current_state.vehicles)
             
         # Draw UI buttons
         

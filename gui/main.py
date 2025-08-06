@@ -1,14 +1,15 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from definition import *
+# main.py (bên trong thư mục gui)
 import pygame
 import sys
-from config import *
-from game_manager import GameManager
-from selection_screen import SelectionScreen
-from gameplay_screen import GameplayScreen
-# Luồng game chính
+
+from definition import *                     # file này nằm ở thư mục gốc
+from gui.config import *                     # sử dụng absolute import
+from gui.game_manager import GameManager
+from gui.selection_screen import SelectionScreen
+from gui.gameplay_screen import GameplayScreen
+
+
+# # Luồng game chính
 class App:
     def __init__(self):
         pygame.init()
@@ -42,12 +43,13 @@ class App:
                 if self.selection_screen.handle_event(event):
                     if self.selection_screen.game_started:
                         self.game_manager.current_state = "playing"
-                        self.gameplay_screen.initialize(self.game_manager.selected_map, self.game_manager.selected_algorithm)
                         
             elif self.game_manager.current_state == "playing":
                 self.gameplay_screen.handle_event(event)
     
     def draw(self):
+        # Dòng này để test xem giao diện có hoạt động không
+        self.window.fill((50, 50, 50))  # tô nền xám để test
         if self.game_manager.current_state == "selecting":
             self.selection_screen.draw(self.window)
         elif self.game_manager.current_state == "playing":
@@ -64,20 +66,5 @@ class App:
 def main():
     app = App()
     app.run()
-# def main():
-#     Dang = Agent(8)
-#     Dang.add_percept(Percept(False, False), 0, 0)
-#     Dang.add_percept(Percept(False, False), 1, 0)
-#     Dang.add_percept(Percept(False, False), 2, 0)
-#     Dang.add_percept(Percept(False, True), 3, 0)
-#     x = 4
-#     y = 0
-#     query_1 = Literal("Wumpus", x, y, True)
-#     query_2 = Literal("Pit", x, y, True)
-
-#     if Dang.kb.infer(query_1) and Dang.kb.infer(query_2):
-#         print("(" + str(x) + ", " + str(y) + ") is safe")
-#     else:
-#         print("(" + str(x) + ", " + str(y) + ") is not safe")
-
-# main()
+if __name__ == "__main__":
+    main()

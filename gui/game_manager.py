@@ -1,6 +1,7 @@
 import pygame
 from typing import Dict, List
-from .config import *
+from gui.config import *
+
 
 class GameManager:
     def __init__(self):
@@ -8,17 +9,20 @@ class GameManager:
         self.images: Dict[str, pygame.Surface] = {}
         self.fonts: Dict[str, pygame.font.Font] = {}
         self.load_assets()
-        self.load_map_files()
 
         # game state
         self.current_state = "selecting"
         self.is_running = True
     
+
     def load_assets(self):
         # background image
-        self.images['background'] = pygame.image.load(BACKGROUND_IMAGE)
-        self.images['background'] = pygame.transform.scale(self.images['background'], (WIDTH, HEIGHT))
-        
+        try:
+            self.images['background'] = pygame.image.load(BACKGROUND_IMAGE)
+            self.images['background'] = pygame.transform.scale(self.images['background'], (WIDTH, HEIGHT))
+        except Exception as e:
+            print("Lỗi khi load background:", e)
+
         # fonts
         self.fonts['normal'] = pygame.font.SysFont(FONT_NAME, FONT_SIZE, True)
         self.fonts['large'] = pygame.font.SysFont(FONT_NAME, FONT_SIZE_LARGE, True)
