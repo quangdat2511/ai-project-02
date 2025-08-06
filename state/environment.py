@@ -1,6 +1,6 @@
 import random
 from typing import Tuple
-from state.agent import *
+from state.types import *
 
 class Cell:
     def __init__(self, has_pit: bool = False, has_wumpus: bool = False, has_gold: bool = False):
@@ -111,21 +111,24 @@ class Environment:
         result += "\n"
         return result
     
-    def display_with_agent(self, agent: Agent):
-        result = ""
-        for y in reversed(range(self.N)):
-            for x in range(self.N):
-                if (x, y) == agent.position:
-                    result += "A "  # Agent's current position
-                else:
-                    cell = self.grid[x][y]
-                    if cell.has_wumpus:
-                        result += "W "
-                    elif cell.has_pit:
-                        result += "P "
-                    elif cell.has_gold:
-                        result += "G "
-                    else:
-                        result += ". "
-            result += "\n"
-        print(result)
+    """
+        Nên xem xét cho hàm display Agent map này ở class riêng
+    """
+    # def display_with_agent(self, agent: Agent):
+    #     result = ""
+    #     for y in reversed(range(self.N)):
+    #         for x in range(self.N):
+    #             if (x, y) == agent.position:
+    #                 result += "A "  # Agent's current position
+    #             else:
+    #                 cell = self.grid[x][y]
+    #                 if cell.has_wumpus:
+    #                     result += "W "
+    #                 elif cell.has_pit:
+    #                     result += "P "
+    #                 elif cell.has_gold:
+    #                     result += "G "
+    #                 else:
+    #                     result += ". "
+    #         result += "\n"
+    #     print(result)
