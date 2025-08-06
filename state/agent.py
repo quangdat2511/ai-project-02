@@ -22,49 +22,40 @@ class Agent:
         pass
     
     def add_percept(self, percept: Percept, x, y):
-        # if percept.breeze:
-        #     percept_literal = Literal("Breeze", x, y, False)
-        #     self.kb.add_clause(Clause([percept_literal]))
-        # elif percept.stench:
-        #     percept_literal = Literal("Stench", x, y, False)
-        #     self.kb.add_clause(Clause([percept_literal]))
         self._add_breeze_axioms(x, y, percept.breeze)
         self._add_stench_axioms(x, y, percept.stench)
-        # self.kb.simplify()
 
     def _add_breeze_axioms(self, x, y, value):
         """Breeze ⇔ có Pit ở ô kề"""
         neighbors = self._neighbors(x,y)
-        b = Literal("Breeze", x, y, False)
-        pits = [Literal("Pit", nx, ny, False) for (nx,ny) in neighbors]
+        b = Literal("Breeze", x, y)
+        pits = [Literal("Pit", nx, ny) for (nx,ny) in neighbors]
         if value:
             # Breeze(x,y) => (P1 v P2 v ...)
             clause = Clause(pits)
-            self.kb.add_clause(clause)
-            # Mỗi Pit => Breeze
-            # for p in pits:
-            #     self.kb.add_clause(Clause([ -p, b ]))
+            self.kb.add_clause(Clause([b]))
+            self.kb.add_clause(Clause([-b]) | clause)
         else:
             # NOT Breeze => tất cả các Pit kề đều False
+            self.kb.add_clause(Clause([-b]))
             for p in pits:
-                self.kb.add_clause(Clause([ -p ]))
+                self.kb.add_clause(Clause([b]) | Clause([-p]))
         
     def _add_stench_axioms(self, x, y, value):
         """Stench ⇔ có Wumpus ở ô kề"""
         neighbors = self._neighbors(x,y)
-        s = Literal("Stench", x, y, False)
+        s = Literal("Stench", x, y)
         wumps = [Literal("Wumpus", nx, ny, False) for (nx,ny) in neighbors]
         if value:
             # Stench => (W1 v W2 v ...)
             clause = Clause(wumps)
-            self.kb.add_clause(clause)
-            # Mỗi Wumpus => Stench
-            # for w in wumps:
-            #     self.kb.add_clause(Clause([ -w, s ]))
+            self.kb.add_clause(Clause([s]))
+            self.kb.add_clause(Clause([-s]) | clause)
         else:
             # NOT Stench => tất cả Wumpus kề đều False
+            self.kb.add_clause(Clause([-s]))
             for w in wumps:
-                self.kb.add_clause(Clause([ -w ]))
+                self.kb.add_clause(Clause([s]) | Clause([-w]))
     
     def _valid(self, nx, ny):
         return 0 <= nx < self.size and 0 <= ny < self.size
