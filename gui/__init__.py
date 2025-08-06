@@ -1,5 +1,5 @@
-# """GUI paceholder for the main module."""
+"""GUI package for Rush Hour game."""
 
-# from .main import main
+from .main import main
 
-# __all__ = ['main']
+__all__ = ['main']

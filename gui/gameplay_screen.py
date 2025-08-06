@@ -2,8 +2,8 @@ import pygame
 from typing import List, Tuple, Optional
 from gui.config import *
 from .button import Button
-# from state.agent import *
-# from state.environment import *
+from state.environment import *
+from state.agent import *
 import copy
 class GameplayScreen:
     def __init__(self, game_manager):
@@ -11,25 +11,16 @@ class GameplayScreen:
         self.font = self.game_manager.fonts['large']
         self.small_font = self.game_manager.fonts['normal']
 
-        # Game state
-        #This blongs to project 01
-        # self.game: Optional[Game] = None
-        # self.game_loader = GameLoader()
-        # self.current_state: Optional[GameState] = None
-        # self.initial_state: Optional[GameState] = None
 
-        self.current_state = None  # Current game state
-        self.initial_state = None  # Initial game state
-        # Solution data
-
+        # State variables
+        self.agent: Optional[Agent] = None  # Current agent state
+        self.environment: Optional[Environment] = None 
         
         # Animation state
         self.is_animating = False
         self.animation_speed = 1.0  # moves per second
         self.animation_timer = 0.0
         self.is_paused = False
-        
-        # Search results
         
         # UI Components
         self.create_ui_components()
@@ -74,8 +65,9 @@ class GameplayScreen:
         )
         
     def initialize(self):
-        self.game = None
-        self.initial_state = None
+        # Dummy example, bạn cần thay thế bằng khởi tạo đúng từ môi trường
+        self.environment = Environment()  # hoặc từ lựa chọn người dùng
+        self.agent = Agent(8)   # hoặc agent cụ thể
                 
     def start_animation(self):
         if self.solution_path and not self.is_animating:
@@ -95,10 +87,6 @@ class GameplayScreen:
         self.animation_timer = 0.0
         
     def update(self, dt: float):
-        if self.search_result is None or not self.search_completed:
-            self.solve_game()
-            return
-
         if self.is_animating and not self.is_paused:
             self.animation_timer += dt
             
@@ -113,42 +101,18 @@ class GameplayScreen:
                 else:
                     # Animation complete
                     self.is_animating = False
-                    
-    def handle_event(self, event):
-        if self.play_button.handle_event(event):
-            self.start_animation()
-            return True
-            
-        if self.pause_button.handle_event(event):
-            self.pause_animation()
-            return True
-            
-        if self.reset_button.handle_event(event):
-            self.reset_animation()
-            return True
-            
-        if self.menu_button.handle_event(event):
-            # Return to selection screen
-            self.game_manager.current_state = "selecting"
-            return True
-            
-        if self.speed_up_button.handle_event(event):
-            self.animation_speed = min(self.animation_speed * 1.5, 10.0)
-            return True
-            
-        if self.speed_down_button.handle_event(event):
-            self.animation_speed = max(self.animation_speed / 1.5, 0.1)
-            return True
-            
-        return False
         
     def draw(self, surface: pygame.Surface):
         # Draw background
-        surface.blit(self.game_manager.get_image('background'), (0, 0))
-        
+        bg = self.game_manager.get_image('gamebackground')
+        if bg is not None:
+            surface.blit(bg, (0, 0))
+        else:
+            surface.fill((60, 60, 60))  # fallback background color
         # Draw the current game state
-            
-        # Draw UI buttons
+        if self.environment is not None and self.agent is not None:
+            self.game_manager.draw_environment(surface, self.environment, self.agent)
+        # Draw UI buttons   
         
     def draw_info_text(self, surface: pygame.Surface):
         pass

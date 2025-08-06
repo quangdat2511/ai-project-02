@@ -43,9 +43,9 @@ class App:
                 if self.selection_screen.handle_event(event):
                     if self.selection_screen.game_started:
                         self.game_manager.current_state = "playing"
-                        
-            elif self.game_manager.current_state == "playing":
-                self.gameplay_screen.handle_event(event)
+                        self.gameplay_screen.initialize()  # Thêm dòng này
+            # elif self.game_manager.current_state == "playing":
+            #     self.gameplay_screen.handle_event(event)
     
     def draw(self):
         # Dòng này để test xem giao diện có hoạt động không
@@ -66,5 +66,5 @@ class App:
 def main():
     app = App()
     app.run()
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

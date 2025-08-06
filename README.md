@@ -23,4 +23,5 @@ This is a Wumpus World agent implementation with a graphical user interface (GUI
    pip install -r requirements.txt
    ```
 ## How to Run
+Run the main.py file
 ## Expected outputs
