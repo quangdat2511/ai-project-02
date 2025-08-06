@@ -93,6 +93,14 @@ class Environment:
     
     def _valid(self, x: int, y: int) -> bool:
         return 0 <= x < self.N and 0 <= y < self.N
+    
+    def _neighbors(self, x: int, y: int) -> list:
+        neighbors = []
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nx, ny = x + dx, y + dy
+            if self._valid(nx, ny):
+                neighbors.append((nx, ny))
+        return neighbors
 
     def __str__(self):
         result = ""
