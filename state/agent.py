@@ -41,9 +41,14 @@ class Agent:
                 neighbors = list(self._neighbors(*self.position))
                 unvisited_neighbors = [pos for pos in neighbors if pos not in self.visited]
                 goal = unvisited_neighbors[0] if unvisited_neighbors else None
+                if goal is None:
+                    print("No unvisited neighbors, staying put.")
+                    # choose random neighbor to avoid getting stuck
+                    goal = neighbors[0] if neighbors else None
             else:
                 goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
 
+        print(f"Current position: {self.position}, Goal: {goal}")
         path = self.planner.a_star(start=self.position, goal=goal)
         next_pos = path[0] if len(path) > 0 else None
 
@@ -140,13 +145,13 @@ class Agent:
 
 
         if action == Action.FORWARD:
+            dx, dy = self.direction.value
             if not percept.bump:
                 # Cập nhật vị trí
-                dx, dy = self.direction.value
                 self.position = (self.position[0] + dx, self.position[1] + dy)
             else:
                 print("Bumped into a wall, cannot move forward.")
-                self.kb.visited.add((self.position[0] + dx, self.position[1] + dy))  # Đánh dấu ô hiện tại là đã thăm
+                self.visited.add((self.position[0] + dx, self.position[1] + dy))  # Đánh dấu ô hiện tại là đã thăm
 
             self.score -= 1  
         elif action == Action.TURN_LEFT:
