@@ -259,7 +259,12 @@ class Agent:
                             self.kb.infer(-Literal("Wumpus", *neighbor))
             else:
                 print("Bumped into a wall, cannot move forward.")
-                self.N = max(self.N, self.position[0] + 1, self.position[1] + 1)  # Cập nhật kích thước N 
+                self.N = max(self.N, self.position[0] + 1, self.position[1] + 1)  # Cập nhật kích thước N
+                # filter the valid positions in sets
+                self.kb.not_has_pit = {pos for pos in self.kb.not_has_pit if self._valid(*pos)}
+                self.kb.not_has_wumpus = {pos for pos in self.kb.not_has_wumpus if self._valid(*pos)}
+                self.kb.has_pit = {pos for pos in self.kb.has_pit if self._valid(*pos)}
+                self.kb.has_wumpus = {pos for pos in self.kb.has_wumpus if self._valid(*pos)}
 
             self.score -= 1  
         elif action == Action.TURN_LEFT:
