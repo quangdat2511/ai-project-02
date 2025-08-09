@@ -10,4 +10,7 @@ if __name__ == "__main__":
     agent = Agent(K=2)
 
     agent.play(env)
-    print("Game Over!")
+    if agent.winning:
+        print("You win!")
+    else:
+        print("Game Over!")

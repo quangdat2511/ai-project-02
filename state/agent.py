@@ -30,6 +30,11 @@ class Agent:
             actions.append(Action.CLIMB)
             return actions
 
+        print(f"Not has pit: ", self.kb.not_has_pit)
+        print(f"Not has wumpus: ", self.kb.not_has_wumpus)
+        print(f"Has wumpus: ", self.kb.has_wumpus)
+        print(f"Has pit: ", self.kb.has_pit)
+        print(f"Visited: ", self.visited)
         if self.has_gold:
             goal = (0, 0)  # nếu có vàng thì luôn hướng về góc trên bên trái
         else:
@@ -53,22 +58,31 @@ class Agent:
 
         print(f"Current position: {self.position}, Goal: {goal}")
         path = self.planner.a_star(start=self.position, goal=goal)
-        next_pos = path[0] if len(path) > 0 else None
+        print("Path: ", path)
+        # next_pos = path[0] if len(path) > 0 else None
 
         # check making turns
-        if next_pos:
-            left_direction = self.direction.turn_left()
-            right_direction = self.direction.turn_right()
-            dx, dy = (next_pos[0] - self.position[0], next_pos[1] - self.position[1])
+        # if next_pos:
+        current_position = self.position
+        current_direction = self.direction
+        for next_pos in path:
+            left_direction = current_direction.turn_left()
+            right_direction = current_direction.turn_right()
+            dx, dy = (next_pos[0] - current_position[0], next_pos[1] - current_position[1])
             if (dx, dy) == left_direction.value:
                 actions.append(Action.TURN_LEFT)
+                current_direction = left_direction
             elif (dx, dy) == right_direction.value:
                 actions.append(Action.TURN_RIGHT)
-            elif (dx, dy) != self.direction.value:
+                current_direction = right_direction
+            elif (dx, dy) != current_direction.value:
                 actions.append(Action.TURN_RIGHT)
                 actions.append(Action.TURN_RIGHT)
-        
-        actions.append(Action.FORWARD)
+                current_direction = right_direction.turn_right()  # quay 180 độ
+
+            actions.append(Action.FORWARD)
+            current_position = next_pos
+
         return actions
             
     def add_percept(self, percept: Percept, x, y):
@@ -208,6 +222,14 @@ class Agent:
                 self.position = (self.position[0] + dx, self.position[1] + dy)
                 if self.position not in self.visited:
                     self.visited.add(self.position)
+                    self.add_percept(percept, *self.position)
+                    neighbors = self._neighbors(self.position)
+                    for neighbor in neighbors:
+                        if neighbor not in self.visited:
+                            self.kb.infer(Literal("Pit", *neighbor))
+                            self.kb.infer(Literal("Wumpus", *neighbor))
+                            self.kb.infer(-Literal("Pit", *neighbor))
+                            self.kb.infer(-Literal("Wumpus", *neighbor))
             else:
                 print("Bumped into a wall, cannot move forward.")
                 self.visited.add((self.position[0] + dx, self.position[1] + dy))  # Đánh dấu ô hiện tại là đã thăm
@@ -244,19 +266,18 @@ class Agent:
     def play(self, environment: Environment):
         self.display(environment)
 
+        # Get initial percept
         percept = environment.get_percept_in_cell(self.position)
-        while self.is_alive and not self.winning:
-            if self.position not in self.visited:
-                self.add_percept(percept, *self.position)
-                
-                neighbors = self._neighbors(self.position)
-                for neighbor in neighbors:
-                    if neighbor not in self.visited:
-                        self.kb.infer(Literal("Pit", *neighbor))
-                        self.kb.infer(Literal("Wumpus", *neighbor))
-                        self.kb.infer(-Literal("Pit", *neighbor))
-                        self.kb.infer(-Literal("Wumpus", *neighbor))
+        self.add_percept(percept, *self.position)
+        neighbors = self._neighbors(self.position)
+        for neighbor in neighbors:
+            self.kb.infer(Literal("Pit", *neighbor))
+            self.kb.infer(Literal("Wumpus", *neighbor))
+            self.kb.infer(-Literal("Pit", *neighbor))
+            self.kb.infer(-Literal("Wumpus", *neighbor))
 
+
+        while self.is_alive and not self.winning:
             actions = self.get_actions(percept)
             for action in actions:
                 percept = self.perform_action(action, environment)
