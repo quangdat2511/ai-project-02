@@ -74,10 +74,13 @@ class Agent:
                     # random neighbor
                     print("No safe unvisited positions, choosing a random neighbor.")
                     neighbors = self._neighbors(self.position)
-                    while True:
-                        goal = neighbors[random.randint(0, len(neighbors) - 1)]
-                        if goal not in self.kb.has_pit and goal not in self.kb.has_wumpus:
-                            break
+                    unvisited_neighbors = [pos for pos in neighbors if pos not in self.visited and pos not in self.kb.has_pit and pos not in self.kb.has_wumpus]
+                    if unvisited_neighbors:
+                        goal = random.choice(unvisited_neighbors)
+                    else:
+                        visited_neighbors = [pos for pos in neighbors if pos in self.visited]
+                        goal = random.choice(visited_neighbors)
+
             else:
                 goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
 
