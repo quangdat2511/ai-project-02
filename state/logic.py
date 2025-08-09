@@ -12,7 +12,7 @@ class Literal:
         return Literal(self.name, self.position[0], self.position[1], not self.is_negated)
 
     def __eq__(self, other):
-        return (self.name, self.position, self.is_negated) == (other.name, self.position, other.is_negated)
+        return (self.name, self.position, self.is_negated) == (other.name, other.position, other.is_negated)
 
     def __hash__(self):
         return hash((self.name, self.position, self.is_negated))
@@ -76,7 +76,54 @@ class KnowledgeBase:
     def add_clauses(self, clauses):
         self.clauses.update(clauses)
     
-    def infer(self, query):
+    def infer(self, query: Literal):
+        inference = InferenceEngine(self.clauses)
+        if query.name == "Pit" and query.is_negated == False:
+            if query.position in self.has_pit:
+                return True
+            else:
+                if inference.resolution(query):
+                    self.has_pit.add(query.position)
+                    self.add_clause(Clause[query])
+                    return True
+                else:
+                    return False
+        elif query.name == "Pit" and query.is_negated == True:
+            if query.position in self.not_has_pit:
+                return True
+            else:
+                if inference.resolution(query):
+                    self.not_has_pit.add(query.position)
+                    self.add_clause(Clause[query])
+                    return True
+                else:
+                    return False
+        elif query.name == "Wumpus" and query.is_negated == False:
+            if query.position in self.has_wumpus:
+                return True
+            else:
+                if inference.resolution(query):
+                    self.has_wumpus.add(query.position)
+                    self.add_clause(Clause[query])
+                    return True
+                else:
+                    return False
+        elif query.name == "Wumpus" and query.is_negated == True:
+            if query.position in self.not_has_wumpus:
+                return True
+            else:
+                if inference.resolution(query):
+                    self.not_has_wumpus.add(query.position)
+                    self.add_clause(Clause[query])
+                    return True
+                else:
+                    return False        
+    
+
+class InferenceEngine:
+    def __init__(self, clauses):
+        self.clauses = clauses
+    def resolution(self, query):
         negated_query = Clause([-query])
         new_clauses = set()
         kb_clauses = set(self.clauses.union({negated_query}))

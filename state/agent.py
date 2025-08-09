@@ -5,17 +5,18 @@ from .logic import *
 from .environment import *
 
 class Agent:
-    def __init__(self):
+    def __init__(self, K: int):
         self.position = (0, 0)
         self.direction = Direction.EAST
         self.has_gold = False
         self.has_arrow = True
+        self.check_scream = False
         self.is_alive = True
         self.kb = KnowledgeBase()
         self.planner = Planner(self)
         self.score = 0
         self.winning = False
-
+        self.K = K
         self.visited = set()
         self.action_count = 0  # Đếm số hành động đã thực hiện
 
@@ -71,6 +72,9 @@ class Agent:
     def add_percept(self, percept: Percept, x, y):
         self._add_breeze_axioms(x, y, percept.breeze)
         self._add_stench_axioms(x, y, percept.stench)
+        if self.has_arrow == False and self.check_scream == False:
+            self.check_scream = True
+            self._add_scream_axioms(percept.scream)
 
     def _add_breeze_axioms(self, x, y, value):
         """Breeze ⇔ có Pit ở ô kề"""
@@ -105,6 +109,54 @@ class Agent:
             self.kb.add_clause(Clause([-s]))
             for w in wumps:
                 self.kb.add_clause(Clause([s]) | Clause([-w]))
+    
+    def _add_scream_axioms(self, value: bool):
+        #Mục tiêu của percept này là giúp cho agent có thêm thông tin ô kh có W.
+        #Vì vậy nếu W di chuyển sau 5 - k bước thì thông tin kh còn áp dụng được nữa.
+        #Các suy luận liên quan đến percept này nên được thiết kế để loại bỏ dễ dàng (nếu cần).
+        if (value):
+            nx, ny = self.position
+            dx, dy = self.direction
+            s = Literal("Scream", -1, -1)
+            #Đầu tiên là giảm K. Khi giảm K cần hết sức thận trọng, để kết luận kh bị sai thì nếu con
+            #W nằm trong has_wumpus thì ta phải xóa nó. Nếu biết vị trí của W bị bắn => Dễ, nếu kh biết
+            #thì tạm xóa 1 ô đầu tiên đã biết có W trên hướng đó, còn nếu trong has_wumpus chưa có ô nào trên
+            #hướng đó thì kh cần vì điều đó có nghĩa con W bị bắn này ch dc tính vào K.
+            while True:
+                nx += dx
+                ny += dy
+                lit = Literal("Wumpus", nx, ny)
+                a = self.kb.infer(-lit)
+                if a:#đã biết chắc chắn kh có W thì mũi tên kh
+                    #dừng ở ô này
+                    continue
+                elif self.kb.infer(lit): #nếu bắt gặp 1 ô chắc chắn có W 
+                    #sau loạt ô chắc chắn kh có W thì => biết chính xác vị trí W bị bắn:
+                    self.kb.add_clause(Clause[s])
+                    self.kb.add_clause(Clause[-s] | Clause([-lit]))
+                    #Remove ô này trong set has_wumpus
+                    #thêm trong set no_has_wumpus, remove visited 4 ô xung quanh ô này,
+                    #xóa 4 mệnh đề stench và literal liên quan ở 4 ô xung quanh (nếu đang có trong KB)
+                    #Làm sao agent có thể đi lại 4 ô đó để kiểm tra?
+                    #Hiện tại thuật toán có cho agent đi lại ô visited kh? và khi nào đi
+                    break
+                else:#Nếu gặp ô chưa có kết luận thì có thêm Scream => not W ở ô đó. Xóa hết tất cả 
+                    #mệnh đề về stench ở hướng đó +-1 (là 3 cột hoặc 3 hàng với hàng agent đang đúng
+                    #làm trung tâm, đồng thời bỏ visited các ô đó). Đồng thời trên hướng bắn đó nếu
+                    #1 hay nhiều ô nào nằm trong has_wumpus thì tạm thời xóa ô đầu tiên gặp (vì có thể 
+                    # là con này bị bắn mà ta chưa thể kết luận ở đây, nếu nó còn thì agent sẽ 
+                    # tự visit và suy luận lại sau)
+                    self.kb.add_clause(Clause[s])
+                    self.kb.add_clause(Clause[-s] | Clause([-lit]))
+                    break
+        else: #Nếu kh nghe scream thì:
+            #Nếu agent đang quay về South thì tất cả ô từ vị trí (x, y) -> (x, 0) đều kh có W
+            #Nếu agent đang quay về West thì tất cả ô từ vị trí (x, y) -> (0, y) đều kh có W
+            #Nếu agent đang quay về Est thì tất cả ô (x', y') sao cho y' = y và x' > x đều kh có W
+            #Nếu agent đang quay về North thì tất cả các ô (x', y') sao cho x' = x và y' > y đều kh có W
+            #Nên thêm 1 hàm riêng hỗ trợ suy luận has_wumpus dựa trên tập has_wumpus và suy luận này.
+            pass
+        #Tóm lại, nếu W di chuyển thì sau 5 bước nếu trong KB còn mệnh đề liên quan đến Scream thì xóa đi.
     
     def _valid(self, nx, ny):
         return 0 <= nx and 0 <= ny
@@ -234,18 +286,18 @@ class Planner:
         score = 0
 
         # Nếu chắc chắn có Pit/Wumpus => vô cực (không được đi)
-        # if kb.infer(Literal("Pit", x, y, False)) or kb.infer(Literal("Wumpus", x, y, False)):
-        #     return float('inf')
-        if (x, y) in kb.has_pit or (x, y) in kb.has_wumpus:
+        if kb.infer(Literal("Pit", x, y)) or kb.infer(Literal("Wumpus", x, y)):
             return float('inf')
+        # if (x, y) in kb.has_pit or (x, y) in kb.has_wumpus:
+            # return float('inf')
 
         # Nếu chưa biết rõ (tức không thể suy ra an toàn) → penalty
-        # if not kb.infer(-Literal("Pit", x, y, False)):
-        if (x, y) not in kb.not_has_pit:
+        if not kb.infer(-Literal("Pit", x, y)):
+        # if (x, y) not in kb.not_has_pit:
             score += 3  # nguy cơ Pit
 
-        # if not kb.infer(-Literal("Wumpus", x, y, False)):
-        if (x, y) not in kb.not_has_wumpus:
+        if not kb.infer(-Literal("Wumpus", x, y)):
+        # if (x, y) not in kb.not_has_wumpus:
             score += 4  # nguy cơ Wumpus (cao hơn pit)
 
         return score  # 0 là an toàn tuyệt đối
