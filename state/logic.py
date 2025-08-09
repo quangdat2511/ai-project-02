@@ -45,12 +45,14 @@ class Clause:
         return resolvents
 
 class KnowledgeBase:
-    def __init__(self):
+    def __init__(self, K: int):
         self.clauses = set()
         self.has_wumpus = set()  # các ô có Wumpus
         self.has_pit = set()  # các ô có Pit
         self.not_has_wumpus = set()  # các ô không có Wumpus
         self.not_has_pit = set()  # các ô không có Pit
+        self.nearest_stench_and_no_breeze = (-1, -1)
+        self.alive_wumpus_count = K
 
     # def simplify_clause(self, clause):
     #     unit_literals = {next(iter(c.literals)) for c in self.clauses if len(c.literals) == 1}
@@ -84,7 +86,7 @@ class KnowledgeBase:
             else:
                 if inference.resolution(query):
                     self.has_pit.add(query.position)
-                    self.add_clause(Clause[query])
+                    self.add_clause(Clause([query]))
                     return True
                 else:
                     return False
@@ -94,7 +96,7 @@ class KnowledgeBase:
             else:
                 if inference.resolution(query):
                     self.not_has_pit.add(query.position)
-                    self.add_clause(Clause[query])
+                    self.add_clause(Clause([query]))
                     return True
                 else:
                     return False
@@ -104,7 +106,7 @@ class KnowledgeBase:
             else:
                 if inference.resolution(query):
                     self.has_wumpus.add(query.position)
-                    self.add_clause(Clause[query])
+                    self.add_clause(Clause([query]))
                     return True
                 else:
                     return False
@@ -114,7 +116,7 @@ class KnowledgeBase:
             else:
                 if inference.resolution(query):
                     self.not_has_wumpus.add(query.position)
-                    self.add_clause(Clause[query])
+                    self.add_clause(Clause([query]))
                     return True
                 else:
                     return False        

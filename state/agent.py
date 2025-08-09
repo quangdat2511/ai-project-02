@@ -12,13 +12,13 @@ class Agent:
         self.has_arrow = True
         self.check_scream = False
         self.is_alive = True
-        self.kb = KnowledgeBase()
+        self.kb = KnowledgeBase(K=K)
         self.planner = Planner(self)
         self.score = 0
         self.winning = False
         self.K = K
         self.visited = set()
-        self.action_count = 0  # Đếm số hành động đã thực hiện
+        self.action_count = 0  
 
     def get_actions(self, percept: Percept) -> List[Action]:
         actions = []
@@ -37,14 +37,16 @@ class Agent:
             print(f"Safe unvisited positions: {safe_unvisited_pos}")
             # goal is the closest unvisited cell that is safe
             if not safe_unvisited_pos:
-                # random unvisited neighbor if no safe unvisited positions
-                print("No safe unvisited positions, choosing a random neighbor.")
-                neighbors = list(self._neighbors(*self.position))
-                unvisited_neighbors = [pos for pos in neighbors if pos not in self.visited]
-                goal = unvisited_neighbors[0] if unvisited_neighbors else None
-                if goal is None:
-                    print("No unvisited neighbors, staying put.")
-                    # choose random neighbor to avoid getting stuck
+                if self.has_arrow and self.kb.nearest_stench_and_no_breeze != (-1, -1):
+                    if self.kb.nearest_stench_and_no_breeze == self.position:
+                        # nếu đang ở ô có Stench và không có Breeze, bắn Wumpus
+                        actions.append(Action.SHOOT)
+                        return actions
+                    
+                    goal = self.kb.nearest_stench_and_no_breeze  
+                else:
+                    # random neighbor
+                    neighbors = self._neighbors(self.position)
                     goal = neighbors[0] if neighbors else None
             else:
                 goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
@@ -78,7 +80,7 @@ class Agent:
 
     def _add_breeze_axioms(self, x, y, value):
         """Breeze ⇔ có Pit ở ô kề"""
-        neighbors = self._neighbors(x,y)
+        neighbors = self._neighbors((x, y))
         b = Literal("Breeze", x, y)
         pits = [Literal("Pit", nx, ny) for (nx,ny) in neighbors]
         self.kb.add_clause(Clause([-Literal("Pit", x, y)]))  # Thêm ô hiện tại là không có Pit
@@ -95,7 +97,7 @@ class Agent:
         
     def _add_stench_axioms(self, x, y, value):
         """Stench ⇔ có Wumpus ở ô kề"""
-        neighbors = self._neighbors(x,y)
+        neighbors = self._neighbors((x, y))
         s = Literal("Stench", x, y)
         wumps = [Literal("Wumpus", nx, ny, False) for (nx,ny) in neighbors]
         self.kb.add_clause(Clause([-Literal("Wumpus", x, y)]))  # Thêm ô hiện tại là không có Wumpus
@@ -161,11 +163,14 @@ class Agent:
     def _valid(self, nx, ny):
         return 0 <= nx and 0 <= ny
     
-    def _neighbors(self, x, y):
+    def _neighbors(self, position: Tuple[int, int]):
+        neighbors = []
+        x, y = position
         for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
             nx, ny = x + dx, y + dy
             if self._valid(nx, ny):
-                yield (nx, ny)
+                neighbors.append((nx, ny))
+        return neighbors
 
     def display(self, env: Environment):
         grid_str = ""
@@ -201,6 +206,8 @@ class Agent:
             if not percept.bump:
                 # Cập nhật vị trí
                 self.position = (self.position[0] + dx, self.position[1] + dy)
+                if self.position not in self.visited:
+                    self.visited.add(self.position)
             else:
                 print("Bumped into a wall, cannot move forward.")
                 self.visited.add((self.position[0] + dx, self.position[1] + dy))  # Đánh dấu ô hiện tại là đã thăm
@@ -219,12 +226,16 @@ class Agent:
             if self.has_arrow:
                 self.has_arrow = False
                 self.score -= 10  # Bắn mất mũi tên
+                if percept.scream:
+                    self.kb.alive_wumpus_count -= 1
         elif action == Action.CLIMB:
             if self.position == (0, 0) and self.has_gold:
                 self.winning = True
                 self.score += 1000
 
         self.is_alive = not environment.is_agent_dead(self.position)
+        if percept.stench and not percept.breeze:
+            self.kb.nearest_stench_and_no_breeze = self.position
 
         self.display(environment)
 
@@ -236,23 +247,15 @@ class Agent:
         percept = environment.get_percept_in_cell(self.position)
         while self.is_alive and not self.winning:
             if self.position not in self.visited:
-                self.visited.add(self.position)
                 self.add_percept(percept, *self.position)
                 
-                for neighbor in self._neighbors(*self.position):
+                neighbors = self._neighbors(self.position)
+                for neighbor in neighbors:
                     if neighbor not in self.visited:
-                        if self.kb.infer(Literal("Pit", *neighbor)):
-                            self.kb.has_pit.add(neighbor)
-                            self.kb.add_clause(Clause([Literal("Pit", *neighbor)]))
-                        if self.kb.infer(Literal("Wumpus", *neighbor)):
-                            self.kb.has_wumpus.add(neighbor)
-                            self.kb.add_clause(Clause([Literal("Wumpus", *neighbor)]))
-                        if self.kb.infer(-Literal("Pit", *neighbor)):
-                            self.kb.not_has_pit.add(neighbor)
-                            self.kb.add_clause(Clause([-Literal("Pit", *neighbor)]))
-                        if self.kb.infer(-Literal("Wumpus", *neighbor)):
-                            self.kb.not_has_wumpus.add(neighbor)
-                            self.kb.add_clause(Clause([-Literal("Wumpus", *neighbor)]))
+                        self.kb.infer(Literal("Pit", *neighbor))
+                        self.kb.infer(Literal("Wumpus", *neighbor))
+                        self.kb.infer(-Literal("Pit", *neighbor))
+                        self.kb.infer(-Literal("Wumpus", *neighbor))
 
             actions = self.get_actions(percept)
             for action in actions:
@@ -286,18 +289,16 @@ class Planner:
         score = 0
 
         # Nếu chắc chắn có Pit/Wumpus => vô cực (không được đi)
-        if kb.infer(Literal("Pit", x, y)) or kb.infer(Literal("Wumpus", x, y)):
+        if kb.infer(Literal("Pit", x, y, False)) or kb.infer(Literal("Wumpus", x, y, False)):
             return float('inf')
         # if (x, y) in kb.has_pit or (x, y) in kb.has_wumpus:
             # return float('inf')
 
         # Nếu chưa biết rõ (tức không thể suy ra an toàn) → penalty
-        if not kb.infer(-Literal("Pit", x, y)):
-        # if (x, y) not in kb.not_has_pit:
+        if not kb.infer(-Literal("Pit", x, y, False)):
             score += 3  # nguy cơ Pit
 
-        if not kb.infer(-Literal("Wumpus", x, y)):
-        # if (x, y) not in kb.not_has_wumpus:
+        if not kb.infer(-Literal("Wumpus", x, y, False)):
             score += 4  # nguy cơ Wumpus (cao hơn pit)
 
         return score  # 0 là an toàn tuyệt đối
@@ -323,7 +324,8 @@ class Planner:
             if current == goal:
                 break
 
-            for next_pos in self.agent._neighbors(*current):
+            neighbors = self.agent._neighbors(current)
+            for next_pos in neighbors:
                 base_cost = 1
                 risk_penalty = self.risk_score(next_pos)  # càng nguy hiểm càng cao
                 utility_bonus = self.utility_score(next_pos)  # càng hấp dẫn càng tốt
