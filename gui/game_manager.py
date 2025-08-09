@@ -58,9 +58,10 @@ class GameManager:
         grid_height = CELL_SIZE * N
 
         # Tính lề để căn giữa lưới
-        offset_x = (surface.get_width() - grid_width) // 2
-        offset_y = (surface.get_height() - grid_height) // 2
-
+        # offset_x = (surface.get_width() - grid_width) // 2
+        # offset_y = (surface.get_height() - grid_height) // 2
+        offset_x = OFFSET_X
+        offset_y = OFFSET_Y
         for y in range(N):
             for x in range(N):
                 # Tính vị trí vẽ ô (gốc tọa độ ở trên cùng bên trái)
@@ -71,26 +72,25 @@ class GameManager:
                     CELL_SIZE
                 )
 
-                # Vẽ nền và viền ô
-                pygame.draw.rect(surface, CELL_COLOR, rect)
+                # Chỉ vẽ viền ô, không fill màu nền
                 pygame.draw.rect(surface, GRID_COLOR, rect, 3)  # Đường viền dày hơn
 
                 cell = env.grid[x][y]
-                percept = env._get_percept_in_cell((x, y))
+                percept = env.get_percept_in_cell((x, y))
 
-                # Vẽ percept
-                if percept.stench and percept.breeze:
-                    img = self.get_image('cell_breeze_stench')
-                    if img:
-                        surface.blit(img, rect.topleft)
-                elif percept.stench:
-                    img = self.get_image('cell_stench')
-                    if img:
-                        surface.blit(img, rect.topleft)
-                elif percept.breeze:
-                    img = self.get_image('cell_breeze')
-                    if img:
-                        surface.blit(img, rect.topleft)
+                # # Vẽ percept
+                # if percept.stench and percept.breeze:
+                #     img = self.get_image('cell_breeze_stench')
+                #     if img:
+                #         surface.blit(img, rect.topleft)
+                # elif percept.stench:
+                #     img = self.get_image('cell_stench')
+                #     if img:
+                #         surface.blit(img, rect.topleft)
+                # elif percept.breeze:
+                #     img = self.get_image('cell_breeze')
+                #     if img:
+                #         surface.blit(img, rect.topleft)
 
                 # Vẽ vật thể
                 if cell.has_wumpus:

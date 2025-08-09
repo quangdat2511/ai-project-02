@@ -2,11 +2,11 @@ WINDOW_TITLE = "Project 02 - Wumpus World Agent"
 # lưu tên file, thông số
 SCALE = 0.45  # Scale factor for the game window and images
 FONT_SIZE_SCALE = 0.85  # Scale factor for font sizes
-WIDTH, HEIGHT = 1920 * SCALE, 1920 * SCALE  # Full HD resolution
+WIDTH, HEIGHT = 2560 * SCALE, 1800* SCALE  # Widened window (e.g., 2560x1920)
 ROWS, COLS = 6, 6
 TILE_SIZE = 880 / 6 * SCALE  # Size of each tile in pixels
-OFFSET_X, OFFSET_Y = 520 * SCALE, 520 * SCALE  # Offset for the grid position
-CELL_SIZE = 64
+OFFSET_X, OFFSET_Y = 100 * SCALE, 30 * SCALE  # Offset for centering the grid in the window
+CELL_SIZE = 48  # Size of each cell in pixels
 # Font settings
 FONT_NAME = 'comicsans'
 FONT_SIZE = int(20 * FONT_SIZE_SCALE)  # Base font size
@@ -17,7 +17,7 @@ GRID_COLOR = (100, 100, 100)   # Viền ô: xám đậm
 # Resource paths
 BACKGROUND_IMAGE = 'gui/assets/background.png'
 DESCRIPTION_BACKGROUND_IMAGE = 'gui/assets/description-bg.png'
-GAME_BACKGROUND_IMAGE = 'gui/assets/game-bg.png'
+GAME_BACKGROUND_IMAGE = 'gui/assets/game-bg-2.png'
 #AGENT
 AGENT_IMAGE = 'gui/assets/agent.png'
 AGENT_VICTORY_IMAGE = 'gui/assets/agent_victory.png'

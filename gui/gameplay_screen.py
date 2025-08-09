@@ -65,9 +65,8 @@ class GameplayScreen:
         )
         
     def initialize(self):
-        # Dummy example, bạn cần thay thế bằng khởi tạo đúng từ môi trường
-        self.environment = Environment()  # hoặc từ lựa chọn người dùng
-        self.agent = Agent(8)   # hoặc agent cụ thể
+        self.environment = Environment(16)  
+        self.agent = Agent()   
                 
     def start_animation(self):
         if self.solution_path and not self.is_animating:

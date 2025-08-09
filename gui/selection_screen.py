@@ -6,7 +6,7 @@ class SelectionScreen:
     def __init__(self, game_manager):
         self.game_manager = game_manager
         self.font = self.game_manager.fonts['normal']
-        self.start_button = Button((320, 600), 200, 50, "Start game", (0, 150, 0), font=self.font, border_radius=5)
+        self.start_button = Button((450, 600), 200, 50, "Start game", (0, 150, 0), font=self.font, border_radius=5)
         
         self.game_started = False
     def draw(self, surface):
