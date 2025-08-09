@@ -19,6 +19,7 @@ class Agent:
         self.K = K
         self.visited = set()
         self.action_count = 0  
+        self.N = -1     # the agent does not know the size at first
 
     def get_actions(self, percept: Percept) -> List[Action]:
         actions = []
@@ -45,10 +46,30 @@ class Agent:
                 if self.has_arrow and self.kb.nearest_stench_and_no_breeze != (-1, -1):
                     if self.kb.nearest_stench_and_no_breeze == self.position:
                         # nếu đang ở ô có Stench và không có Breeze, bắn Wumpus
+                        neighbors = self._neighbors(self.position)
+                        goal = None
+                        for neighbor in neighbors:
+                            if self.kb.infer(Literal("Wumpus", *neighbor, False)):
+                                goal = neighbor
+                                break
+
+                        if goal:
+                            # find the direction to shoot
+                            dx, dy = (goal[0] - self.position[0], goal[1] - self.position[1])
+                            left_direction = self.direction.turn_left()
+                            right_direction = self.direction.turn_right()
+                            if (dx, dy) == left_direction.value:
+                                actions.append(Action.TURN_LEFT)
+                            elif (dx, dy) == right_direction.value:
+                                actions.append(Action.TURN_RIGHT)
+                            elif (dx, dy) != self.direction.value:
+                                actions.append(Action.TURN_RIGHT)
+                                actions.append(Action.TURN_RIGHT)  # quay 180 độ
+
                         actions.append(Action.SHOOT)
                         return actions
-                    
-                    goal = self.kb.nearest_stench_and_no_breeze  
+
+                    goal = self.kb.nearest_stench_and_no_breeze
                 else:
                     # random neighbor
                     print("No safe unvisited positions, choosing a random neighbor.")
@@ -179,8 +200,10 @@ class Agent:
         #Tóm lại, nếu W di chuyển thì sau 5 bước nếu trong KB còn mệnh đề liên quan đến Scream thì xóa đi.
     
     def _valid(self, nx, ny):
-        return 0 <= nx and 0 <= ny
-    
+        if self.N == -1:
+            return 0 <= nx and 0 <= ny
+        return 0 <= nx < self.N and 0 <= ny < self.N
+
     def _neighbors(self, position: Tuple[int, int]):
         neighbors = []
         x, y = position
@@ -236,7 +259,7 @@ class Agent:
                             self.kb.infer(-Literal("Wumpus", *neighbor))
             else:
                 print("Bumped into a wall, cannot move forward.")
-                self.visited.add((self.position[0] + dx, self.position[1] + dy))  # Đánh dấu ô hiện tại là đã thăm
+                self.N = max(self.N, self.position[0] + 1, self.position[1] + 1)  # Cập nhật kích thước N 
 
             self.score -= 1  
         elif action == Action.TURN_LEFT:

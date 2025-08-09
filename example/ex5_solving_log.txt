@@ -1,0 +1,983 @@
+. . G . . . . P 
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+A . . . . . P .
+
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+Not has pit:  {(1, 0), (0, 1)}
+Not has wumpus:  {(1, 0), (0, 1)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(0, 0)}
+Safe unvisited positions: [(1, 0), (0, 1)]
+Current position: (0, 0), Goal: (1, 0)
+Path:  [(1, 0)]
+Performing action: FORWARD at position (0, 0) facing EAST
+Call resolution
+Call resolution
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+. A . . . . P .
+
+Not has pit:  {(1, 0), (0, 1)}
+Not has wumpus:  {(1, 0), (1, 1), (2, 0), (0, 1)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(1, 0), (0, 0)}
+Safe unvisited positions: [(0, 1)]
+Current position: (1, 0), Goal: (0, 1)
+Call resolution
+Call resolution
+Path:  [(0, 0), (0, 1)]
+Performing action: TURN_RIGHT at position (1, 0) facing EAST
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+. A . . . . P .
+
+Performing action: TURN_RIGHT at position (1, 0) facing SOUTH
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+. A . . . . P .
+
+Performing action: FORWARD at position (1, 0) facing WEST
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+A . . . . . P .
+
+Performing action: TURN_RIGHT at position (0, 0) facing WEST
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+A . . . . . P .
+
+Performing action: FORWARD at position (0, 0) facing NORTH
+Call resolution
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+A P . P . . P .
+. . . . . . P .
+
+Not has pit:  {(1, 0), (0, 0), (0, 1)}
+Not has wumpus:  {(0, 1), (0, 0), (1, 1), (2, 0), (0, 2), (1, 0)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(1, 0), (0, 1), (0, 0)}
+Safe unvisited positions: []
+No safe unvisited positions, choosing a random neighbor.
+Current position: (0, 1), Goal: (0, 0)
+Path:  [(0, 0)]
+Performing action: TURN_RIGHT at position (0, 1) facing NORTH
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+A P . P . . P .
+. . . . . . P .
+
+Performing action: TURN_RIGHT at position (0, 1) facing EAST
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+A P . P . . P .
+. . . . . . P .
+
+Performing action: FORWARD at position (0, 1) facing SOUTH
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+A . . . . . P .
+
+Not has pit:  {(1, 0), (0, 0), (0, 1)}
+Not has wumpus:  {(0, 1), (0, 0), (1, 1), (2, 0), (0, 2), (1, 0)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(1, 0), (0, 1), (0, 0)}
+Safe unvisited positions: []
+No safe unvisited positions, choosing a random neighbor.
+Current position: (0, 0), Goal: (1, 0)
+Path:  [(1, 0)]
+Performing action: TURN_LEFT at position (0, 0) facing SOUTH
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+A . . . . . P .
+
+Performing action: FORWARD at position (0, 0) facing EAST
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+. A . . . . P .
+
+Not has pit:  {(1, 0), (0, 0), (0, 1)}
+Not has wumpus:  {(0, 1), (0, 0), (1, 1), (2, 0), (0, 2), (1, 0)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(1, 0), (0, 1), (0, 0)}
+Safe unvisited positions: []
+No safe unvisited positions, choosing a random neighbor.
+Current position: (1, 0), Goal: (1, 1)
+Path:  [(1, 1)]
+Performing action: TURN_LEFT at position (1, 0) facing EAST
+. . G . . . . P
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. P . P . . P .
+. A . . . . P .
+
+Performing action: FORWARD at position (1, 0) facing NORTH
+Call resolution
+Call resolution
+. . G . . . . P 
+. . . P . . . .
+. P . . . . . .
+. . . . . . . .
+. P P . W W . .
+. P P . . . . .
+. A . P . . P .
+. . . . . . P .
+
+Game Over!
+PS D:\khoa\HCMUS\HK6\AI\Project 02\ai-project-02> python main.py
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+A . . . . . . .
+
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+Not has pit:  {(1, 0), (0, 1)}
+Not has wumpus:  {(1, 0), (0, 1)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(0, 0)}
+Safe unvisited positions: [(1, 0), (0, 1)]
+Current position: (0, 0), Goal: (1, 0)
+Path:  [(1, 0)]
+Performing action: FORWARD at position (0, 0) facing EAST
+Call resolution
+Call resolution
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. A . . . . . .
+
+Not has pit:  {(1, 0), (0, 1)}
+Not has wumpus:  {(1, 0), (1, 1), (2, 0), (0, 1)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(1, 0), (0, 0)}
+Safe unvisited positions: [(0, 1)]
+Current position: (1, 0), Goal: (0, 1)
+Call resolution
+Call resolution
+Path:  [(0, 0), (0, 1)]
+Performing action: TURN_RIGHT at position (1, 0) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. A . . . . . .
+
+Performing action: TURN_RIGHT at position (1, 0) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. A . . . . . .
+
+Performing action: FORWARD at position (1, 0) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+A . . . . . . .
+
+Performing action: TURN_RIGHT at position (0, 0) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+A . . . . . . .
+
+Performing action: FORWARD at position (0, 0) facing NORTH
+Call resolution
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+A P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(1, 0), (0, 0), (0, 1)}
+Not has wumpus:  {(0, 1), (0, 0), (1, 1), (2, 0), (0, 2), (1, 0)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(1, 0), (0, 1), (0, 0)}
+Safe unvisited positions: []
+No safe unvisited positions, choosing a random neighbor.
+Current position: (0, 1), Goal: (0, 2)
+Path:  [(0, 2)]
+Performing action: FORWARD at position (0, 1) facing NORTH
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+A . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 0), (0, 3), (1, 0)}
+Not has wumpus:  {(0, 1), (1, 2), (0, 0), (1, 1), (0, 3), (2, 0), (0, 2), (1, 0)}
+Has wumpus:  set()
+Has pit:  set()
+Visited:  {(1, 0), (0, 1), (0, 2), (0, 0)}
+Safe unvisited positions: [(1, 2), (0, 3)]
+Current position: (0, 2), Goal: (1, 2)
+Path:  [(1, 2)]
+Performing action: TURN_RIGHT at position (0, 2) facing NORTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+A . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (0, 2) facing EAST
+Call resolution
+Call resolution
+Call resolution
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. A . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 0), (0, 3), (1, 0)}
+Not has wumpus:  {(0, 1), (1, 2), (0, 0), (1, 1), (0, 3), (2, 0), (0, 2), (2, 2), (1, 0), (1, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 0), (0, 2), (1, 0)}
+Safe unvisited positions: [(0, 3)]
+Current position: (1, 2), Goal: (0, 3)
+Call resolution
+Path:  [(0, 2), (0, 3)]
+Performing action: TURN_RIGHT at position (1, 2) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. A . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (1, 2) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. A . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (1, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+A . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (0, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+A . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (0, 2) facing NORTH
+Call resolution
+Call resolution
+Call resolution
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+A . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (0, 2), (1, 0), (1, 3)}
+Not has wumpus:  {(0, 1), (1, 2), (0, 4), (0, 0), (1, 1), (0, 3), (2, 0), (0, 2), (2, 2), (1, 0), (1, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 0), (0, 3), (0, 2), (1, 0)}
+Safe unvisited positions: [(0, 4), (1, 3)]
+Current position: (0, 3), Goal: (0, 4)
+Path:  [(0, 4)]
+Performing action: FORWARD at position (0, 3) facing NORTH
+Call resolution
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+A . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (0, 2), (1, 0), (1, 3)}
+Not has wumpus:  {(0, 1), (1, 2), (0, 4), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (0, 2), (1, 0)}
+Safe unvisited positions: [(1, 3)]
+Current position: (0, 4), Goal: (1, 3)
+Path:  [(0, 3), (1, 3)]
+Performing action: TURN_RIGHT at position (0, 4) facing NORTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+A . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (0, 4) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+A . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (0, 4) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+A . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_LEFT at position (0, 3) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+A . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (0, 3) facing EAST
+Call resolution
+Call resolution
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. A . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (1, 0), (1, 3)}
+Not has wumpus:  {(0, 1), (1, 2), (0, 4), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (0, 2), (1, 0), (1, 3)}
+Safe unvisited positions: [(1, 4), (2, 3)]
+Current position: (1, 3), Goal: (1, 4)
+Path:  [(1, 4)]
+Performing action: TURN_LEFT at position (1, 3) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. A . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (1, 3) facing NORTH
+Call resolution
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. A . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (1, 0), (1, 3)}
+Not has wumpus:  {(0, 1), (2, 4), (1, 2), (0, 4), (0, 0), (1, 5), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (1, 4), (0, 2), (1, 0), (1, 3)}
+Safe unvisited positions: [(2, 3)]
+Current position: (1, 4), Goal: (2, 3)
+Path:  [(1, 3), (2, 3)]
+Performing action: TURN_RIGHT at position (1, 4) facing NORTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. A . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (1, 4) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. A . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (1, 4) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. A . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_LEFT at position (1, 3) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. A . P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (1, 3) facing EAST
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . A P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (1, 0), (1, 3)}
+Not has wumpus:  {(0, 1), (2, 4), (1, 2), (0, 4), (0, 0), (1, 5), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3), (0, 2), (3, 3), (0, 5), (2, 2), (1, 0), (1, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (1, 0), (1, 3)}
+Safe unvisited positions: []
+No safe unvisited positions, choosing a random neighbor.
+Current position: (2, 3), Goal: (2, 2)
+Path:  [(2, 2)]
+Performing action: TURN_RIGHT at position (2, 3) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . A P . . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (2, 3) facing SOUTH
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . A . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (1, 0), (3, 2), (1, 3)}
+Not has wumpus:  {(0, 2), (0, 5), (2, 2), (1, 0), (1, 3), (3, 3), (0, 1), (2, 4), (1, 2), (0, 4), (2, 1), (1, 5), (3, 2), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (2, 2), (1, 0), (1, 3)}
+Safe unvisited positions: [(2, 1), (3, 2)]
+Current position: (2, 2), Goal: (2, 1)
+Path:  [(2, 1)]
+Performing action: FORWARD at position (2, 2) facing SOUTH
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P A P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (1, 0), (3, 2), (1, 3)}
+Not has wumpus:  {(3, 1), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3), (3, 3), (0, 1), (2, 4), (1, 2), (0, 4), (2, 1), (1, 5), (3, 2), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (2, 2), (1, 0), (1, 3)}
+Safe unvisited positions: [(3, 2)]
+Current position: (2, 1), Goal: (3, 2)
+Call resolution
+Path:  [(2, 2), (3, 2)]
+Performing action: TURN_RIGHT at position (2, 1) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P A P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (2, 1) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P A P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (2, 1) facing NORTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . A . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (2, 2) facing NORTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . A . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (2, 2) facing EAST
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . A . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3)}
+Not has wumpus:  {(3, 1), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3), (4, 2), (3, 3), (0, 1), (2, 4), (1, 2), (0, 4), (2, 1), (1, 5), (3, 2), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (0, 3), (1, 4), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3)}
+Safe unvisited positions: []
+No safe unvisited positions, choosing a random neighbor.
+Current position: (3, 2), Goal: (4, 2)
+Path:  [(4, 2)]
+Performing action: FORWARD at position (3, 2) facing EAST
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . A G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (4, 1), (4, 3), (0, 3), (1, 4), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3), (5, 2)}
+Not has wumpus:  {(4, 3), (3, 1), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3), (4, 2), (3, 3), (0, 1), (2, 4), (1, 2), (0, 4), (2, 1), (1, 5), (3, 2), (4, 1), (5, 2), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (0, 3), (1, 4), (4, 2), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3)}
+Safe unvisited positions: [(4, 1), (4, 3), (5, 2)]
+Current position: (4, 2), Goal: (4, 1)
+Path:  [(4, 1)]
+Performing action: TURN_RIGHT at position (4, 2) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . A G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (4, 2) facing SOUTH
+Call resolution
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P A . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (4, 1), (4, 3), (0, 3), (1, 4), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3), (5, 2)}
+Not has wumpus:  {(4, 0), (4, 3), (3, 1), (5, 1), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3), (4, 2), (3, 3), (0, 1), (2, 4), (1, 2), (0, 4), (2, 1), (1, 5), (3, 2), (4, 1), (5, 2), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (4, 1), (0, 3), (1, 4), (4, 2), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3)}
+Safe unvisited positions: [(4, 3), (5, 2)]
+Current position: (4, 1), Goal: (4, 3)
+Call resolution
+Path:  [(4, 2), (4, 3)]
+Performing action: TURN_RIGHT at position (4, 1) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P A . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (4, 1) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . G . .
+. P . P A . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (4, 1) facing NORTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . A G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (4, 2) facing NORTH
+Call resolution
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P A . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (4, 1), (4, 3), (0, 3), (1, 4), (4, 2), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3), (5, 2)}
+Not has wumpus:  {(4, 0), (4, 3), (3, 1), (5, 1), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3), (4, 2), (3, 3), (5, 3), (0, 1), (2, 4), (1, 2), (0, 4), (2, 1), (1, 5), (3, 2), (4, 1), (5, 2), (4, 4), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (4, 1), (4, 3), (0, 3), (1, 4), (4, 2), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3)}
+Safe unvisited positions: [(5, 2)]
+Current position: (4, 3), Goal: (5, 2)
+Path:  [(4, 2), (5, 2)]
+Performing action: TURN_RIGHT at position (4, 3) facing NORTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P A . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (4, 3) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P A . . P
+. . . . . G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (4, 3) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . A G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_LEFT at position (4, 2) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . A G . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (4, 2) facing EAST
+Call resolution
+Call resolution
+Call resolution
+Call resolution
+. . P . . . . . 
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . A . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: GRAB at position (5, 2) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . A . .
+. P . P . . . .
+. . . . . . . .
+
+Not has pit:  {(4, 3), (5, 1), (0, 2), (2, 2), (1, 0), (1, 3), (6, 2), (4, 2), (5, 3), (0, 1), (1, 2), (0, 4), (2, 1), (3, 2), (4, 1), (5, 2), (0, 0), (0, 3), (1, 4), (2, 3)}
+Not has wumpus:  {(4, 0), (4, 3), (3, 1), (5, 1), (0, 2), (0, 5), (2, 2), (1, 0), (1, 3), (6, 2), (4, 2), (3, 3), (5, 3), (0, 1), (2, 4), (1, 2), (0, 4), (2, 1), (1, 5), (3, 2), (4, 1), (5, 2), (4, 4), (0, 0), (1, 1), (0, 3), (2, 0), (1, 4), (2, 3)}
+Has wumpus:  set()
+Has pit:  {(1, 1)}
+Visited:  {(0, 1), (1, 2), (0, 4), (2, 1), (0, 0), (4, 1), (4, 3), (0, 3), (1, 4), (4, 2), (2, 3), (0, 2), (2, 2), (1, 0), (3, 2), (1, 3), (5, 2)}
+Current position: (5, 2), Goal: (0, 0)
+Path:  [(4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 1), (0, 0)]
+Performing action: TURN_RIGHT at position (5, 2) facing EAST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . A . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_RIGHT at position (5, 2) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . A . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (5, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . A . . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (4, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . A . . . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (3, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . A . . . . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (2, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. A . . . . . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (1, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+A . . . . . . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: TURN_LEFT at position (0, 2) facing WEST
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+A . . . . . . .
+. P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (0, 2) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . . . .
+A P . P . . . .
+. . . . . . . .
+
+Performing action: FORWARD at position (0, 1) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . . . .
+. P . P . . . .
+A . . . . . . .
+
+Performing action: CLIMB at position (0, 0) facing SOUTH
+. . P . . . . .
+. . W . W . . .
+P P . P . . . P
+. . . . . . P .
+. . . P . . . P
+. . . . . . . .
+. P . P . . . .
+A . . . . . . .
+
+You win!
