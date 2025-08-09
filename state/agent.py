@@ -51,8 +51,9 @@ class Agent:
                     goal = self.kb.nearest_stench_and_no_breeze  
                 else:
                     # random neighbor
+                    print("No safe unvisited positions, choosing a random neighbor.")
                     neighbors = self._neighbors(self.position)
-                    goal = neighbors[0] if neighbors else None
+                    goal = neighbors[random.randint(0, len(neighbors) - 1)]
             else:
                 goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
 
@@ -269,6 +270,7 @@ class Agent:
         # Get initial percept
         percept = environment.get_percept_in_cell(self.position)
         self.add_percept(percept, *self.position)
+        self.visited.add(self.position)
         neighbors = self._neighbors(self.position)
         for neighbor in neighbors:
             self.kb.infer(Literal("Pit", *neighbor))
