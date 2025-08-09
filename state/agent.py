@@ -88,9 +88,9 @@ class Agent:
     def add_percept(self, percept: Percept, x, y):
         self._add_breeze_axioms(x, y, percept.breeze)
         self._add_stench_axioms(x, y, percept.stench)
-        if self.has_arrow == False and self.check_scream == False:
-            self.check_scream = True
-            self._add_scream_axioms(percept.scream)
+        # if self.has_arrow == False and self.check_scream == False:
+        #     self.check_scream = True
+        #     self._add_scream_axioms(percept.scream)
 
     def _add_breeze_axioms(self, x, y, value):
         """Breeze ⇔ có Pit ở ô kề"""
@@ -209,7 +209,7 @@ class Agent:
         percept = environment.perform_action(self.position, self.direction, action)
 
         self.action_count += 1
-        if self.action_count > 50:
+        if self.action_count > 200:
             print("Too many actions, stopping the game.")
             self.is_alive = False
             return percept
