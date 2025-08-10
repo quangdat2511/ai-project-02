@@ -88,15 +88,23 @@ class KnowledgeBase:
     
     def infer(self, query: Literal):
         if self.alive_wumpus_count == len(self.has_wumpus) and query.name == "Wumpus":
+            #Not Wumpus at x, y?
             if query.is_negated:
+                #If in has_wumpus
                 if query.position in self.has_wumpus:
                     return False
+                #If not in has_wumpus
                 else:
+                    self.not_has_wumpus.add(query.position)
+                    self.add_clause(Clause([-Literal("Wumpus", *query.position)]))
                     return True
+            #Wumpus at x, y?
             else:
                 if query.position in self.has_wumpus:
                     return True
                 else:
+                    self.not_has_wumpus.add(query.position)
+                    self.add_clause(Clause([-Literal("Wumpus", *query.position)]))
                     return False
                 
         if self.not_scream_helper.available == True and query.name == "Wumpus":
