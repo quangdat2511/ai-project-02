@@ -241,7 +241,9 @@ class Agent:
             #Nếu agent đang quay về Est thì tất cả ô (x', y') sao cho y' = y và x' > x đều kh có W
             #Nếu agent đang quay về North thì tất cả các ô (x', y') sao cho x' = x và y' > y đều kh có W
             #Nên thêm 1 hàm riêng hỗ trợ suy luận has_wumpus dựa trên tập has_wumpus và suy luận này.
-            pass
+            self.kb.not_scream_helper.available = True
+            self.kb.not_scream_helper.org_position = self.position
+            self.kb.not_scream_helper.shooting_direction = self.direction
         #Tóm lại, nếu W di chuyển thì sau 5 bước nếu trong KB còn mệnh đề liên quan đến Scream thì xóa đi.
     
     def find_first_wumpus_on_path(self, start_x, start_y, direction, has_wumpus):

@@ -1,3 +1,10 @@
+from .types import*
+class ScreamSupport:
+    def __init__(self):
+        self.available = False
+        self.org_position = None
+        self.shooting_direction = Direction.EAST
+
 class Literal:
     def __init__(self, name, x, y, is_negated=False):
         self.name = name
@@ -53,6 +60,7 @@ class KnowledgeBase:
         self.not_has_pit = set()  # các ô không có Pit
         self.nearest_stench_and_no_breeze = (-1, -1)
         self.alive_wumpus_count = K
+        self.not_scream_helper = ScreamSupport()
 
     # def simplify_clause(self, clause):
     #     unit_literals = {next(iter(c.literals)) for c in self.clauses if len(c.literals) == 1}
@@ -90,6 +98,18 @@ class KnowledgeBase:
                     return True
                 else:
                     return False
+                
+        if self.not_scream_helper.available == True and query.name == "Wumpus":
+            dx, dy = self.not_scream_helper.shooting_direction.value
+            x1, y1 = self.not_scream_helper.org_position
+            x2, y2 = query.position
+            vx, vy = x2 - x1, y2 - y1
+            if (dx == 0 and vx == 0 and dy * vy > 0) or (dy == 0 and vy == 0 and dx * vx > 0):
+                if query.position not in self.not_has_wumpus:
+                    self.not_has_wumpus.add(query.position)
+                    self.add_clause(Clause([-Literal("Wumpus", *query.position)]))
+                return query.is_negated
+
         inference = InferenceEngine(self.clauses)
         if query.name == "Pit" and query.is_negated == False:
             if query.position in self.has_pit:

@@ -6,7 +6,7 @@ from state import *
 
 if __name__ == "__main__":
     # Khởi tạo môi trường và agent
-    env = Environment(N=8, K=3, p = 0.1, map_id=7)  # 8x8 grid
+    env = Environment(N=8, K=6, p = 0.1, map_id=None)  # 8x8 grid
     # env = Environment()
     # fixed_map = [
     #     [".", ".", "P", ".", "P", ".", ".", "."],
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #     [".", ".", ".", ".", "P", ".", ".", "."],
     # ]
     # env.initialize_from_map(fixed_map)
-    agent = Agent(K=4)
+    agent = Agent(K=6)
 
     agent.play(env)
     if agent.winning:
