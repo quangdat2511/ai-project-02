@@ -1,4 +1,5 @@
 import random
+import os
 from typing import Tuple
 from .types import *
 
@@ -12,20 +13,57 @@ class Cell:
         return not (self.has_pit or self.has_wumpus)
 
 class Environment:
-    def __init__(self, N: int = 8, K: int = 2, p: float = 0.2, advanced_mode: bool = False):
+    def __init__(self, N: int = 8, K: int = 2, p: float = 0.2, advanced_mode: bool = False, map_id: int = None):
         self.N = N
         self.K = K
         self.p = p
 
+        self.agent_start = (0, 0)
         # for advanced mode
         self.advanced_mode = advanced_mode
         self.action_count = 0
         self.wumpus_move_interval = 5
 
         self.grid = [[Cell() for _ in range(N)] for _ in range(N)]
+        if map_id is not None and self.load_map_from_file(map_id):
+            print(f"Loaded map example/ex{map_id}.txt")
+        else:
+            self.initialize_environment()
 
-        self.initialize_environment()
+    def load_map_from_file(self, map_id: int) -> bool:
+        map_path = f"example/ex{map_id}.txt"
+        if not os.path.exists(map_path):
+            print(f"File {map_path} not found. Using randomized map")
+            return False
+        with open(map_path, "r", encoding="utf-8") as f:
+            lines = [line.strip() for line in f.readlines() if line.strip()]
+        try:
+            self.N = int(lines[0])
+        except ValueError:
+            print("Invalid map size in file")
+            return False
+        self.grid = [[Cell() for _ in range(self.N)] for _ in range(self.N)]
+        self.K = 0
 
+        for row_idx, line in enumerate(lines[1:]):
+            symbols = line.split()
+            if len(symbols) != self.N:
+                print("Map size row mismatch.")
+                return False
+            y = self.N - 1 - row_idx # Reverse y = 0 at last
+            for x, sym in enumerate(symbols):
+                if sym == "W":
+                    self.grid[x][y].has_wumpus = True
+                    self.K += 1
+                elif sym == "P":
+                    self.grid[x][y].has_pit = True
+                elif sym == "G":
+                    self.grid[x][y].has_gold = True
+                elif sym == "A":
+                    self.agent_start = (x, y)
+
+        return True
+                    
     def initialize_environment(self):
         # Logic to initialize the environment with pits, wumpus, and gold
         count = 0
@@ -37,7 +75,8 @@ class Environment:
                 count += 1
 
         # Create pits
-        pit_count = int(self.N * self.N * 0.2)
+        valid_pit_pos = (self.N * self.N) - 1
+        pit_count = int(valid_pit_pos * self.p)
         placed_bit = 0
         all_position = [(x, y) for x in range(self.N) for y in range(self.N) if (x, y) != (0, 0) and not self.grid[x][y].has_wumpus]
         random.shuffle(all_position)
