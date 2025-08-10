@@ -114,9 +114,11 @@ class KnowledgeBase:
         if query.name == "Pit" and query.is_negated == False:
             if query.position in self.has_pit:
                 return True
+            elif query.position in self.not_has_pit:
+                return False
             else:
+                # print("Call resolution")
                 if inference.resolution(query):
-                    print("Call resolution")
                     self.has_pit.add(query.position)
                     self.add_clause(Clause([query]))
                     return True
@@ -125,9 +127,11 @@ class KnowledgeBase:
         elif query.name == "Pit" and query.is_negated == True:
             if query.position in self.not_has_pit:
                 return True
+            elif query.position in self.has_pit:
+                return False
             else:
+                # print("Call resolution")
                 if inference.resolution(query):
-                    print("Call resolution")
                     self.not_has_pit.add(query.position)
                     self.add_clause(Clause([query]))
                     return True
@@ -136,9 +140,11 @@ class KnowledgeBase:
         elif query.name == "Wumpus" and query.is_negated == False:
             if query.position in self.has_wumpus:
                 return True
+            elif query.position in self.not_has_wumpus:
+                return False
             else:
+                # print("Call resolution")
                 if inference.resolution(query):
-                    print("Call resolution")
                     self.has_wumpus.add(query.position)
                     self.add_clause(Clause([query]))
                     return True
@@ -147,9 +153,11 @@ class KnowledgeBase:
         elif query.name == "Wumpus" and query.is_negated == True:
             if query.position in self.not_has_wumpus:
                 return True
+            elif query.position in self.has_wumpus:
+                return False
             else:
+                # print("Call resolution")
                 if inference.resolution(query):
-                    print("Call resolution")
                     self.not_has_wumpus.add(query.position)
                     self.add_clause(Clause([query]))
                     return True

@@ -56,7 +56,6 @@ class Planner:
 
         while frontier:
             _, current = heapq.heappop(frontier)
-
             if current == goal:
                 break
 

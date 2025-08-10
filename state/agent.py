@@ -360,10 +360,10 @@ class Agent:
                 neighbors = self._neighbors(self.position)
                 for neighbor in neighbors:
                     if neighbor not in self.visited:
-                        print(self.kb.infer(Literal("Pit", *neighbor)))
-                        print(self.kb.infer(Literal("Wumpus", *neighbor)))
-                        print(self.kb.infer(-Literal("Pit", *neighbor)))
-                        print(self.kb.infer(-Literal("Wumpus", *neighbor)))
+                        self.kb.infer(Literal("Pit", *neighbor))
+                        self.kb.infer(Literal("Wumpus", *neighbor))
+                        self.kb.infer(-Literal("Pit", *neighbor))
+                        self.kb.infer(-Literal("Wumpus", *neighbor))
         elif action == Action.CLIMB:
             if self.position == (0, 0) and self.has_gold:
                 self.winning = True
