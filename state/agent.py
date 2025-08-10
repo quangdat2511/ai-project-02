@@ -197,7 +197,8 @@ class Agent:
                     for neighbor in neighbors:
                         self.kb.remove_stench_clauses(neighbor[0], neighbor[1])
                         self.visited.discard(neighbor)
-                    self.visited.add(self.position)                    
+                    if (self.position + self.direction.value == nx, ny):
+                        self.visited.add(self.position)                    
                     break
                 else:#Nếu gặp ô chưa có kết luận thì có thêm Scream => not W ở ô đó. Xóa hết tất cả 
                     #mệnh đề về stench ở hướng đó +-1 (là 3 cột hoặc 3 hàng với hàng agent đang đúng
@@ -205,9 +206,34 @@ class Agent:
                     #1 hay nhiều ô nào nằm trong has_wumpus thì tạm thời xóa ô đầu tiên gặp (vì có thể 
                     # là con này bị bắn mà ta chưa thể kết luận ở đây, nếu nó còn thì agent sẽ 
                     # tự visit và suy luận lại sau)
-                    break
-                    self.kb.add_clause(Clause[s])
-                    self.kb.add_clause(Clause[-s] | Clause([-lit]))
+                    self.kb.add_clause(Clause([s]))
+                    self.kb.add_clause(Clause([-s]) | Clause([-lit]))
+                    x_min = x_max = y_min = y_max = 0
+                    if self.direction == Direction.NORTH:
+                        x_min, x_max = nx - 1, nx + 1
+                        y_min, y_max = ny, None
+                    elif self.direction == Direction.EAST:
+                        x_min, x_max = nx, None
+                        y_min, y_max = ny - 1, ny + 1
+                    elif self.direction == Direction.WEST:
+                        x_min, x_max = None, nx
+                        y_min, y_max = ny - 1, ny + 1
+                    elif self.direction == Direction.SOUTH:
+                        x_min, x_max = nx - 1, nx + 1
+                        y_min, y_max = None, ny
+                    the_sus_wumpus = self.find_first_wumpus_on_path(nx, ny, self.direction, self.kb.has_wumpus)
+                    if (the_sus_wumpus != None):
+                        sx, sy = the_sus_wumpus
+                        self.kb.has_wumpus.discard((sx, sy))
+                        self.kb.remove_unit_clause(Literal("Wumpus", sx, sy))
+                    removed_positions = self.kb.remove_unit_stench_clause_in_range(x_min, x_max, y_min, y_max)
+                    if (self.position + self.direction.value == nx, ny):
+                        removed_positions.append(self.position)
+                    for pos in removed_positions:
+                        self.kb.remove_stench_clauses(pos[0], pos[1])
+                        self.visited.discard(pos)
+                    if (self.position + self.direction.value == nx, ny):
+                        self.visited.add(self.position)                    
                     break
         else: #Nếu kh nghe scream thì:
             #Nếu agent đang quay về South thì tất cả ô từ vị trí (x, y) -> (x, 0) đều kh có W
@@ -218,6 +244,33 @@ class Agent:
             pass
         #Tóm lại, nếu W di chuyển thì sau 5 bước nếu trong KB còn mệnh đề liên quan đến Scream thì xóa đi.
     
+    def find_first_wumpus_on_path(self, start_x, start_y, direction, has_wumpus):
+        """
+        Tìm vị trí Wumpus đầu tiên trên đường bắn từ (start_x, start_y)
+        theo hướng cho trước. Nếu không có trả về None.
+        """
+        if direction == Direction.NORTH:
+            # Cùng cột, y tăng dần
+            candidates = [(x, y) for (x, y) in has_wumpus if x == start_x and y > start_y]
+            return min(candidates, key=lambda pos: pos[1], default=None)
+
+        elif direction == Direction.SOUTH:
+            # Cùng cột, y giảm dần
+            candidates = [(x, y) for (x, y) in has_wumpus if x == start_x and y < start_y]
+            return max(candidates, key=lambda pos: pos[1], default=None)
+
+        elif direction == Direction.EAST:
+            # Cùng hàng, x tăng dần
+            candidates = [(x, y) for (x, y) in has_wumpus if y == start_y and x > start_x]
+            return min(candidates, key=lambda pos: pos[0], default=None)
+
+        elif direction == Direction.WEST:
+            # Cùng hàng, x giảm dần
+            candidates = [(x, y) for (x, y) in has_wumpus if y == start_y and x < start_x]
+            return max(candidates, key=lambda pos: pos[0], default=None)
+
+        return None
+
     def _valid(self, nx, ny):
         if self.N == -1:
             return 0 <= nx and 0 <= ny
@@ -328,6 +381,8 @@ class Agent:
 
         # Get initial percept
         percept = environment.get_percept_in_cell(self.position)
+        if percept.stench and not percept.breeze:
+            self.kb.nearest_stench_and_no_breeze = self.position
         self.add_percept(percept, *self.position)
         self.visited.add(self.position)
         neighbors = self._neighbors(self.position)

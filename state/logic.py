@@ -150,6 +150,22 @@ class KnowledgeBase:
         clause_to_remove = Clause([literal])
         self.clauses.discard(clause_to_remove)
 
+    def remove_unit_stench_clause_in_range(self, x_min=None, x_max=None, y_min=None, y_max=None):
+        removed_positions = []
+        for clause in list(self.clauses):  # copy để tránh thay đổi khi duyệt
+            if len(clause.literals) == 1:
+                lit = next(iter(clause.literals))
+                if lit.name == "Stench" and not lit.is_negated:
+                    x, y = lit.position
+                    if (x_min is None or x >= x_min) and \
+                    (x_max is None or x <= x_max) and \
+                    (y_min is None or y >= y_min) and \
+                    (y_max is None or y <= y_max):
+                        self.clauses.discard(clause)
+                        removed_positions.append((x, y))
+
+        return removed_positions
+
 class InferenceEngine:
     def __init__(self, clauses):
         self.clauses = clauses
