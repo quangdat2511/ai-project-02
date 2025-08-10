@@ -58,7 +58,7 @@ class KnowledgeBase:
         self.has_pit = set()  # các ô có Pit
         self.not_has_wumpus = set()  # các ô không có Wumpus
         self.not_has_pit = set()  # các ô không có Pit
-        self.nearest_stench_and_no_breeze = (-1, -1)
+        self.shoot_position = (-1, -1)
         self.alive_wumpus_count = K
         self.not_scream_helper = ScreamSupport()
 

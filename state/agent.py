@@ -44,8 +44,17 @@ class Agent:
             print(f"Safe unvisited positions: {safe_unvisited_pos}")
             # goal is the closest unvisited cell that is safe
             if not safe_unvisited_pos:
-                if self.has_arrow and self.kb.nearest_stench_and_no_breeze != (-1, -1):
-                    if self.kb.nearest_stench_and_no_breeze == self.position:
+                if self.has_arrow and (len(self.kb.has_wumpus) > 0 or self.kb.shoot_position != (-1, -1)):
+                    if len(self.kb.has_wumpus) > 0:
+                        # get the nearest wumpus from current position
+                        nearest_wumpus = min(
+                            self.kb.has_wumpus,
+                            key=lambda wumpus: abs(wumpus[0] - self.position[0]) + abs(wumpus[1] - self.position[1])
+                        )
+                        visited_wumpus_neighbors = [pos for pos in self._neighbors(nearest_wumpus) if pos in self.visited]
+                        self.kb.shoot_position = visited_wumpus_neighbors[0]
+
+                    if self.kb.shoot_position == self.position:
                         # nếu đang ở ô có Stench và không có Breeze, bắn Wumpus
                         neighbors = self._neighbors(self.position)
                         goal = None
@@ -70,7 +79,7 @@ class Agent:
                         actions.append(Action.SHOOT)
                         return actions
 
-                    goal = self.kb.nearest_stench_and_no_breeze
+                    goal = self.kb.shoot_position
                 else:
                     # random neighbor
                     print("No safe unvisited positions, choosing a random neighbor.")
@@ -371,8 +380,8 @@ class Agent:
 
         self.is_alive = not environment.is_agent_dead(self.position)
         if percept.stench and not percept.breeze:
-            self.kb.nearest_stench_and_no_breeze = self.position
-            # print(f"nearest_stench_and_no_breeze is: {self.position}")
+            self.kb.shoot_position = self.position
+            # print(f"shoot_position is: {self.position}")
 
         self.display(environment)
 
@@ -384,7 +393,7 @@ class Agent:
         # Get initial percept
         percept = environment.get_percept_in_cell(self.position)
         if percept.stench and not percept.breeze:
-            self.kb.nearest_stench_and_no_breeze = self.position
+            self.kb.shoot_position = self.position
         self.add_percept(percept, *self.position)
         self.visited.add(self.position)
         neighbors = self._neighbors(self.position)
