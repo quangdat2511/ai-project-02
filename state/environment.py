@@ -37,12 +37,18 @@ class Environment:
                 count += 1
 
         # Create pits
-        for x in range(self.N):
-            for y in range(self.N):
-                if (x, y) != (0, 0) and not self.grid[x][y].has_wumpus:
-                    if random.random() < self.p:
-                        self.grid[x][y].has_pit = True
+        pit_count = int(self.N * self.N * 0.2)
+        placed_bit = 0
+        all_position = [(x, y) for x in range(self.N) for y in range(self.N) if (x, y) != (0, 0) and not self.grid[x][y].has_wumpus]
+        random.shuffle(all_position)
 
+        for pos in all_position:
+            if placed_bit >= pit_count:
+                break
+            x, y = pos
+            self.grid[x][y].has_pit = True
+            placed_bit += 1
+        
         # Create Gold
         while True:
             x, y, = random.randint(0, self.N - 1), random.randint(0, self.N - 1)
@@ -122,25 +128,5 @@ class Environment:
             result += "\n"
         result += "\n"
         return result
+
     
-    """
-        Nên xem xét cho hàm display Agent map này ở class riêng
-    """
-    # def display_with_agent(self, agent: Agent):
-    #     result = ""
-    #     for y in reversed(range(self.N)):
-    #         for x in range(self.N):
-    #             if (x, y) == agent.position:
-    #                 result += "A "  # Agent's current position
-    #             else:
-    #                 cell = self.grid[x][y]
-    #                 if cell.has_wumpus:
-    #                     result += "W "
-    #                 elif cell.has_pit:
-    #                     result += "P "
-    #                 elif cell.has_gold:
-    #                     result += "G "
-    #                 else:
-    #                     result += ". "
-    #         result += "\n"
-    #     print(result)
