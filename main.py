@@ -6,11 +6,7 @@ from state import *
 
 if __name__ == "__main__":
     # Khởi tạo môi trường và agent
-<<<<<<< HEAD
     env = Environment(N=8, K=3, p = 0.1, map_id=7)  # 8x8 grid
-=======
-    env = Environment(N=8, K=4, p = 0.1)  # 8x8 grid
->>>>>>> c173d41cb113431f02c638b8413c86436e45ca5f
     # env = Environment()
     # fixed_map = [
     #     [".", ".", "P", ".", "P", ".", ".", "."],
