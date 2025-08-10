@@ -83,7 +83,12 @@ class Agent:
                         goal = random.choice(visited_neighbors)
 
             else:
-                goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
+                # goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
+                goal = min(
+                    (pos for pos in safe_unvisited_pos if pos != self.position),
+                    key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]),
+                    default=None
+                )
 
         print(f"Current position: {self.position}, Goal: {goal}")
         path = self.planner.a_star(start=self.position, goal=goal, visited=self.visited)
@@ -115,11 +120,11 @@ class Agent:
         return actions
             
     def add_percept(self, percept: Percept, x, y):
+        if self.has_arrow == False and self.check_scream == False:
+            self.check_scream = True
+            self._add_scream_axioms(percept.scream)
         self._add_breeze_axioms(x, y, percept.breeze)
         self._add_stench_axioms(x, y, percept.stench)
-        # if self.has_arrow == False and self.check_scream == False:
-        #     self.check_scream = True
-        #     self._add_scream_axioms(percept.scream)
 
     def _add_breeze_axioms(self, x, y, value):
         """Breeze ⇔ có Pit ở ô kề"""
@@ -161,7 +166,7 @@ class Agent:
         #Các suy luận liên quan đến percept này nên được thiết kế để loại bỏ dễ dàng (nếu cần).
         if (value):
             nx, ny = self.position
-            dx, dy = self.direction
+            dx, dy = self.direction.value
             s = Literal("Scream", -1, -1)
             #Đầu tiên là giảm K. Khi giảm K cần hết sức thận trọng, để kết luận kh bị sai thì nếu con
             #W nằm trong has_wumpus thì ta phải xóa nó. Nếu biết vị trí của W bị bắn => Dễ, nếu kh biết
@@ -177,13 +182,22 @@ class Agent:
                     continue
                 elif self.kb.infer(lit): #nếu bắt gặp 1 ô chắc chắn có W 
                     #sau loạt ô chắc chắn kh có W thì => biết chính xác vị trí W bị bắn:
-                    self.kb.add_clause(Clause[s])
-                    self.kb.add_clause(Clause[-s] | Clause([-lit]))
+                    self.kb.add_clause(Clause([s]))
+                    self.kb.add_clause(Clause([-s]) | Clause([-lit]))
                     #Remove ô này trong set has_wumpus
                     #thêm trong set no_has_wumpus, remove visited 4 ô xung quanh ô này,
                     #xóa 4 mệnh đề stench và literal liên quan ở 4 ô xung quanh (nếu đang có trong KB)
                     #Làm sao agent có thể đi lại 4 ô đó để kiểm tra?
                     #Hiện tại thuật toán có cho agent đi lại ô visited kh? và khi nào đi
+                    self.kb.has_wumpus.discard((nx, ny))
+                    self.kb.remove_unit_clause(Literal("Wumpus", nx, ny))
+                    self.kb.not_has_wumpus.add((nx, ny))
+                    self.kb.add_clause(Clause([-Literal("Wumpus", nx, ny)]))
+                    neighbors = self._neighbors((nx, ny))
+                    for neighbor in neighbors:
+                        self.kb.remove_stench_clauses(neighbor[0], neighbor[1])
+                        self.visited.discard(neighbor)
+                    self.visited.add(self.position)                    
                     break
                 else:#Nếu gặp ô chưa có kết luận thì có thêm Scream => not W ở ô đó. Xóa hết tất cả 
                     #mệnh đề về stench ở hướng đó +-1 (là 3 cột hoặc 3 hàng với hàng agent đang đúng
@@ -191,6 +205,7 @@ class Agent:
                     #1 hay nhiều ô nào nằm trong has_wumpus thì tạm thời xóa ô đầu tiên gặp (vì có thể 
                     # là con này bị bắn mà ta chưa thể kết luận ở đây, nếu nó còn thì agent sẽ 
                     # tự visit và suy luận lại sau)
+                    break
                     self.kb.add_clause(Clause[s])
                     self.kb.add_clause(Clause[-s] | Clause([-lit]))
                     break
@@ -286,6 +301,14 @@ class Agent:
                 self.score -= 10  # Bắn mất mũi tên
                 if percept.scream:
                     self.kb.alive_wumpus_count -= 1
+                self.add_percept(percept, *self.position)
+                neighbors = self._neighbors(self.position)
+                for neighbor in neighbors:
+                    if neighbor not in self.visited:
+                        print(self.kb.infer(Literal("Pit", *neighbor)))
+                        print(self.kb.infer(Literal("Wumpus", *neighbor)))
+                        print(self.kb.infer(-Literal("Pit", *neighbor)))
+                        print(self.kb.infer(-Literal("Wumpus", *neighbor)))
         elif action == Action.CLIMB:
             if self.position == (0, 0) and self.has_gold:
                 self.winning = True
@@ -294,6 +317,7 @@ class Agent:
         self.is_alive = not environment.is_agent_dead(self.position)
         if percept.stench and not percept.breeze:
             self.kb.nearest_stench_and_no_breeze = self.position
+            # print(f"nearest_stench_and_no_breeze is: {self.position}")
 
         self.display(environment)
 

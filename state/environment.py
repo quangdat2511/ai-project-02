@@ -77,6 +77,7 @@ class Environment:
                     break
                 if self.grid[target_x][target_y].has_wumpus:
                     self.grid[target_x][target_y].has_wumpus = False
+                    percept = self.get_percept_in_cell(position)
                     percept.scream = True
                     return percept  # Wumpus killed
             return percept
@@ -128,5 +129,25 @@ class Environment:
             result += "\n"
         result += "\n"
         return result
-
     
+    # def initialize_from_map(self, map_data: list[list[str]]):
+    #     """
+    #     Khởi tạo map từ dữ liệu truyền vào (map_data là list 2D).
+    #     Kích thước map sẽ được set lại theo dữ liệu này.
+    #     """
+    #     self.N = len(map_data)
+    #     self.grid = [[Cell() for _ in range(self.N)] for _ in range(self.N)]
+
+    #     for y in range(self.N):
+    #         for x in range(self.N):
+    #             symbol = map_data[y][x]
+    #             if symbol == "W":
+    #                 self.grid[x][y].has_wumpus = True
+    #             elif symbol == "P":
+    #                 self.grid[x][y].has_pit = True
+    #             elif symbol == "G":
+    #                 self.grid[x][y].has_gold = True
+    #             # "." thì giữ nguyên mặc định (ô trống)
+
+    #     # Đếm lại số Wumpus
+    #     self.K = sum(cell.has_wumpus for row in self.grid for cell in row)

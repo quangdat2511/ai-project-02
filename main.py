@@ -6,8 +6,20 @@ from state import *
 
 if __name__ == "__main__":
     # Khởi tạo môi trường và agent
-    env = Environment(N=8, K=2)  # 8x8 grid
-    agent = Agent(K=2)
+    env = Environment(N=8, K=3, p = 0.1)  # 8x8 grid
+    # env = Environment()
+    # fixed_map = [
+    #     [".", ".", ".", ".", "P", ".", ".", "."],
+    #     [".", ".", ".", ".", "P", ".", ".", "."],
+    #     [".", ".", "W", ".", "P", ".", "G", "."],
+    #     [".", ".", ".", ".", "P", "P", ".", "."],
+    #     ["P", "P", "P", "P", "P", ".", ".", "."],
+    #     [".", ".", ".", "P", ".", ".", "P", "."],
+    #     [".", "W", ".", ".", ".", ".", ".", "."],
+    #     [".", ".", ".", ".", "P", ".", ".", "."],
+    # ]
+    # env.initialize_from_map(fixed_map)
+    agent = Agent(K=3)
 
     agent.play(env)
     if agent.winning:

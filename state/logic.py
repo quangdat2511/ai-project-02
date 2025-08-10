@@ -134,8 +134,21 @@ class KnowledgeBase:
                     self.add_clause(Clause([query]))
                     return True
                 else:
-                    return False        
+                    return False
+
+    def remove_stench_clauses(self, target_x, target_y):
+        """
+        Xóa toàn bộ clause trong KB có chứa literal Stench tại tọa độ (target_x, target_y),
+        bất kể literal đó có dấu phủ định hay không.
+        """
+        to_remove = {clause for clause in self.clauses
+                    if any(lit.name == "Stench" and lit.position == (target_x, target_y)
+                            for lit in clause.literals)}
+        self.clauses -= to_remove
     
+    def remove_unit_clause(self, literal):
+        clause_to_remove = Clause([literal])
+        self.clauses.discard(clause_to_remove)
 
 class InferenceEngine:
     def __init__(self, clauses):
