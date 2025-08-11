@@ -62,6 +62,7 @@ class KnowledgeBase:
         self.alive_wumpus_count = K
         self.not_scream_helper = ScreamSupport()
 
+
     # def simplify_clause(self, clause):
     #     unit_literals = {next(iter(c.literals)) for c in self.clauses if len(c.literals) == 1}
     #     new_literals = set()
@@ -121,6 +122,8 @@ class KnowledgeBase:
         inference = InferenceEngine(self.clauses)
         if query.name == "Pit" and query.is_negated == False:
             if query.position in self.has_pit:
+                self.not_has_wumpus.add(query.position)
+                self.add_clause(Clause([-Literal("Wumpus", *query.position)]))
                 return True
             elif query.position in self.not_has_pit:
                 return False
@@ -136,6 +139,8 @@ class KnowledgeBase:
             if query.position in self.not_has_pit:
                 return True
             elif query.position in self.has_pit:
+                self.not_has_wumpus.add(query.position)
+                self.add_clause(Clause([-Literal("Wumpus", *query.position)]))
                 return False
             else:
                 # print("Call resolution")
@@ -147,6 +152,8 @@ class KnowledgeBase:
                     return False
         elif query.name == "Wumpus" and query.is_negated == False:
             if query.position in self.has_wumpus:
+                self.not_has_pit.add(query.position)
+                self.add_clause(Clause([-Literal("Pit", *query.position)]))
                 return True
             elif query.position in self.not_has_wumpus:
                 return False
@@ -162,6 +169,8 @@ class KnowledgeBase:
             if query.position in self.not_has_wumpus:
                 return True
             elif query.position in self.has_wumpus:
+                self.not_has_pit.add(query.position)
+                self.add_clause(Clause([-Literal("Pit", *query.position)]))
                 return False
             else:
                 # print("Call resolution")

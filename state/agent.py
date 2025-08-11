@@ -137,24 +137,22 @@ class Agent:
         self._add_stench_axioms(x, y, percept.stench)
 
     def _add_breeze_axioms(self, x, y, value):
-        """Breeze ⇔ có Pit ở ô kề"""
         neighbors = self._neighbors((x, y))
         b = Literal("Breeze", x, y)
-        pits = [Literal("Pit", nx, ny) for (nx,ny) in neighbors]
+        pits = [Literal("Pit", nx, ny) for (nx, ny) in neighbors]
         self.kb.add_clause(Clause([-Literal("Pit", x, y)]))  # Thêm ô hiện tại là không có Pit
         if value:
             # Breeze(x,y) => (P1 v P2 v ...)
             clause = Clause(pits)
-            self.kb.add_clause(Clause([b]))
-            self.kb.add_clause(Clause([-b]) | clause)
+            # self.kb.add_clause(Clause([b]))
+            self.kb.add_clause(clause)
         else:
             # NOT Breeze => tất cả các Pit kề đều False
-            self.kb.add_clause(Clause([-b]))
+            # self.kb.add_clause(Clause([-b]))
             for p in pits:
-                self.kb.add_clause(Clause([b]) | Clause([-p]))
+                self.kb.add_clause(Clause([-p]))
         
     def _add_stench_axioms(self, x, y, value):
-        """Stench ⇔ có Wumpus ở ô kề"""
         neighbors = self._neighbors((x, y))
         s = Literal("Stench", x, y)
         wumps = [Literal("Wumpus", nx, ny, False) for (nx,ny) in neighbors]
