@@ -2,9 +2,13 @@ from enum import Enum
 from dataclasses import dataclass
 
 class Direction(Enum):
+    # Up
     NORTH = (0, 1)
+    # Right
     EAST = (1, 0)
+    # Down
     SOUTH = (0, -1)
+    # Left
     WEST = (-1, 0)
 
     def turn_left(self):

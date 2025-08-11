@@ -1,4 +1,4 @@
-"""GUI package for Rush Hour game."""
+"""GUI package for Wumpus World Agent game."""
 
 from .main import main
 

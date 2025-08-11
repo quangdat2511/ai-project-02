@@ -2,7 +2,7 @@
 import pygame
 import sys
 
-from definition import *                     # file này nằm ở thư mục gốc
+from state import *                     # file này nằm ở thư mục gốc
 from gui.config import *                     # sử dụng absolute import
 from gui.game_manager import GameManager
 from gui.selection_screen import SelectionScreen
@@ -44,8 +44,8 @@ class App:
                     if self.selection_screen.game_started:
                         self.game_manager.current_state = "playing"
                         self.gameplay_screen.initialize()  # Thêm dòng này
-            # elif self.game_manager.current_state == "playing":
-            #     self.gameplay_screen.handle_event(event)
+            elif self.game_manager.current_state == "playing":
+                self.gameplay_screen.handle_event(event)
     
     def draw(self):
         # Dòng này để test xem giao diện có hoạt động không

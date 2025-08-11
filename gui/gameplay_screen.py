@@ -5,6 +5,7 @@ from .button import Button
 from state.environment import *
 from state.agent import *
 import copy
+import random
 class GameplayScreen:
     def __init__(self, game_manager):
         self.game_manager = game_manager
@@ -21,16 +22,16 @@ class GameplayScreen:
         self.animation_speed = 1.0  # moves per second
         self.animation_timer = 0.0
         self.is_paused = False
-        
+        self.current_action = None
         # UI Components
         self.create_ui_components()
 
     def create_ui_components(self):
         button_y = HEIGHT - 70
-        button_spacing = 110 
-        button_width = 100 
-        button_height = 40
-        indent = 100 * SCALE
+        button_spacing = 80 
+        button_width = 80 
+        button_height = 30
+        indent = (100 * SCALE) + 780  
         
         # Control buttons
         self.play_button = Button(
@@ -54,22 +55,33 @@ class GameplayScreen:
         )
         
         # Speed control buttons
-        self.speed_up_button = Button(
-            (WIDTH - 140, button_y), 50, button_height,
-            ">>", (0, 150, 150), font=self.font, border_radius=5
-        )
+        # self.speed_up_button = Button(
+        #     (WIDTH - 140, button_y), 50, button_height,
+        #     ">>", (0, 150, 150), font=self.font, border_radius=5
+        # )
         
-        self.speed_down_button = Button(
-            (WIDTH - 320, button_y), 50, button_height,
-            "<<", (0, 150, 150), font=self.font, border_radius=5
-        )
+        # self.speed_down_button = Button(
+        #     (WIDTH - 320, button_y), 50, button_height,
+        #     "<<", (0, 150, 150), font=self.font, border_radius=5
+        # )
         
     def initialize(self):
-        self.environment = Environment(16)  
-        self.agent = Agent()   
+        # Danh sách các cấu hình Environment
+        env_configs = [
+            (8, 10, 0.2, False, None),
+            (12, 10, 0.2, False, None),
+            (16, 10, 0.2, False, None)
+        ]
+
+        # Chọn ngẫu nhiên một cấu hình
+        config = random.choice(env_configs)
+
+        # Tạo Environment và Agent
+        self.environment = Environment(*config)
+        self.agent = Agent(2) 
                 
     def start_animation(self):
-        if self.solution_path and not self.is_animating:
+        if not self.is_animating:
             self.is_animating = True
             self.is_paused = False
             self.animation_timer = 0.0
@@ -79,28 +91,45 @@ class GameplayScreen:
             self.is_paused = not self.is_paused
             
     def reset_animation(self):
-        self.current_state = copy.deepcopy(self.initial_state)
-        self.current_step = 0
+        self.initialize()  # Reset environment and agent
         self.is_animating = False
         self.is_paused = False
         self.animation_timer = 0.0
+        self.current_action = None  # Reset current action
         
     def update(self, dt: float):
-        if self.is_animating and not self.is_paused:
+        if self.agent and self.environment and self.is_animating and not self.is_paused and self.agent.is_alive and not self.agent.winning:
             self.animation_timer += dt
-            
-            # Check if it's time for the next move
             if self.animation_timer >= 1.0 / self.animation_speed:
                 self.animation_timer = 0.0
-                
-                if self.current_step < self.total_steps:
-                    # Move to the next state
-                    self.current_step += 1
-                    self.current_state = copy.deepcopy(self.solution_states[self.current_step])
-                else:
-                    # Animation complete
-                    self.is_animating = False
-        
+                self.current_action = self.agent.play_one_action(self.environment)
+    def handle_event(self, event):
+        if self.play_button.handle_event(event):
+            self.start_animation()
+            return True
+            
+        if self.pause_button.handle_event(event):
+            self.pause_animation()
+            return True
+            
+        if self.reset_button.handle_event(event):
+            self.reset_animation()
+            return True
+            
+        if self.menu_button.handle_event(event):
+            # Return to selection screen
+            self.game_manager.current_state = "selecting"
+            return True
+            
+        # if self.speed_up_button.handle_event(event):
+        #     self.animation_speed = min(self.animation_speed * 1.5, 10.0)
+        #     return True
+            
+        # if self.speed_down_button.handle_event(event):
+        #     self.animation_speed = max(self.animation_speed / 1.5, 0.1)
+        #     return True
+            
+        return False    
     def draw(self, surface: pygame.Surface):
         # Draw background
         bg = self.game_manager.get_image('gamebackground')
@@ -108,11 +137,20 @@ class GameplayScreen:
             surface.blit(bg, (0, 0))
         else:
             surface.fill((60, 60, 60))  # fallback background color
-        # Draw the current game state
-        if self.environment is not None and self.agent is not None:
-            self.game_manager.draw_environment(surface, self.environment, self.agent)
-        # Draw UI buttons   
-        
+        self.menu_button.draw(surface)
+        if self.agent.winning:
+            self.game_manager.drawAgentWinning(surface)
+        elif not self.agent.is_alive:
+            self.game_manager.drawAgentLost(surface)
+        else:
+
+            self.game_manager.draw_environment(surface, self.environment, self.agent, self.current_action)
+            # Draw UI buttons
+            self.play_button.draw(surface)
+            self.pause_button.draw(surface)
+            self.reset_button.draw(surface)
+            # self.speed_up_button.draw(surface)
+            # self.speed_down_button.draw(surface)
+
     def draw_info_text(self, surface: pygame.Surface):
         pass
-            

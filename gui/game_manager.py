@@ -25,14 +25,22 @@ class GameManager:
 
             # Load game elements
             asset_paths = {
-                'wumpus': WUMPUS_IMAGE,
-                'pit': PIT_IMAGE,
-                'gold': GOLD_IMAGE,
-                'agent': AGENT_IMAGE,
-                'cell_stench': STENCH_IMAGE,
-                'cell_breeze': BREEZE_IMAGE,
-                'cell_breeze_stench': BREEZE_STENCH_IMAGE,
-                'cell_breeze_stench_gold': BREEZE_STENCH_IMAGE_GOLD,
+                'cell_wumpus': CELL_WUMPUS,
+                'cell_pit': CELL_PIT,
+                'gold': CELL_GOLD,
+                'glitter': GLITTER,
+                'agent_left': AGENT_LEFT,
+                'agent_right': AGENT_RIGHT,
+                'agent_up': AGENT_UP,
+                'agent_down': AGENT_DOWN,
+                'agent_victory': AGENT_VICTORY,
+                'agent_lost': AGENT_LOST,
+                'cell_stench': CELL_STENCH,
+                'cell_breeze': CELL_BREEZE,
+                'cell_breeze_stench': CELL_BREEZE_STENCH,
+                'cell_breeze_stench_gold': CELL_BREEZE_STENCH_GOLD,
+                'cell_breeze_gold': CELL_BREEZE_GOLD,
+                'cell_stench_gold': CELL_STENCH_GOLD,
             }
 
             for key, path in asset_paths.items():
@@ -51,8 +59,50 @@ class GameManager:
 
     def get_font(self, size: str = 'normal') -> pygame.font.Font:
         return self.fonts.get(size, self.fonts['normal'])
+    def drawAgentWinning(self, surface: pygame.Surface):
+        img = self.get_image('agent_victory')
+        if img:
+            # Scale ảnh
+            new_width = WIDTH // 3
+            new_height = HEIGHT // 3
+            img = pygame.transform.scale(img, (new_width, new_height))
 
-    def draw_environment(self, surface: pygame.Surface, env: Environment, agent: 'Agent' = None):
+            # Căn giữa
+            x = (WIDTH - new_width) // 2
+            y = (HEIGHT - new_height) // 2
+            surface.blit(img, (x, y))
+
+            # Thêm chữ "Agent Win"
+            font = self.get_font('large')
+            text_surface = font.render("Agent Win", True, (255, 255, 0))  # vàng
+            text_x = (WIDTH - text_surface.get_width()) // 2
+            text_y = y + new_height + 20  # cách ảnh 20px
+            surface.blit(text_surface, (text_x, text_y))
+
+
+    def drawAgentLost(self, surface: pygame.Surface):
+        img = self.get_image('agent_lost')
+        if img:
+            # Scale ảnh
+            new_width = WIDTH // 3
+            new_height = HEIGHT // 3
+            img = pygame.transform.scale(img, (new_width, new_height))
+
+            # Căn giữa
+            x = (WIDTH - new_width) // 2
+            y = (HEIGHT - new_height) // 2
+            surface.blit(img, (x, y))
+
+            # Thêm chữ "Agent Lost"
+            font = self.get_font('large')
+            text_surface = font.render("Agent Lost", True, (255, 0, 0))  # đỏ
+            text_x = (WIDTH - text_surface.get_width()) // 2
+            text_y = y + new_height + 20
+            surface.blit(text_surface, (text_x, text_y))
+
+
+
+    def draw_environment(self, surface: pygame.Surface, env: Environment, agent: 'Agent' = None, current_action: Action = None):
         N = env.N  # Lưới NxN
         grid_width = CELL_SIZE * N
         grid_height = CELL_SIZE * N
@@ -69,7 +119,17 @@ class GameManager:
                     CELL_SIZE,
                     CELL_SIZE
                 )
-
+                if agent is not None and agent.position == (x, y):
+                    if agent.direction == Direction.NORTH:
+                        img = self.get_image('agent_up')
+                    elif agent.direction == Direction.EAST:
+                        img = self.get_image('agent_right')
+                    elif agent.direction == Direction.SOUTH:
+                        img = self.get_image('agent_down')
+                    elif agent.direction == Direction.WEST:
+                        img = self.get_image('agent_left')
+                    if img: surface.blit(img, rect.topleft)
+                    continue  # Skip drawing the cell if agent is there
                 pygame.draw.rect(surface, GRID_COLOR, rect, 3)
 
                 cell = env.grid[x][y]
@@ -82,10 +142,10 @@ class GameManager:
                 has_breeze = percept.breeze
 
                 if is_wumpus:
-                    img = self.get_image('wumpus')
+                    img = self.get_image('cell_wumpus')
                     if img: surface.blit(img, rect.topleft)
                 elif is_pit:
-                    img = self.get_image('pit')
+                    img = self.get_image('cell_pit')
                     if img: surface.blit(img, rect.topleft)
                 else:
                     if is_gold and has_stench and has_breeze:
@@ -94,6 +154,12 @@ class GameManager:
                     else:
                         if has_stench and has_breeze:
                             img = self.get_image('cell_breeze_stench')
+                            if img: surface.blit(img, rect.topleft)
+                        elif has_breeze and is_gold:
+                            img = self.get_image('cell_breeze_gold')
+                            if img: surface.blit(img, rect.topleft)
+                        elif has_stench and is_gold:
+                            img = self.get_image('cell_stench_gold')
                             if img: surface.blit(img, rect.topleft)
                         elif has_stench:
                             img = self.get_image('cell_stench')
@@ -106,10 +172,8 @@ class GameManager:
                             img = self.get_image('gold')
                             if img: surface.blit(img, rect.topleft)
 
-                if agent is not None and agent.position == (x, y):
-                    img = self.get_image('agent')
-                    if img: surface.blit(img, rect.topleft)
 
+        # score, last action, last percept
         # === Vẽ score & percept bên phải lưới ===
         if agent is not None:
             font_large = self.get_font('large')
@@ -129,20 +193,26 @@ class GameManager:
             if percept.breeze:
                 percept_images.append(self.get_image('cell_breeze'))
             if getattr(percept, "glitter", False):
-                percept_images.append(self.get_image('cell_glitter'))
-            if getattr(percept, "bump", False):
-                percept_images.append(self.get_image('cell_bump'))
-            if getattr(percept, "scream", False):
-                percept_images.append(self.get_image('cell_scream'))
-
+                percept_images.append(self.get_image('glitter'))
+            # if getattr(percept, "bump", False):
+            #     percept_images.append(self.get_image('cell_bump'))
+            # if getattr(percept, "scream", False):
+            #     percept_images.append(self.get_image('cell_scream'))
+            # Thêm chữ "Current Percept" trước các ảnh percept
+            title_text = self.get_font('normal').render("Current Percept:", True, (255, 255, 0))
+            surface.blit(title_text, (score_x, score_y + 50))
             # Nếu không có percept nào thì hiện "None"
             if not percept_images:
                 none_text = self.get_font('normal').render("None", True, (255, 255, 255))
-                surface.blit(none_text, (score_x, score_y + 50))
+                surface.blit(none_text, (score_x, score_y + 80))
             else:
-                # Hiển thị các hình percept ngay dưới Score
+                # Hiển thị các hình percept ngay dưới dòng chữ
                 for i, img in enumerate(percept_images):
                     if img:
-                        surface.blit(img, (score_x, score_y + 50 + i * (CELL_SIZE + 5)))
+                        surface.blit(img, (score_x, score_y + 80 + i * (CELL_SIZE + 5)))
+            # Hiển thị hành động hiện tại
+            if current_action is not None:
+                action_text = self.get_font('normal').render(f"Last Action: {current_action.value}", True, (255, 255, 255))
+                surface.blit(action_text, (score_x, score_y + 80 + len(percept_images) * (CELL_SIZE + 5) + 20))
 
 
