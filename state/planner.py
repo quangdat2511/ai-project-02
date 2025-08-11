@@ -3,8 +3,8 @@ from typing import List, Tuple, Set, Callable
 from .logic import *
 
 class Planner:
-    def __init__(self, kb: KnowledgeBase, neighbors_fn: Callable[[Tuple[int, int]], List[Tuple[int, int]]]):
-        self.kb = kb
+    def __init__(self, data: InferenceEngine, neighbors_fn: Callable[[Tuple[int, int]], List[Tuple[int, int]]]):
+        self.data = data
         self._neighbors = neighbors_fn
 
     def heuristic(self, a: Tuple[int, int], b: Tuple[int, int]) -> int:
@@ -27,14 +27,14 @@ class Planner:
         score = 0
 
         # Definitely died
-        if self.kb.infer(Literal("Pit", x, y, False)) or self.kb.infer(Literal("Wumpus", x, y, False)):
+        if self.data.infer(Literal("Pit", x, y, False)) or self.data.infer(Literal("Wumpus", x, y, False)):
             return float('inf')
 
         # has pit
-        if not self.kb.infer(-Literal("Pit", x, y, False)):
+        if not self.data.infer(-Literal("Pit", x, y, False)):
             score += 3
         # has wumpus
-        if not self.kb.infer(-Literal("Wumpus", x, y, False)):
+        if not self.data.infer(-Literal("Wumpus", x, y, False)):
             score += 4
 
         return score

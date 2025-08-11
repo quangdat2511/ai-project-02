@@ -12,16 +12,17 @@ class Agent:
         self.has_arrow = True
         self.check_scream = False
         self.is_alive = True
-        self.kb = KnowledgeBase(K=K)
-        self.planner = Planner(self.kb, self._neighbors)
+        # self.kb = KnowledgeBase(K=K)
+        self.data = InferenceEngine(K=K)
+        self.planner = Planner(self.data, self._neighbors)
         self.score = 0
         self.winning = False
         self.K = K
-        self.visited = set()
         self.action_count = 0  
         self.N = -1     # the agent does not know the size at first
         self.current_percept = None
         self.action_queue = []
+        self.is_moving_wumpus = False
 
     def get_actions(self, percept: Percept) -> List[Action]:
         actions = []
@@ -33,36 +34,36 @@ class Agent:
             actions.append(Action.CLIMB)
             return actions
 
-        print(f"Not has pit: ", self.kb.not_has_pit)
-        print(f"Not has wumpus: ", self.kb.not_has_wumpus)
-        print(f"Has wumpus: ", self.kb.has_wumpus)
-        print(f"Has pit: ", self.kb.has_pit)
-        print(f"Visited: ", self.visited)
+        print(f"Not has pit: ", self.data.not_has_pit)
+        print(f"Not has wumpus: ", self.data.not_has_wumpus)
+        print(f"Has wumpus: ", self.data.has_wumpus)
+        print(f"Has pit: ", self.data.has_pit)
+        print(f"Visited: ", self.data.visited)
         if self.has_gold:
             goal = (0, 0)  # nếu có vàng thì luôn hướng về góc trên bên trái
         else:
-            safe_unvisited_pos = [pos for pos in self.kb.not_has_pit if pos in self.kb.not_has_wumpus and pos not in self.visited]
+            safe_unvisited_pos = [pos for pos in self.data.not_has_pit if pos in self.data.not_has_wumpus and pos not in self.data.visited]
             print(f"Safe unvisited positions: {safe_unvisited_pos}")
             # goal is the closest unvisited cell that is safe
             if not safe_unvisited_pos:
-                print("shoot position: ", self.kb.shoot_position)
+                print("shoot position: ", self.data.shoot_position)
                 print("Has arrow: ", self.has_arrow)
-                if self.has_arrow and (len(self.kb.has_wumpus) > 0 or self.kb.shoot_position != (-1, -1)):
-                    if len(self.kb.has_wumpus) > 0:
+                if self.has_arrow and (len(self.data.has_wumpus) > 0 or self.data.shoot_position != (-1, -1)):
+                    if len(self.data.has_wumpus) > 0:
                         # get the nearest wumpus from current position
                         nearest_wumpus = min(
-                            self.kb.has_wumpus,
+                            self.data.has_wumpus,
                             key=lambda wumpus: abs(wumpus[0] - self.position[0]) + abs(wumpus[1] - self.position[1])
                         )
-                        visited_wumpus_neighbors = [pos for pos in self._neighbors(nearest_wumpus) if pos in self.visited]
-                        self.kb.shoot_position = visited_wumpus_neighbors[0]
+                        visited_wumpus_neighbors = [pos for pos in self._neighbors(nearest_wumpus) if pos in self.data.visited]
+                        self.data.shoot_position = visited_wumpus_neighbors[0]
 
-                    if self.kb.shoot_position == self.position:
+                    if self.data.shoot_position == self.position:
                         # nếu đang ở ô có Stench và không có Breeze, bắn Wumpus
                         neighbors = self._neighbors(self.position)
                         goal = None
                         for neighbor in neighbors:
-                            if self.kb.infer(Literal("Wumpus", *neighbor, False)):
+                            if self.data.infer(Literal("Wumpus", *neighbor, False)):
                                 goal = neighbor
                                 break
 
@@ -82,16 +83,16 @@ class Agent:
                         actions.append(Action.SHOOT)
                         return actions
 
-                    goal = self.kb.shoot_position
+                    goal = self.data.shoot_position
                 else:
                     # random neighbor
                     print("No safe unvisited positions, choosing a random neighbor.")
                     neighbors = self._neighbors(self.position)
-                    unvisited_neighbors = [pos for pos in neighbors if pos not in self.visited and pos not in self.kb.has_pit and pos not in self.kb.has_wumpus]
+                    unvisited_neighbors = [pos for pos in neighbors if pos not in self.data.visited and pos not in self.data.has_pit and pos not in self.data.has_wumpus]
                     if unvisited_neighbors:
                         goal = random.choice(unvisited_neighbors)
                     else:
-                        visited_neighbors = [pos for pos in neighbors if pos in self.visited]
+                        visited_neighbors = [pos for pos in neighbors if pos in self.data.visited]
                         goal = random.choice(visited_neighbors)
 
             else:
@@ -103,7 +104,7 @@ class Agent:
                 )
 
         print(f"Current position: {self.position}, Goal: {goal}")
-        path = self.planner.a_star(start=self.position, goal=goal, visited=self.visited)
+        path = self.planner.a_star(start=self.position, goal=goal, visited=self.data.visited)
         print("Path: ", path)
         # next_pos = path[0] if len(path) > 0 else None
 
@@ -142,33 +143,33 @@ class Agent:
         neighbors = self._neighbors((x, y))
         b = Literal("Breeze", x, y)
         pits = [Literal("Pit", nx, ny) for (nx, ny) in neighbors]
-        self.kb.add_clause(Clause([-Literal("Pit", x, y)]))  # Thêm ô hiện tại là không có Pit
+        self.data.kb.tell(Clause([-Literal("Pit", x, y)]))  # Thêm ô hiện tại là không có Pit
         if value:
             # Breeze(x,y) => (P1 v P2 v ...)
             clause = Clause(pits)
-            # self.kb.add_clause(Clause([b]))
-            self.kb.add_clause(clause)
+            # self.data.kb.tell(Clause([b]))
+            self.data.kb.tell(clause)
         else:
             # NOT Breeze => tất cả các Pit kề đều False
-            # self.kb.add_clause(Clause([-b]))
+            # self.data.kb.tell(Clause([-b]))
             for p in pits:
-                self.kb.add_clause(Clause([-p]))
+                self.data.kb.tell(Clause([-p]))
         
     def _add_stench_axioms(self, x, y, value):
         neighbors = self._neighbors((x, y))
         s = Literal("Stench", x, y)
         wumps = [Literal("Wumpus", nx, ny, False) for (nx,ny) in neighbors]
-        self.kb.add_clause(Clause([-Literal("Wumpus", x, y)]))  # Thêm ô hiện tại là không có Wumpus
+        self.data.kb.tell(Clause([-Literal("Wumpus", x, y)]))  # Thêm ô hiện tại là không có Wumpus
         if value:
             # Stench => (W1 v W2 v ...)
             clause = Clause(wumps)
-            self.kb.add_clause(Clause([s]))
-            self.kb.add_clause(Clause([-s]) | clause)
+            self.data.kb.tell(Clause([s]))
+            self.data.kb.tell(Clause([-s]) | clause)
         else:
             # NOT Stench => tất cả Wumpus kề đều False
-            self.kb.add_clause(Clause([-s]))
+            self.data.kb.tell(Clause([-s]))
             for w in wumps:
-                self.kb.add_clause(Clause([s]) | Clause([-w]))
+                self.data.kb.tell(Clause([s]) | Clause([-w]))
     
     def _add_scream_axioms(self, value: bool):
         #Mục tiêu của percept này là giúp cho agent có thêm thông tin ô kh có W.
@@ -186,29 +187,29 @@ class Agent:
                 nx += dx
                 ny += dy
                 lit = Literal("Wumpus", nx, ny)
-                a = self.kb.infer(-lit)
+                a = self.data.infer(-lit)
                 if a:#đã biết chắc chắn kh có W thì mũi tên kh
                     #dừng ở ô này
                     continue
-                elif self.kb.infer(lit): #nếu bắt gặp 1 ô chắc chắn có W 
+                elif self.data.infer(lit): #nếu bắt gặp 1 ô chắc chắn có W 
                     #sau loạt ô chắc chắn kh có W thì => biết chính xác vị trí W bị bắn:
-                    self.kb.add_clause(Clause([s]))
-                    self.kb.add_clause(Clause([-s]) | Clause([-lit]))
+                    self.data.kb.tell(Clause([s]))
+                    self.data.kb.tell(Clause([-s]) | Clause([-lit]))
                     #Remove ô này trong set has_wumpus
                     #thêm trong set no_has_wumpus, remove visited 4 ô xung quanh ô này,
                     #xóa 4 mệnh đề stench và literal liên quan ở 4 ô xung quanh (nếu đang có trong KB)
                     #Làm sao agent có thể đi lại 4 ô đó để kiểm tra?
                     #Hiện tại thuật toán có cho agent đi lại ô visited kh? và khi nào đi
-                    self.kb.has_wumpus.discard((nx, ny))
-                    self.kb.remove_unit_clause(Literal("Wumpus", nx, ny))
-                    self.kb.not_has_wumpus.add((nx, ny))
-                    self.kb.add_clause(Clause([-Literal("Wumpus", nx, ny)]))
+                    self.data.has_wumpus.discard((nx, ny))
+                    self.data.remove_unit_clause(Literal("Wumpus", nx, ny))
+                    self.data.not_has_wumpus.add((nx, ny))
+                    self.data.kb.tell(Clause([-Literal("Wumpus", nx, ny)]))
                     neighbors = self._neighbors((nx, ny))
                     for neighbor in neighbors:
-                        self.kb.remove_stench_clauses(neighbor[0], neighbor[1])
-                        self.visited.discard(neighbor)
+                        self.data.remove_stench_clauses(neighbor[0], neighbor[1])
+                        self.data.visited.discard(neighbor)
                     if (self.position + self.direction.value == nx, ny):
-                        self.visited.add(self.position)                    
+                        self.data.visited.add(self.position)                    
                     break
                 else:#Nếu gặp ô chưa có kết luận thì có thêm Scream => not W ở ô đó. Xóa hết tất cả 
                     #mệnh đề về stench ở hướng đó +-1 (là 3 cột hoặc 3 hàng với hàng agent đang đúng
@@ -216,8 +217,8 @@ class Agent:
                     #1 hay nhiều ô nào nằm trong has_wumpus thì tạm thời xóa ô đầu tiên gặp (vì có thể 
                     # là con này bị bắn mà ta chưa thể kết luận ở đây, nếu nó còn thì agent sẽ 
                     # tự visit và suy luận lại sau)
-                    self.kb.add_clause(Clause([s]))
-                    self.kb.add_clause(Clause([-s]) | Clause([-lit]))
+                    self.data.kb.tell(Clause([s]))
+                    self.data.kb.tell(Clause([-s]) | Clause([-lit]))
                     x_min = x_max = y_min = y_max = 0
                     if self.direction == Direction.NORTH:
                         x_min, x_max = nx - 1, nx + 1
@@ -231,19 +232,19 @@ class Agent:
                     elif self.direction == Direction.SOUTH:
                         x_min, x_max = nx - 1, nx + 1
                         y_min, y_max = None, ny
-                    the_sus_wumpus = self.find_first_wumpus_on_path(nx, ny, self.direction, self.kb.has_wumpus)
+                    the_sus_wumpus = self.find_first_wumpus_on_path(nx, ny, self.direction, self.data.has_wumpus)
                     if (the_sus_wumpus != None):
                         sx, sy = the_sus_wumpus
-                        self.kb.has_wumpus.discard((sx, sy))
-                        self.kb.remove_unit_clause(Literal("Wumpus", sx, sy))
-                    removed_positions = self.kb.remove_unit_stench_clause_in_range(x_min, x_max, y_min, y_max)
+                        self.data.has_wumpus.discard((sx, sy))
+                        self.data.remove_unit_clause(Literal("Wumpus", sx, sy))
+                    removed_positions = self.data.remove_unit_stench_clause_in_range(x_min, x_max, y_min, y_max)
                     if (self.position + self.direction.value == nx, ny):
                         removed_positions.append(self.position)
                     for pos in removed_positions:
-                        self.kb.remove_stench_clauses(pos[0], pos[1])
-                        self.visited.discard(pos)
+                        self.data.remove_stench_clauses(pos[0], pos[1])
+                        self.data.visited.discard(pos)
                     if (self.position + self.direction.value == nx, ny):
-                        self.visited.add(self.position)                    
+                        self.data.visited.add(self.position)                    
                     break
         else: #Nếu kh nghe scream thì:
             #Nếu agent đang quay về South thì tất cả ô từ vị trí (x, y) -> (x, 0) đều kh có W
@@ -251,9 +252,9 @@ class Agent:
             #Nếu agent đang quay về Est thì tất cả ô (x', y') sao cho y' = y và x' > x đều kh có W
             #Nếu agent đang quay về North thì tất cả các ô (x', y') sao cho x' = x và y' > y đều kh có W
             #Nên thêm 1 hàm riêng hỗ trợ suy luận has_wumpus dựa trên tập has_wumpus và suy luận này.
-            self.kb.not_scream_helper.available = True
-            self.kb.not_scream_helper.org_position = self.position
-            self.kb.not_scream_helper.shooting_direction = self.direction
+            self.data.not_scream_helper.available = True
+            self.data.not_scream_helper.org_position = self.position
+            self.data.not_scream_helper.shooting_direction = self.direction
         #Tóm lại, nếu W di chuyển thì sau 5 bước nếu trong KB còn mệnh đề liên quan đến Scream thì xóa đi.
     
     def find_first_wumpus_on_path(self, start_x, start_y, direction, has_wumpus):
@@ -325,30 +326,29 @@ class Agent:
             self.is_alive = False
             return percept
 
-
         if action == Action.FORWARD:
             dx, dy = self.direction.value
             if not percept.bump:
                 # Cập nhật vị trí
                 self.position = (self.position[0] + dx, self.position[1] + dy)
-                if self.position not in self.visited:
-                    self.visited.add(self.position)
+                if self.position not in self.data.visited:
+                    self.data.visited.add(self.position)
                     self.add_percept(percept, *self.position)
                     neighbors = self._neighbors(self.position)
                     for neighbor in neighbors:
-                        if neighbor not in self.visited:
-                            self.kb.infer(Literal("Pit", *neighbor))
-                            self.kb.infer(Literal("Wumpus", *neighbor))
-                            self.kb.infer(-Literal("Pit", *neighbor))
-                            self.kb.infer(-Literal("Wumpus", *neighbor))
+                        if neighbor not in self.data.visited:
+                            self.data.infer(Literal("Pit", *neighbor))
+                            self.data.infer(Literal("Wumpus", *neighbor))
+                            self.data.infer(-Literal("Pit", *neighbor))
+                            self.data.infer(-Literal("Wumpus", *neighbor))
             else:
                 print("Bumped into a wall, cannot move forward.")
                 self.N = max(self.N, self.position[0] + 1, self.position[1] + 1)  # Cập nhật kích thước N
                 # filter the valid positions in sets
-                self.kb.not_has_pit = {pos for pos in self.kb.not_has_pit if self._valid(*pos)}
-                self.kb.not_has_wumpus = {pos for pos in self.kb.not_has_wumpus if self._valid(*pos)}
-                self.kb.has_pit = {pos for pos in self.kb.has_pit if self._valid(*pos)}
-                self.kb.has_wumpus = {pos for pos in self.kb.has_wumpus if self._valid(*pos)}
+                self.data.not_has_pit = {pos for pos in self.data.not_has_pit if self._valid(*pos)}
+                self.data.not_has_wumpus = {pos for pos in self.data.not_has_wumpus if self._valid(*pos)}
+                self.data.has_pit = {pos for pos in self.data.has_pit if self._valid(*pos)}
+                self.data.has_wumpus = {pos for pos in self.data.has_wumpus if self._valid(*pos)}
 
             self.score -= 1  
         elif action == Action.TURN_LEFT:
@@ -365,15 +365,15 @@ class Agent:
                 self.has_arrow = False
                 self.score -= 10  # Bắn mất mũi tên
                 if percept.scream:
-                    self.kb.alive_wumpus_count -= 1
+                    self.data.alive_wumpus_count -= 1
                 self.add_percept(percept, *self.position)
                 neighbors = self._neighbors(self.position)
                 for neighbor in neighbors:
-                    if neighbor not in self.visited:
-                        self.kb.infer(Literal("Pit", *neighbor))
-                        self.kb.infer(Literal("Wumpus", *neighbor))
-                        self.kb.infer(-Literal("Pit", *neighbor))
-                        self.kb.infer(-Literal("Wumpus", *neighbor))
+                    if neighbor not in self.data.visited:
+                        self.data.infer(Literal("Pit", *neighbor))
+                        self.data.infer(Literal("Wumpus", *neighbor))
+                        self.data.infer(-Literal("Pit", *neighbor))
+                        self.data.infer(-Literal("Wumpus", *neighbor))
         elif action == Action.CLIMB:
             if self.position == (0, 0) and self.has_gold:
                 self.winning = True
@@ -381,9 +381,9 @@ class Agent:
 
         self.is_alive = not environment.is_agent_dead(self.position)
         if percept.stench and not percept.breeze:
-            self.kb.shoot_position = self.position
-        elif percept.stench and self.kb.shoot_position == (-1, -1):
-            self.kb.shoot_position = self.position
+            self.data.shoot_position = self.position
+        elif percept.stench and self.data.shoot_position == (-1, -1):
+            self.data.shoot_position = self.position
 
         self.display(environment)
 
@@ -397,18 +397,18 @@ class Agent:
         # Get initial percept
         percept = environment.get_percept_in_cell(self.position)
         if percept.stench and not percept.breeze:
-            self.kb.shoot_position = self.position
-        elif percept.stench and self.kb.shoot_position == (-1, -1):
-            self.kb.shoot_position = self.position
+            self.data.shoot_position = self.position
+        elif percept.stench and self.data.shoot_position == (-1, -1):
+            self.data.shoot_position = self.position
             
         self.add_percept(percept, *self.position)
-        self.visited.add(self.position)
+        self.data.visited.add(self.position)
         neighbors = self._neighbors(self.position)
         for neighbor in neighbors:
-            self.kb.infer(Literal("Pit", *neighbor))
-            self.kb.infer(Literal("Wumpus", *neighbor))
-            self.kb.infer(-Literal("Pit", *neighbor))
-            self.kb.infer(-Literal("Wumpus", *neighbor))
+            self.data.infer(Literal("Pit", *neighbor))
+            self.data.infer(Literal("Wumpus", *neighbor))
+            self.data.infer(-Literal("Pit", *neighbor))
+            self.data.infer(-Literal("Wumpus", *neighbor))
 
 
         while self.is_alive and not self.winning:
@@ -425,18 +425,18 @@ class Agent:
         if not self.current_percept:
             self.current_percept = environment.get_percept_in_cell(self.position)
             if self.current_percept.stench and not self.current_percept.breeze:
-                self.kb.shoot_position = self.position
-            elif self.current_percept.stench and self.kb.shoot_position == (-1, -1):
-                self.kb.shoot_position = self.position
+                self.data.shoot_position = self.position
+            elif self.current_percept.stench and self.data.shoot_position == (-1, -1):
+                self.data.shoot_position = self.position
 
             self.add_percept(self.current_percept, *self.position)
-            self.visited.add(self.position)
+            self.data.visited.add(self.position)
             neighbors = self._neighbors(self.position)
             for neighbor in neighbors:
-                self.kb.infer(Literal("Pit", *neighbor))
-                self.kb.infer(Literal("Wumpus", *neighbor))
-                self.kb.infer(-Literal("Pit", *neighbor))
-                self.kb.infer(-Literal("Wumpus", *neighbor))
+                self.data.infer(Literal("Pit", *neighbor))
+                self.data.infer(Literal("Wumpus", *neighbor))
+                self.data.infer(-Literal("Pit", *neighbor))
+                self.data.infer(-Literal("Wumpus", *neighbor))
             return None
         
         if len(self.action_queue) == 0:
