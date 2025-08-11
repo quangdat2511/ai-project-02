@@ -45,6 +45,8 @@ class Agent:
             print(f"Safe unvisited positions: {safe_unvisited_pos}")
             # goal is the closest unvisited cell that is safe
             if not safe_unvisited_pos:
+                print("shoot position: ", self.kb.shoot_position)
+                print("Has arrow: ", self.has_arrow)
                 if self.has_arrow and (len(self.kb.has_wumpus) > 0 or self.kb.shoot_position != (-1, -1)):
                     if len(self.kb.has_wumpus) > 0:
                         # get the nearest wumpus from current position
@@ -380,7 +382,8 @@ class Agent:
         self.is_alive = not environment.is_agent_dead(self.position)
         if percept.stench and not percept.breeze:
             self.kb.shoot_position = self.position
-            # print(f"shoot_position is: {self.position}")
+        elif percept.stench and self.kb.shoot_position == (-1, -1):
+            self.kb.shoot_position = self.position
 
         self.display(environment)
 
@@ -395,6 +398,9 @@ class Agent:
         percept = environment.get_percept_in_cell(self.position)
         if percept.stench and not percept.breeze:
             self.kb.shoot_position = self.position
+        elif percept.stench and self.kb.shoot_position == (-1, -1):
+            self.kb.shoot_position = self.position
+            
         self.add_percept(percept, *self.position)
         self.visited.add(self.position)
         neighbors = self._neighbors(self.position)
@@ -418,6 +424,19 @@ class Agent:
     def play_one_action(self, environment: Environment):
         if not self.current_percept:
             self.current_percept = environment.get_percept_in_cell(self.position)
+            if self.current_percept.stench and not self.current_percept.breeze:
+                self.kb.shoot_position = self.position
+            elif self.current_percept.stench and self.kb.shoot_position == (-1, -1):
+                self.kb.shoot_position = self.position
+
+            self.add_percept(self.current_percept, *self.position)
+            self.visited.add(self.position)
+            neighbors = self._neighbors(self.position)
+            for neighbor in neighbors:
+                self.kb.infer(Literal("Pit", *neighbor))
+                self.kb.infer(Literal("Wumpus", *neighbor))
+                self.kb.infer(-Literal("Pit", *neighbor))
+                self.kb.infer(-Literal("Wumpus", *neighbor))
             return None
         
         if len(self.action_queue) == 0:
