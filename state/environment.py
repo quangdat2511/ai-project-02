@@ -22,7 +22,6 @@ class Environment:
         # for advanced mode
         self.advanced_mode = advanced_mode
         self.action_count = 0
-        self.wumpus_move_interval = 5
 
         self.grid = [[Cell() for _ in range(N)] for _ in range(N)]
         if map_id is not None and self.load_map_from_file(map_id):
@@ -96,35 +95,34 @@ class Environment:
                 break
 
     def perform_action(self, position: Tuple[int, int], direction: Direction, action: Action) -> Percept:
-        self.action_count += 1
-        if self.advanced_mode and self.action_count == 5:
-            self.move_wumpus()
-            self.action_count = 0
-
         x, y = position
         dx, dy = direction.value
+        percept = self.get_percept_in_cell(position)
+
         if action == Action.FORWARD:
             # Move the agent forward
             new_position = (x + dx, y + dy)
-            return self.get_percept_in_cell(new_position)
+            percept = self.get_percept_in_cell(new_position)
 
         if action == Action.GRAB:
             self.grid[x][y].has_gold = False  # Agent grabs gold
-            return self.get_percept_in_cell(position)
 
-        percept = self.get_percept_in_cell(position)
         if action == Action.SHOOT:
-            percept = self.get_percept_in_cell(position)
             for step in range(1, self.N):
                 target_x, target_y = x + dx * step, y + dy * step
                 if not self._valid(target_x, target_y):
                     break
                 if self.grid[target_x][target_y].has_wumpus:
                     self.grid[target_x][target_y].has_wumpus = False
-                    percept = self.get_percept_in_cell(position)
                     percept.scream = True
-                    return percept  # Wumpus killed
-            return percept
+                    break
+
+        self.action_count += 1
+        if self.advanced_mode and self.action_count == 5:
+            self.move_wumpus()
+            self.action_count = 0
+            new_percept = self.get_percept_in_cell(position)
+            percept.stench = new_percept.stench
 
         return percept
 
