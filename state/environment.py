@@ -114,6 +114,7 @@ class Environment:
                     break
                 if self.grid[target_x][target_y].has_wumpus:
                     self.grid[target_x][target_y].has_wumpus = False
+                    percept = self.get_percept_in_cell(position)
                     percept.scream = True
                     break
 

@@ -228,12 +228,40 @@ class InferenceEngine:
         for pos in positions:
             self.remove_stench_clauses(*pos)
             self.visited.discard(pos)
-
         #Handle has_wumpus
         for pos in self.has_wumpus:
             self.remove_unit_clause(Literal("Wumpus", *pos))
+            self.visited.discard(pos)
         self.has_wumpus.clear()
         #Handle not_has_wumpus
         for pos in self.not_has_wumpus:
             self.remove_unit_clause(-Literal("Wumpus", *pos))
+            self.visited.discard(pos)
         self.not_has_wumpus.clear()
+
+    def find_first_wumpus_on_path(self, start_x, start_y, direction):
+        """
+        Tìm vị trí Wumpus đầu tiên trên đường bắn từ (start_x, start_y)
+        theo hướng cho trước. Nếu không có trả về None.
+        """
+        if direction == Direction.NORTH:
+            # Cùng cột, y tăng dần
+            candidates = [(x, y) for (x, y) in self.has_wumpus if x == start_x and y > start_y]
+            return min(candidates, key=lambda pos: pos[1], default=None)
+
+        elif direction == Direction.SOUTH:
+            # Cùng cột, y giảm dần
+            candidates = [(x, y) for (x, y) in self.has_wumpus if x == start_x and y < start_y]
+            return max(candidates, key=lambda pos: pos[1], default=None)
+
+        elif direction == Direction.EAST:
+            # Cùng hàng, x tăng dần
+            candidates = [(x, y) for (x, y) in self.has_wumpus if y == start_y and x > start_x]
+            return min(candidates, key=lambda pos: pos[0], default=None)
+
+        elif direction == Direction.WEST:
+            # Cùng hàng, x giảm dần
+            candidates = [(x, y) for (x, y) in self.has_wumpus if y == start_y and x < start_x]
+            return max(candidates, key=lambda pos: pos[0], default=None)
+
+        return None
