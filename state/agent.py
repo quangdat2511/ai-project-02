@@ -1,5 +1,4 @@
 from typing import Tuple, List, Optional
-from queue import PriorityQueue
 from .types import *
 from .logic import *
 from .environment import *
@@ -388,6 +387,8 @@ class Agent:
         return percept
 
     def play(self, environment: Environment):
+        # start_time = time.perf_counter()
+
         self.display(environment)
 
         # Get initial percept
@@ -408,3 +409,89 @@ class Agent:
             actions = self.get_actions(percept)
             for action in actions:
                 percept = self.perform_action(action, environment)
+
+        # end_time = time.perf_counter()
+        # elapsed = end_time - start_time
+        # print(f"Time: {elapsed: .4f} seconds")
+        # print(f"Score: {self.score}")
+
+
+class RandomAgent:
+    def __init__(self):
+        self.position = (0, 0)
+        self.direction = Direction.EAST
+        self.has_gold = False
+        self.is_alive = True
+        self.winning = False
+        self.score = 0
+        self.action_count = 0
+
+    def get_random_action(self, percept):
+        if percept.glitter:
+            return Action.GRAB
+        if self.has_gold and self.position == (0, 0):
+            return Action.CLIMB
+        return random.choice([Action.FORWARD, Action.TURN_LEFT, Action.TURN_RIGHT])
+    
+    def display(self, env: Environment):
+        grid_str = ""
+        N = env.N
+        for y in reversed(range(N)):
+            for x in range(N):
+                if (x, y) == self.position:
+                    grid_str += "A "  # Agent
+                else:
+                    c = env.grid[x][y]
+                    if c.has_wumpus: grid_str += "W "
+                    elif c.has_pit:  grid_str += "P "
+                    elif c.has_gold: grid_str += "G "
+                    else:             grid_str += ". "
+            grid_str += "\n"
+        print(grid_str)
+    
+    def perform_action(self, action, environment):
+        print(f"Performing action: {action.name} at postion {self.position} facing {self.direction.name}")
+        percept = environment.perform_action(self.position, self.direction, action)
+        self.action_count += 1
+
+        if self.action_count > 200:
+            print("Too many action, stopping the game.")
+            self.is_alive = False
+            return percept
+    
+        if action == Action.FORWARD:
+            if not percept.bump:
+                dx, dy = self.direction.value
+                self.position = (self.position[0] + dx, self.position[1] + dy)
+            self.score -= 1
+        elif action == Action.TURN_LEFT:
+            self.direction = self.direction.turn_left()
+            self.score -= 1
+        elif action == Action.TURN_RIGHT:
+            self.direction = self.direction.turn_right()
+            self.score -= 1
+        elif action == Action.GRAB:
+            self.has_gold = True
+            self.score += 10
+        elif action == Action.CLIMB:
+            if self.position == (0, 0) and self.has_gold:
+                self.winning = True
+                self.score += 1000
+
+        self.is_alive = not environment.is_agent_dead(self.position)
+        self.display(environment)
+        return percept
+
+    def play(self, environment):
+        # start_time = time.perf_counter()
+
+        self.display(environment)
+        percept = environment.get_percept_in_cell(self.position)
+        while self.is_alive and not self.winning:
+            action = self.get_random_action(percept)
+            percept = self.perform_action(action, environment)
+
+        # end_time = time.perf_counter()
+        # elapsed = end_time - start_time
+        # print(f"Time: {elapsed: .4f} seconds")
+        # print(f"Score: {self.score}")
