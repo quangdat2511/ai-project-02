@@ -20,6 +20,8 @@ class Agent:
         self.visited = set()
         self.action_count = 0  
         self.N = -1     # the agent does not know the size at first
+        self.last_action = None
+        self.last_percept = None
 
     def get_actions(self, percept: Percept) -> List[Action]:
         actions = []
@@ -453,6 +455,8 @@ class RandomAgent:
         print(f"Performing action: {action.name} at postion {self.position} facing {self.direction.name}")
         percept = environment.perform_action(self.position, self.direction, action)
         self.action_count += 1
+        self.last_action = action
+        self.last_percept = percept
 
         if self.action_count > 200:
             print("Too many action, stopping the game.")

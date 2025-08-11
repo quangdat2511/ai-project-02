@@ -96,6 +96,11 @@ class Environment:
                 break
 
     def perform_action(self, position: Tuple[int, int], direction: Direction, action: Action) -> Percept:
+        self.action_count += 1
+        if self.advanced_mode and self.action_count == 5:
+            self.move_wumpus()
+            self.action_count = 0
+
         x, y = position
         dx, dy = direction.value
         if action == Action.FORWARD:
@@ -136,6 +141,22 @@ class Environment:
             glitter=cell.has_gold
         )
         return percept
+
+    def move_wumpus(self):
+        wumpus_positions = []
+        for x in range(self.N):
+            for y in range(self.N):
+                wumpus_positions.append((x, y)) if self.grid[x][y].has_wumpus else None
+            
+        for x, y in wumpus_positions:
+            if self.grid[x][y].has_wumpus:
+                # random direction
+                direction = random.choice([Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST])
+                dx, dy = direction.value
+                new_x, new_y = x + dx, y + dy
+                if self._valid(new_x, new_y) and not self.grid[new_x][new_y].has_pit and not self.grid[new_x][new_y].has_wumpus:
+                    self.grid[x][y].has_wumpus = False
+                    self.grid[new_x][new_y].has_wumpus = True
 
     def is_agent_dead(self, position: Tuple[int, int]) -> bool:
         x, y = position
