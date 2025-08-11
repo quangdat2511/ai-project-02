@@ -136,6 +136,12 @@ class Agent:
         if self.has_arrow == False and self.check_scream == False:
             self.check_scream = True
             self._add_scream_axioms(percept.scream)
+            if percept.scream and not percept.stench:
+                x, y = self.position
+                dx, dy = self.direction.value
+                nx, ny = x + dx, y + dy
+                self.inference_engine.not_has_pit.add((nx, ny))
+                self.inference_engine.kb.tell(Clause([-Literal("Pit", nx, ny)]))
         self._add_breeze_axioms(x, y, percept.breeze)
         self._add_stench_axioms(x, y, percept.stench)
 
