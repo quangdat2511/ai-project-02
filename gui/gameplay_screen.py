@@ -91,7 +91,7 @@ class GameplayScreen:
         else:
             raise ValueError(f"Invalid selected_map value: {selected_map}")
         if selected_agent == "Smart":
-            self.agent = Agent(self.environment.K, is_moving_wumpus=advanced_mode)
+            self.agent = Agent(K=self.environment.K, is_moving_wumpus=self.environment.advanced_mode)
         elif selected_agent == "Random":
             self.agent = RandomAgent()
                 

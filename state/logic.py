@@ -186,7 +186,7 @@ class InferenceEngine:
                 
     def remove_stench_clauses(self, x, y):
         """
-        Xóa toàn bộ clause trong KB có chứa literal Stench tại tọa độ (target_x, target_y),
+        Xóa toàn bộ clause trong KB có chứa literal Stench tại tọa độ (x, y),
         bất kể literal đó có dấu phủ định hay không.
         """
         to_remove = {clause for clause in self.kb.clauses
@@ -235,12 +235,16 @@ class InferenceEngine:
 
         return removed_positions
 
-    def remove_unit_wumpus_clause(self):
-        for clause in list(self.kb.clauses): 
-            if len(clause.literals) == 1:
-                lit = next(iter(clause.literals))
-                if lit.name == "Wumpus":
-                    self.kb.clauses.discard(clause)
+    # def remove_unit_wumpus_clause(self):
+    #     for clause in list(self.kb.clauses): 
+    #         if len(clause.literals) == 1:
+    #             lit = next(iter(clause.literals))
+    #             if lit.name == "Wumpus":
+    #                 self.kb.clauses.discard(clause)
+    def remove_wumpus_clauses(self):
+        to_remove = {clause for clause in self.kb.clauses
+                    if any(lit.name == "Wumpus" for lit in clause.literals)}
+        self.kb.clauses -= to_remove
     
     def handle_moving_wumpus(self):
         #Handle scream
@@ -261,10 +265,11 @@ class InferenceEngine:
         #     self.remove_unit_clause(-Literal("Wumpus", *pos))
         #     self.visited.discard(pos)
         # self.not_has_wumpus.clear()
-        self.remove_unit_wumpus_clause()
+        self.remove_wumpus_clauses()
         self.has_wumpus.clear()
         self.not_has_wumpus.clear()
         # self.visited.clear()
+        self.shoot_position = (-1, -1)
 
     def find_first_wumpus_on_path(self, start_x, start_y, direction):
         """
