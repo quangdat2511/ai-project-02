@@ -16,7 +16,7 @@ class GameplayScreen:
         # State variables
         self.agent: Optional[Agent] = None  # Current agent state
         self.environment: Optional[Environment] = None 
-        
+        self.action_count = 0
         # Animation state
         self.is_animating = False
         self.animation_speed = 1.0  # moves per second
