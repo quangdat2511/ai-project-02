@@ -64,10 +64,12 @@ class GameplayScreen:
         #     (WIDTH - 320, button_y), 50, button_height,
         #     "<<", (0, 150, 150), font=self.font, border_radius=5
         # )
+
         
-    def initialize(self, advanced_mode: bool = True):
+    def initialize(self, advanced_mode: bool = True, selected_map: str = "Random"):
         # Danh sách các cấu hình Environment
         env_configs = [
+<<<<<<< Updated upstream
             # (8, 2, 0.2, False, None),
             # (12, 2, 0.2, False, None),
             # (16, 2, 0.2, False, None),
@@ -76,14 +78,28 @@ class GameplayScreen:
             (11, 3, 0.1, advanced_mode, None),
             (14, 4, 0.1, advanced_mode, None),
             (2, 1, 0.2, advanced_mode, None)
+=======
+            (8, 10, 0.2, advanced_mode, None),
+            (12, 10, 0.2, advanced_mode, None),
+            (16, 10, 0.2, advanced_mode, None),
+>>>>>>> Stashed changes
         ]
+        print("Selected map:" + selected_map)
+        if selected_map == "Random":
+            # Chọn ngẫu nhiên một cấu hình
+            config = random.choice(env_configs)
+            self.environment = Environment(*config)
+        elif selected_map == "1":
+            self.environment = Environment(map_id=1, advanced_mode=advanced_mode)
+        elif selected_map == "2":
+            self.environment = Environment(map_id=2, advanced_mode=advanced_mode)
+        elif selected_map == "3":
+            self.environment = Environment(map_id=3, advanced_mode=advanced_mode)
+        else:
+            raise ValueError(f"Invalid selected_map value: {selected_map}")
 
-        # Chọn ngẫu nhiên một cấu hình
-        config = random.choice(env_configs)
-
-        # Tạo Environment và Agent
-        self.environment = Environment(*config)
         self.agent = Agent(2)
+
                 
     def start_animation(self):
         if not self.is_animating:
@@ -96,7 +112,7 @@ class GameplayScreen:
             self.is_paused = not self.is_paused
             
     def reset_animation(self):
-        self.initialize(self.environment.advanced_mode)  # Reset environment and agent
+        self.initialize(self.environment.advanced_mode, selected_map=self.game_manager.selected_map)  # Reset environment and agent
         self.is_animating = False
         self.is_paused = False
         self.animation_timer = 0.0

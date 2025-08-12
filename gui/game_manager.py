@@ -9,10 +9,14 @@ class GameManager:
         # asset manager
         self.images: Dict[str, pygame.Surface] = {}
         self.fonts: Dict[str, pygame.font.Font] = {}
+        self.maps: List[str] = ["1", "2", "3", "Random"]
+        self.agents: List[str] = ["Smart", "Random"]
         self.load_assets()
         # game state
         self.current_state = "selecting"
         self.is_running = True
+        self.selected_agent = "Smart"
+        self.selected_map = "1"
     def load_assets(self):
         try:
             # Load background
@@ -218,6 +222,12 @@ class GameManager:
             score_x = OFFSET_X + grid_width + 20
             score_y = OFFSET_Y
 
+            # Thêm Selected Map & Agent
+            selected_map_text = font_large.render(f"Map: {self.selected_map}", True, (200, 200, 200))
+            selected_agent_text = font_large.render(f"Agent: {self.selected_agent}", True, (200, 200, 200))
+            surface.blit(selected_map_text, (score_x, score_y))
+            surface.blit(selected_agent_text, (score_x, score_y + 30))
+
             # Mode text
             if env.advanced_mode:
                 mode_text = font_large.render("Advanced Mode", True, COLOR_MODE_ADVANCED)
@@ -236,9 +246,10 @@ class GameManager:
                 COLOR_SCORE
             )
 
-            surface.blit(mode_text, (score_x, score_y))
-            surface.blit(score_text, (score_x, score_y + 30))
-            surface.blit(action_count_text, (score_x, score_y + 60))
+            # Vẽ các thông tin khác
+            surface.blit(mode_text, (score_x, score_y + 60))
+            surface.blit(score_text, (score_x, score_y + 90))
+            surface.blit(action_count_text, (score_x, score_y + 120))
 
             # Percept
             percept = agent.current_percept
@@ -256,14 +267,14 @@ class GameManager:
                     percept_list.append(("Scream", self.get_image('scream')))
 
                 title_text = font_normal.render("Current Percept:", True, COLOR_PERCEPT_TITLE)
-                surface.blit(title_text, (score_x, score_y + 90))
+                surface.blit(title_text, (score_x, score_y + 150))
 
                 if not percept_list:
                     none_text = font_normal.render("None", True, COLOR_PERCEPT_NONE)
-                    surface.blit(none_text, (score_x, score_y + 110))
+                    surface.blit(none_text, (score_x, score_y + 180))
                 else:
                     for i, (label, img) in enumerate(percept_list):
-                        y_pos = score_y + 110 + i * (CELL_SIZE + 5)
+                        y_pos = score_y + 180 + i * (CELL_SIZE + 5)
                         if img:
                             surface.blit(img, (score_x, y_pos))
                         label_text = font_normal.render(label, True, (255, 255, 255))
@@ -276,7 +287,7 @@ class GameManager:
                         True,
                         COLOR_LAST_ACTION
                     )
-                    surface.blit(action_text, (score_x, score_y + 110 + len(percept_list) * (CELL_SIZE + 5) + 20))
+                    surface.blit(action_text, (score_x, score_y + 180 + len(percept_list) * (CELL_SIZE + 5) + 20))
 
 
 

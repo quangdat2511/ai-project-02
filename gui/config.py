@@ -48,5 +48,9 @@ CELL_BREEZE_GOLD = 'gui/assets/breeze_gold.png'
 CELL_STENCH_GOLD = 'gui/assets/stench_gold.png'
 CELL_BREEZE_STENCH = 'gui/assets/cell_breeze-stench.png'
 CELL_BREEZE_STENCH_GOLD = 'gui/assets/breeze_stench_gold.png'
-
+# Dropdowns với dữ liệu riêng
+# Màu sắc
+BG_COLOR = (240, 240, 240)  # xám nhạt
+TEXT_COLOR = (0, 0, 0)      # đen
+HOVER_COLOR = (200, 200, 255)  # xanh nhạt khi hover
 

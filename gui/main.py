@@ -23,7 +23,7 @@ class App:
         
     def run(self):
         while self.game_manager.is_running:
-            dt = self.clock.tick(60) / 1000.0  # 60 FPS
+            dt = self.clock.tick(20) / 1000.0  # 60 FPS
             
             self.handle_events()
 
@@ -42,7 +42,10 @@ class App:
             if self.game_manager.current_state == "selecting":
                 if self.selection_screen.handle_event(event):
                     if self.selection_screen.game_started:
-                        self.gameplay_screen.initialize(advanced_mode= self.game_manager.current_state == "advanced")
+                        self.gameplay_screen.initialize(
+                            advanced_mode=self.game_manager.current_state == "advanced",
+                            selected_map=self.game_manager.selected_map
+                        )
             elif self.game_manager.current_state == "normal" or self.game_manager.current_state == "advanced":
                 self.gameplay_screen.handle_event(event)
     
