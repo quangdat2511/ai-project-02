@@ -72,10 +72,10 @@ class GameplayScreen:
             # (12, 2, 0.2, False, None),
             # (16, 2, 0.2, False, None),
             # (2, 2, 0.2, False, None)
-            (8, 10, 0.2, advanced_mode, None),
-            (12, 10, 0.2, advanced_mode, None),
-            (16, 10, 0.2, advanced_mode, None),
-            (2, 2, 0.2, advanced_mode, None)
+            (8, 2, 0.2, advanced_mode, None),
+            (12, 3, 0.2, advanced_mode, None),
+            (16, 4, 0.2, advanced_mode, None),
+            (2, 1, 0.2, advanced_mode, None)
         ]
 
         # Chọn ngẫu nhiên một cấu hình
@@ -96,7 +96,7 @@ class GameplayScreen:
             self.is_paused = not self.is_paused
             
     def reset_animation(self):
-        self.initialize()  # Reset environment and agent
+        self.initialize(self.environment.advanced_mode)  # Reset environment and agent
         self.is_animating = False
         self.is_paused = False
         self.animation_timer = 0.0

@@ -13,7 +13,14 @@ FONT_SIZE = int(20 * FONT_SIZE_SCALE)  # Base font size
 FONT_SIZE_LARGE = int(30 * FONT_SIZE_SCALE)  # Large font size
 CELL_COLOR = (230, 230, 230)   # Nền ô: xám nhạt
 GRID_COLOR = (100, 100, 100)   # Viền ô: xám đậm
-
+# Màu sắc
+COLOR_MODE_NORMAL = (0, 200, 255)      # xanh cyan
+COLOR_MODE_ADVANCED = (255, 100, 0)    # cam
+COLOR_SCORE = (255, 215, 0)            # vàng gold
+COLOR_ACTION_COUNT = (144, 238, 144)   # xanh lá nhạt
+COLOR_PERCEPT_TITLE = (255, 255, 0)    # vàng
+COLOR_PERCEPT_NONE = (200, 200, 200)   # xám nhạt
+COLOR_LAST_ACTION = (255, 105, 180)    # hồng
 # Resource paths
 BACKGROUND_IMAGE = 'gui/assets/background.png'
 DESCRIPTION_BACKGROUND_IMAGE = 'gui/assets/description-bg.png'
@@ -26,8 +33,8 @@ AGENT_SIDE_IMAGE = 'gui/assets/agent_side.png'
 
 AGENT_LEFT = 'gui/assets/agent_left.png'
 AGENT_RIGHT = 'gui/assets/agent_right.png'
-AGENT_UP = 'gui/assets/agent_2.png'
-AGENT_DOWN = 'gui/assets/agent_3.png'
+AGENT_UP = 'gui/assets/agent_up_2.png'
+AGENT_DOWN = 'gui/assets/agent_down.png'
 CELL_WUMPUS = 'gui/assets/wumpus.png'
 ARROW_IMAGE = 'gui/assets/arrow.png'
 GLITTER = 'gui/assets/gold.png'

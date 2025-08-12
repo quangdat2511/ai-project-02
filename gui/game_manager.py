@@ -46,7 +46,7 @@ class GameManager:
 
             for key, path in asset_paths.items():
                 image = pygame.image.load(path)
-                self.images[key] = pygame.transform.scale(image, (CELL_SIZE * 0.98, CELL_SIZE * 0.98))
+                self.images[key] = pygame.transform.scale(image, (CELL_SIZE * 0.90, CELL_SIZE * 0.90))
 
         except Exception as e:
             print("Lỗi khi load assets:", e)
@@ -132,6 +132,7 @@ class GameManager:
                     CELL_SIZE,
                     CELL_SIZE
                 )
+                pygame.draw.rect(surface, GRID_COLOR, rect, 3)
                 if agent is not None and agent.position == (x, y):
                     if agent.direction == Direction.NORTH:
                         img = self.get_image('agent_up')
@@ -143,7 +144,7 @@ class GameManager:
                         img = self.get_image('agent_left')
                     if img: surface.blit(img, rect.topleft)
                     continue  # Skip drawing the cell if agent is there
-                pygame.draw.rect(surface, GRID_COLOR, rect, 3)
+
 
                 cell = env.grid[x][y]
                 percept = env.get_percept_in_cell((x, y))
@@ -162,25 +163,25 @@ class GameManager:
                     img = self.get_image('cell_pit')
                     if img: surface.blit(img, rect.topleft)
                 else:
-                    if is_gold and has_stench and has_breeze:
-                        img = self.get_image('cell_breeze_stench_gold')
-                        if img: surface.blit(img, rect.topleft)
-                    else:
-                        if has_stench and has_breeze:
-                            img = self.get_image('cell_breeze_stench')
-                            if img: surface.blit(img, rect.topleft)
-                        elif has_breeze and is_gold:
-                            img = self.get_image('cell_breeze_gold')
-                            if img: surface.blit(img, rect.topleft)
-                        elif has_stench and is_gold:
-                            img = self.get_image('cell_stench_gold')
-                            if img: surface.blit(img, rect.topleft)
-                        elif has_stench:
-                            img = self.get_image('cell_stench')
-                            if img: surface.blit(img, rect.topleft)
-                        elif has_breeze:
-                            img = self.get_image('cell_breeze')
-                            if img: surface.blit(img, rect.topleft)
+                    # if is_gold and has_stench and has_breeze:
+                    #     img = self.get_image('cell_breeze_stench_gold')
+                    #     if img: surface.blit(img, rect.topleft)
+                    # else:
+                    #     if has_stench and has_breeze:
+                    #         img = self.get_image('cell_breeze_stench')
+                    #         if img: surface.blit(img, rect.topleft)
+                    #     elif has_breeze and is_gold:
+                    #         img = self.get_image('cell_breeze_gold')
+                    #         if img: surface.blit(img, rect.topleft)
+                    #     elif has_stench and is_gold:
+                    #         img = self.get_image('cell_stench_gold')
+                    #         if img: surface.blit(img, rect.topleft)
+                    #     elif has_stench:
+                    #         img = self.get_image('cell_stench')
+                    #         if img: surface.blit(img, rect.topleft)
+                    #     elif has_breeze:
+                    #         img = self.get_image('cell_breeze')
+                    #         if img: surface.blit(img, rect.topleft)
 
                         if is_gold:
                             img = self.get_image('gold')
@@ -191,56 +192,71 @@ class GameManager:
         # === Vẽ score & percept bên phải lưới ===
         if agent is not None:
             font_large = self.get_font('large')
+            font_normal = self.get_font('normal')
 
             score_x = OFFSET_X + grid_width + 20
             score_y = OFFSET_Y
 
-            # Hiển thị Score
-            # Draw mode
-            mode_text = mode_text = font_large.render("Normal Mode", True, (255, 255, 255))
+            # Mode text
             if env.advanced_mode:
-                mode_text = font_large.render("Advanced Mode", True, (255, 255, 255))
-            # # Hiển thị số action đã thực hiện
-            action_count_text = font_large.render(f"Action count: {agent.action_count}", True, (255, 255, 255))
-            surface.blit(action_count_text, (score_x, score_y + 60))
-            # Hiển thị điểm số
-            score_text = font_large.render(f"Score: {agent.score}", True, (255, 255, 255))
-            surface.blit(score_text, (score_x, score_y + 30))
+                mode_text = font_large.render("Advanced Mode", True, COLOR_MODE_ADVANCED)
+            else:
+                mode_text = font_large.render("Normal Mode", True, COLOR_MODE_NORMAL)
+
+            action_count_text = font_large.render(
+                f"Action count: {agent.action_count}",
+                True,
+                COLOR_ACTION_COUNT
+            )
+
+            score_text = font_large.render(
+                f"Score: {agent.score}",
+                True,
+                COLOR_SCORE
+            )
+
             surface.blit(mode_text, (score_x, score_y))
-            # Lấy percept hiện tại
+            surface.blit(score_text, (score_x, score_y + 30))
+            surface.blit(action_count_text, (score_x, score_y + 60))
+
+            # Percept
             percept = env.get_percept_in_cell(agent.position)
-                #             glitter = percept.glitter
-                # bump = percept.bump
-            percept_images = []
+
+            percept_list = []
             if percept.stench:
-                percept_images.append(self.get_image('cell_stench'))
+                percept_list.append(("Stench", self.get_image('cell_stench')))
             if percept.breeze:
-                percept_images.append(self.get_image('cell_breeze'))
+                percept_list.append(("Breeze", self.get_image('cell_breeze')))
             if percept.glitter:
-                percept_images.append(self.get_image('glitter'))
+                percept_list.append(("Glitter", self.get_image('glitter')))
             if percept.bump:
-                percept_images.append(self.get_image('bump'))
+                percept_list.append(("Bump", self.get_image('bump')))
             if percept.scream:
-                percept_images.append(self.get_image('scream'))
-            # if getattr(percept, "bump", False):
-            #     percept_images.append(self.get_image('cell_bump'))
-            # if getattr(percept, "scream", False):
-            #     percept_images.append(self.get_image('cell_scream'))
-            # Thêm chữ "Current Percept" trước các ảnh percept
-            title_text = self.get_font('normal').render("Current Percept:", True, (255, 255, 0))
+                percept_list.append(("Scream", self.get_image('scream')))
+
+            title_text = font_normal.render("Current Percept:", True, COLOR_PERCEPT_TITLE)
             surface.blit(title_text, (score_x, score_y + 90))
-            # Nếu không có percept nào thì hiện "None"
-            if not percept_images:
-                none_text = self.get_font('normal').render("None", True, (255, 255, 255))
+
+            if not percept_list:
+                none_text = font_normal.render("None", True, COLOR_PERCEPT_NONE)
                 surface.blit(none_text, (score_x, score_y + 110))
             else:
-                # Hiển thị các hình percept ngay dưới dòng chữ
-                for i, img in enumerate(percept_images):
+                for i, (label, img) in enumerate(percept_list):
+                    y_pos = score_y + 110 + i * (CELL_SIZE + 5)
                     if img:
-                        surface.blit(img, (score_x, score_y + 110 + i * (CELL_SIZE + 5)))
-            # Hiển thị hành động hiện tại
+                        surface.blit(img, (score_x, y_pos))
+                    label_text = font_normal.render(label, True, (255, 255, 255))
+                    surface.blit(label_text, (score_x + CELL_SIZE + 5, y_pos + CELL_SIZE // 4))
+
+            # Last action
             if current_action is not None:
-                action_text = self.get_font('normal').render(f"Last Action: {current_action.value}", True, (255, 255, 255))
-                surface.blit(action_text, (score_x, score_y + 110 + len(percept_images) * (CELL_SIZE + 5) + 20))
+                action_text = font_normal.render(
+                    f"Last Action: {current_action.value}",
+                    True,
+                    COLOR_LAST_ACTION
+                )
+                surface.blit(action_text, (score_x, score_y + 110 + len(percept_list) * (CELL_SIZE + 5) + 20))
+
+
 
 
