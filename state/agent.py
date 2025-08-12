@@ -308,7 +308,7 @@ class Agent:
         percept = environment.perform_action(self.position, self.direction, action)
 
         self.action_count += 1
-        if self.action_count > 200:
+        if self.action_count > 1000:
             print("Too many actions, stopping the game.")
             self.is_alive = False
             return percept
