@@ -519,6 +519,17 @@ class RandomAgent:
         self.display(environment)
         return percept
 
+    def play_one_action(self, environment: Environment):
+        """
+            Play a single action
+        """
+        percept = environment.get_percept_in_cell(self.position)
+        action = self.get_random_action(percept)
+        new_percept = self.perform_action(action, environment)
+        if not self.is_alive or self.climbed_out:
+            return None
+        return action
+    
     def play(self, environment: Environment):
         # start_time = time.perf_counter()
 
