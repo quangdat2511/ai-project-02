@@ -13,7 +13,6 @@ class GameManager:
         # game state
         self.current_state = "selecting"
         self.is_running = True
-
     def load_assets(self):
         try:
             # Load background
@@ -201,6 +200,10 @@ class GameManager:
             mode_text = mode_text = font_large.render("Normal Mode", True, (255, 255, 255))
             if env.advanced_mode:
                 mode_text = font_large.render("Advanced Mode", True, (255, 255, 255))
+            # # Hiển thị số action đã thực hiện
+            action_count_text = font_large.render(f"Action count: {agent.action_count}", True, (255, 255, 255))
+            surface.blit(action_count_text, (score_x, score_y + 60))
+            # Hiển thị điểm số
             score_text = font_large.render(f"Score: {agent.score}", True, (255, 255, 255))
             surface.blit(score_text, (score_x, score_y + 30))
             surface.blit(mode_text, (score_x, score_y))
@@ -225,19 +228,19 @@ class GameManager:
             #     percept_images.append(self.get_image('cell_scream'))
             # Thêm chữ "Current Percept" trước các ảnh percept
             title_text = self.get_font('normal').render("Current Percept:", True, (255, 255, 0))
-            surface.blit(title_text, (score_x, score_y + 80))
+            surface.blit(title_text, (score_x, score_y + 90))
             # Nếu không có percept nào thì hiện "None"
             if not percept_images:
                 none_text = self.get_font('normal').render("None", True, (255, 255, 255))
-                surface.blit(none_text, (score_x, score_y + 100))
+                surface.blit(none_text, (score_x, score_y + 110))
             else:
                 # Hiển thị các hình percept ngay dưới dòng chữ
                 for i, img in enumerate(percept_images):
                     if img:
-                        surface.blit(img, (score_x, score_y + 100 + i * (CELL_SIZE + 5)))
+                        surface.blit(img, (score_x, score_y + 110 + i * (CELL_SIZE + 5)))
             # Hiển thị hành động hiện tại
             if current_action is not None:
                 action_text = self.get_font('normal').render(f"Last Action: {current_action.value}", True, (255, 255, 255))
-                surface.blit(action_text, (score_x, score_y + 100 + len(percept_images) * (CELL_SIZE + 5) + 20))
+                surface.blit(action_text, (score_x, score_y + 110 + len(percept_images) * (CELL_SIZE + 5) + 20))
 
 
