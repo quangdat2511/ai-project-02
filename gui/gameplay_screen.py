@@ -65,7 +65,7 @@ class GameplayScreen:
         #     "<<", (0, 150, 150), font=self.font, border_radius=5
         # )
         
-    def initialize(self, advanced_mode: bool = False):
+    def initialize(self, advanced_mode: bool = True):
         # Danh sách các cấu hình Environment
         env_configs = [
             # (8, 2, 0.2, False, None),
