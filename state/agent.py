@@ -94,7 +94,7 @@ class Agent:
                     # random neighbor
                     print("No safe unvisited positions, choosing a random neighbor.")
                     neighbors = self._neighbors(self.position)
-                    unvisited_neighbors = [pos for pos in neighbors if pos not in self.inference_engine.visited and pos not in self.inference_engine.has_pit and pos not in self.inference_engine.has_wumpus]
+                    unvisited_neighbors = [pos for pos in neighbors if pos not in self.inference_engine.visited and not self.inference_engine.infer(Literal("Pit", *pos, False)) and not self.inference_engine.infer(Literal("Wumpus", *pos, False))]
                     if unvisited_neighbors:
                         goal = random.choice(unvisited_neighbors)
                     else:
