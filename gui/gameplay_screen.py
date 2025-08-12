@@ -72,9 +72,9 @@ class GameplayScreen:
             # (12, 2, 0.2, False, None),
             # (16, 2, 0.2, False, None),
             # (2, 2, 0.2, False, None)
-            (8, 2, 0.2, advanced_mode, None),
-            (12, 3, 0.2, advanced_mode, None),
-            (16, 4, 0.2, advanced_mode, None),
+            (8, 10, 0.2, advanced_mode, None),
+            (12, 10, 0.2, advanced_mode, None),
+            (16, 10, 0.2, advanced_mode, None),
             (2, 1, 0.2, advanced_mode, None)
         ]
 
