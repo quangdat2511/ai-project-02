@@ -55,18 +55,18 @@ class GameplayScreen:
         )
         
         # Speed control buttons
-        # self.speed_up_button = Button(
-        #     (WIDTH - 140, button_y), 50, button_height,
-        #     ">>", (0, 150, 150), font=self.font, border_radius=5
-        # )
+        self.speed_up_button = Button(
+            (indent, button_y - 70), button_width * 1.8, button_height,
+            "Speed up", (100, 100, 100), font=self.font, border_radius=5
+        )
         
-        # self.speed_down_button = Button(
-        #     (WIDTH - 320, button_y), 50, button_height,
-        #     "<<", (0, 150, 150), font=self.font, border_radius=5
-        # )
+        self.speed_down_button = Button(
+            (indent + button_spacing * 2, button_y - 70), button_width * 1.8, button_height,
+            "Spead down", (100, 100, 100), font=self.font, border_radius=5
+        )
 
         
-    def initialize(self, advanced_mode: bool = True, selected_map: str = "Random", selected_agent: str = "Random"):
+    def initialize(self, advanced_mode: bool = True, selected_map: str = "Random", selected_agent: str = "Smart"):
         # Danh sách các cấu hình Environment
         env_configs = [
             (8, 2, 0.2, advanced_mode, None),
@@ -114,10 +114,10 @@ class GameplayScreen:
         
     def update(self, dt: float):
         if self.agent and self.environment and self.is_animating and not self.is_paused and self.agent.is_alive and not self.agent.climbed_out:
-            # self.animation_timer += dt
-            # if self.animation_timer >= 1.0 / self.animation_speed:
-            #     self.animation_timer = 0.0
-            self.current_action = self.agent.play_one_action(self.environment)
+            self.animation_timer += dt
+            if self.animation_timer >= 1.0 / self.animation_speed:
+                self.animation_timer = 0.0
+                self.current_action = self.agent.play_one_action(self.environment)
     def handle_event(self, event):
         if self.play_button.handle_event(event):
             self.start_animation()
@@ -136,13 +136,13 @@ class GameplayScreen:
             self.game_manager.current_state = "selecting"
             return True
             
-        # if self.speed_up_button.handle_event(event):
-        #     self.animation_speed = min(self.animation_speed * 1.5, 10.0)
-        #     return True
+        if self.speed_up_button.handle_event(event):
+            self.animation_speed = min(self.animation_speed * 1.5, 10.0)
+            return True
             
-        # if self.speed_down_button.handle_event(event):
-        #     self.animation_speed = max(self.animation_speed / 1.5, 0.1)
-        #     return True
+        if self.speed_down_button.handle_event(event):
+            self.animation_speed = max(self.animation_speed / 1.5, 0.1)
+            return True
             
         return False    
     def draw(self, surface: pygame.Surface, advanced_mode: bool = False):
@@ -164,10 +164,10 @@ class GameplayScreen:
             # Draw UI buttons
             self.play_button.draw(surface)
             self.pause_button.draw(surface)
-
-            # self.speed_up_button.draw(surface)
-            # self.speed_down_button.draw(surface)
-            # Draw action info
+            
+            self.speed_up_button.draw(surface)
+            self.speed_down_button.draw(surface)
+            
 
     def draw_info_text(self, surface: pygame.Surface):
         pass

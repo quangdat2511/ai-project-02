@@ -1,5 +1,5 @@
 import pygame
-from typing import Dict
+from typing import Dict, Union
 from gui.config import *
 from state.environment import *
 from state.agent import *
@@ -127,7 +127,7 @@ class GameManager:
         # Căn giữa ảnh trong ô
         img_rect = img.get_rect(center=rect.center)
         surface.blit(img, img_rect.topleft)
-    def draw_environment(self, surface: pygame.Surface, env: Environment, agent: 'Agent' = None, current_action: Action = None):
+    def draw_environment(self, surface: pygame.Surface, env: Environment, agent: Union[Agent, RandomAgent, None] = None, current_action: Action = None):
         N = env.N  # Lưới NxN
         grid_width = CELL_SIZE * N
         grid_height = CELL_SIZE * N
@@ -250,8 +250,10 @@ class GameManager:
             surface.blit(mode_text, (score_x, score_y + 60))
             surface.blit(score_text, (score_x, score_y + 90))
             surface.blit(action_count_text, (score_x, score_y + 120))
-
+            print(type(agent))
+            # print(isinstance(agent, Agent))
             # Percept
+            percept_list = []
             if isinstance(agent, Agent):
                 percept = agent.current_percept
                 if percept:

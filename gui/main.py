@@ -20,10 +20,9 @@ class App:
         self.game_manager = GameManager()
         self.selection_screen = SelectionScreen(self.game_manager)
         self.gameplay_screen = GameplayScreen(self.game_manager)
-        
     def run(self):
         while self.game_manager.is_running:
-            dt = self.clock.tick(50) / 1000.0  # 60 FPS
+            dt = self.clock.tick(60) / 1000.0  # 60 FPS
             
             self.handle_events()
 
@@ -31,7 +30,7 @@ class App:
 
             if self.game_manager.current_state == "normal" or self.game_manager.current_state == "advanced":
                 self.gameplay_screen.update(dt)
-                
+            # print(self.game_manager.selected_agent)
             self.draw()
     
     def handle_events(self):
@@ -44,7 +43,8 @@ class App:
                     if self.selection_screen.game_started:
                         self.gameplay_screen.initialize(
                             advanced_mode=self.game_manager.current_state == "advanced",
-                            selected_map=self.game_manager.selected_map
+                            selected_map=self.game_manager.selected_map,
+                            selected_agent= self.game_manager.selected_agent
                         )
             elif self.game_manager.current_state == "normal" or self.game_manager.current_state == "advanced":
                 self.gameplay_screen.handle_event(event)
