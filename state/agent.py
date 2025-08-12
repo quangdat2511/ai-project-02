@@ -315,6 +315,7 @@ class Agent:
 
         if self.is_moving_wumpus == True and self.action_count % 5 == 0:
             self.inference_engine.handle_moving_wumpus()
+            self.add_percept(percept, *self.position)
 
         if action == Action.FORWARD:
             dx, dy = self.direction.value
