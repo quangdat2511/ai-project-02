@@ -179,24 +179,30 @@ class GameManager:
                 else:
                         if is_gold and has_stench and has_breeze:
                             img = self.get_image('cell_breeze_stench_gold')
-                            if img: self.draw_cell_image(surface, img, rect, 0.6)
+                            if img:
+                                img_rect = img.get_rect(center=rect.center)
+                                surface.blit(img, img_rect.topleft)
                         else:
                             if has_stench and has_breeze:
                                 img = self.get_image('cell_breeze_stench')
                                 if img: self.draw_cell_image(surface, img, rect, 0.6)
                             elif has_breeze and is_gold:
                                 img = self.get_image('cell_breeze_gold')
-                                if img: self.draw_cell_image(surface, img, rect, 0.6)
+                                if img:
+                                    img_rect = img.get_rect(center=rect.center)
+                                    surface.blit(img, img_rect.topleft)
                             elif has_stench and is_gold:
                                 img = self.get_image('cell_stench_gold')
-                                if img: self.draw_cell_image(surface, img, rect, 0.6)
+                                if img:
+                                    img_rect = img.get_rect(center=rect.center)
+                                    surface.blit(img, img_rect.topleft)
                             elif has_stench:
                                 img = self.get_image('cell_stench')
                                 if img: self.draw_cell_image(surface, img, rect)
                             elif has_breeze:
                                 img = self.get_image('cell_breeze')
                                 if img: self.draw_cell_image(surface, img, rect)
-                            if is_gold:
+                            elif is_gold:
                                 img = self.get_image('gold')
                                 if img:
                                     img_rect = img.get_rect(center=rect.center)
@@ -235,42 +241,42 @@ class GameManager:
             surface.blit(action_count_text, (score_x, score_y + 60))
 
             # Percept
-            percept = env.get_percept_in_cell(agent.position)
+            percept = agent.current_percept
+            if percept:
+                percept_list = []
+                if percept.stench:
+                    percept_list.append(("Stench", self.get_image('cell_stench')))
+                if percept.breeze:
+                    percept_list.append(("Breeze", self.get_image('cell_breeze')))
+                if percept.glitter:
+                    percept_list.append(("Glitter", self.get_image('glitter')))
+                if percept.bump:
+                    percept_list.append(("Bump", self.get_image('bump')))
+                if percept.scream:
+                    percept_list.append(("Scream", self.get_image('scream')))
 
-            percept_list = []
-            if percept.stench:
-                percept_list.append(("Stench", self.get_image('cell_stench')))
-            if percept.breeze:
-                percept_list.append(("Breeze", self.get_image('cell_breeze')))
-            if percept.glitter:
-                percept_list.append(("Glitter", self.get_image('glitter')))
-            if percept.bump:
-                percept_list.append(("Bump", self.get_image('bump')))
-            if percept.scream:
-                percept_list.append(("Scream", self.get_image('scream')))
+                title_text = font_normal.render("Current Percept:", True, COLOR_PERCEPT_TITLE)
+                surface.blit(title_text, (score_x, score_y + 90))
 
-            title_text = font_normal.render("Current Percept:", True, COLOR_PERCEPT_TITLE)
-            surface.blit(title_text, (score_x, score_y + 90))
+                if not percept_list:
+                    none_text = font_normal.render("None", True, COLOR_PERCEPT_NONE)
+                    surface.blit(none_text, (score_x, score_y + 110))
+                else:
+                    for i, (label, img) in enumerate(percept_list):
+                        y_pos = score_y + 110 + i * (CELL_SIZE + 5)
+                        if img:
+                            surface.blit(img, (score_x, y_pos))
+                        label_text = font_normal.render(label, True, (255, 255, 255))
+                        surface.blit(label_text, (score_x + CELL_SIZE + 5, y_pos + CELL_SIZE // 4))
 
-            if not percept_list:
-                none_text = font_normal.render("None", True, COLOR_PERCEPT_NONE)
-                surface.blit(none_text, (score_x, score_y + 110))
-            else:
-                for i, (label, img) in enumerate(percept_list):
-                    y_pos = score_y + 110 + i * (CELL_SIZE + 5)
-                    if img:
-                        surface.blit(img, (score_x, y_pos))
-                    label_text = font_normal.render(label, True, (255, 255, 255))
-                    surface.blit(label_text, (score_x + CELL_SIZE + 5, y_pos + CELL_SIZE // 4))
-
-            # Last action
-            if current_action is not None:
-                action_text = font_normal.render(
-                    f"Last Action: {current_action.value}",
-                    True,
-                    COLOR_LAST_ACTION
-                )
-                surface.blit(action_text, (score_x, score_y + 110 + len(percept_list) * (CELL_SIZE + 5) + 20))
+                # Last action
+                if current_action is not None:
+                    action_text = font_normal.render(
+                        f"Last Action: {current_action.value}",
+                        True,
+                        COLOR_LAST_ACTION
+                    )
+                    surface.blit(action_text, (score_x, score_y + 110 + len(percept_list) * (CELL_SIZE + 5) + 20))
 
 
 
