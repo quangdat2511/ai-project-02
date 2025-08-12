@@ -69,9 +69,9 @@ class GameplayScreen:
     def initialize(self, advanced_mode: bool = True, selected_map: str = "Random"):
         # Danh sách các cấu hình Environment
         env_configs = [
-            (8, 10, 0.2, advanced_mode, None),
-            (12, 10, 0.2, advanced_mode, None),
-            (16, 10, 0.2, advanced_mode, None),
+            (8, 2, 0.2, advanced_mode, None),
+            (12, 2, 0.2, advanced_mode, None),
+            (16, 2, 0.2, advanced_mode, None),
         ]
         print("Selected map:" + selected_map)
         if selected_map == "Random":

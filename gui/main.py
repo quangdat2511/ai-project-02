@@ -23,7 +23,7 @@ class App:
         
     def run(self):
         while self.game_manager.is_running:
-            dt = self.clock.tick(20) / 1000.0  # 60 FPS
+            dt = self.clock.tick(50) / 1000.0  # 60 FPS
             
             self.handle_events()
 

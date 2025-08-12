@@ -1,6 +1,6 @@
 # Main game
-# from gui import *
+from gui import *
 # Debugging
-from execute import *
+# from execute import *
 if __name__ == "__main__":
     main()
