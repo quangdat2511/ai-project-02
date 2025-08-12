@@ -34,6 +34,9 @@ class Agent:
             actions.append(Action.CLIMB)
             return actions
 
+        # count number of actions left until wumpus is moved for advanced mode
+        actions_left = 5 - (self.action_count % 5)
+
         print(f"Not has pit: ", self.inference_engine.not_has_pit)
         print(f"Not has wumpus: ", self.inference_engine.not_has_wumpus)
         print(f"Has wumpus: ", self.inference_engine.has_wumpus)
@@ -78,8 +81,11 @@ class Agent:
                                 actions.append(Action.TURN_RIGHT)
                             elif (dx, dy) != self.direction.value:
                                 actions.append(Action.TURN_RIGHT)
-                                actions.append(Action.TURN_RIGHT)  # quay 180 độ
+                                actions.append(Action.TURN_RIGHT)
 
+                        if self.is_moving_wumpus and actions_left <= len(actions):
+                            return actions  
+                        
                         actions.append(Action.SHOOT)
                         return actions
 
@@ -125,8 +131,10 @@ class Agent:
             elif (dx, dy) != current_direction.value:
                 actions.append(Action.TURN_RIGHT)
                 actions.append(Action.TURN_RIGHT)
-                current_direction = right_direction.turn_right()  # quay 180 độ
+                current_direction = right_direction.turn_right()  
 
+            if self.is_moving_wumpus and actions_left <= len(actions):
+                return actions  
             actions.append(Action.FORWARD)
             current_position = next_pos
 
