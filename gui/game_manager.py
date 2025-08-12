@@ -250,7 +250,7 @@ class GameManager:
             surface.blit(mode_text, (score_x, score_y + 60))
             surface.blit(score_text, (score_x, score_y + 90))
             surface.blit(action_count_text, (score_x, score_y + 120))
-            print(type(agent))
+            # print(type(agent))
             # print(isinstance(agent, Agent))
             # Percept
             percept_list = []

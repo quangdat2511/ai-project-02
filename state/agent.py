@@ -458,6 +458,7 @@ class RandomAgent:
         self.position = (0, 0)
         self.direction = Direction.EAST
         self.has_gold = False
+        self.has_arrow = True
         self.is_alive = True
         self.climbed_out = False
         self.score = 0
@@ -468,7 +469,10 @@ class RandomAgent:
             return Action.GRAB
         if self.has_gold and self.position == (0, 0):
             return Action.CLIMB
-        return random.choice([Action.FORWARD, Action.TURN_LEFT, Action.TURN_RIGHT])
+        possible_choices = [Action.FORWARD, Action.TURN_LEFT, Action.TURN_RIGHT]
+        if self.has_arrow:
+            possible_choices.append(Action.SHOOT)
+        return random.choice(possible_choices)
     
     def display(self, env: Environment):
         grid_str = ""
@@ -504,6 +508,9 @@ class RandomAgent:
         elif action == Action.TURN_LEFT:
             self.direction = self.direction.turn_left()
             self.score -= 1
+        elif action == Action.SHOOT:
+            self.has_arrow = False
+            self.score -= 10
         elif action == Action.TURN_RIGHT:
             self.direction = self.direction.turn_right()
             self.score -= 1

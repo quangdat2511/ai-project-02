@@ -62,7 +62,7 @@ class GameplayScreen:
         
         self.speed_down_button = Button(
             (indent + button_spacing * 2, button_y - 70), button_width * 1.8, button_height,
-            "Spead down", (100, 100, 100), font=self.font, border_radius=5
+            "Speed down", (100, 100, 100), font=self.font, border_radius=5
         )
 
         
@@ -155,7 +155,7 @@ class GameplayScreen:
         self.menu_button.draw(surface)
         self.reset_button.draw(surface)
         if self.agent.climbed_out:
-            self.game_manager.drawAgenClimbout(surface, self.agent.score)
+            self.game_manager.drawAgentClimbout(surface, self.agent.score)
         elif not self.agent.is_alive:
             self.game_manager.drawAgentDead(surface, self.agent.score)
         else:
