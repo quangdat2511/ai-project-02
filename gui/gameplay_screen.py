@@ -1,5 +1,5 @@
 import pygame
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union
 from gui.config import *
 from .button import Button
 from state.environment import *
@@ -14,7 +14,7 @@ class GameplayScreen:
 
 
         # State variables
-        self.agent: Optional[Agent] = None  # Current agent state
+        self.agent: Optional[Union[Agent, RandomAgent]] = None
         self.environment: Optional[Environment] = None 
         self.action_count = 0
         # Animation state
@@ -66,12 +66,12 @@ class GameplayScreen:
         # )
 
         
-    def initialize(self, advanced_mode: bool = True, selected_map: str = "Random"):
+    def initialize(self, advanced_mode: bool = True, selected_map: str = "Random", selected_agent: str = "Random"):
         # Danh sách các cấu hình Environment
         env_configs = [
             (8, 2, 0.2, advanced_mode, None),
-            (12, 2, 0.2, advanced_mode, None),
-            (16, 2, 0.2, advanced_mode, None),
+            (11, 3, 0.2, advanced_mode, None),
+            (14, 4, 0.2, advanced_mode, None)
         ]
         print("Selected map:" + selected_map)
         if selected_map == "Random":
@@ -84,11 +84,16 @@ class GameplayScreen:
             self.environment = Environment(map_id=2, advanced_mode=advanced_mode)
         elif selected_map == "3":
             self.environment = Environment(map_id=3, advanced_mode=advanced_mode)
+        elif selected_map == "4":
+            self.environment = Environment(map_id=4, advanced_mode=advanced_mode)
+        elif selected_map == "5":
+            self.environment = Environment(map_id=5, advanced_mode=advanced_mode)
         else:
             raise ValueError(f"Invalid selected_map value: {selected_map}")
-
-        self.agent = Agent(2)
-
+        if selected_agent == "Smart":
+            self.agent = Agent(self.environment.K, is_moving_wumpus=advanced_mode)
+        elif selected_agent == "Random":
+            self.agent = RandomAgent()
                 
     def start_animation(self):
         if not self.is_animating:
@@ -150,9 +155,9 @@ class GameplayScreen:
         self.menu_button.draw(surface)
         self.reset_button.draw(surface)
         if self.agent.climbed_out:
-            self.game_manager.drawAgentWinning(surface, self.agent.score)
+            self.game_manager.drawAgenClimbout(surface, self.agent.score)
         elif not self.agent.is_alive:
-            self.game_manager.drawAgentLost(surface, self.agent.score)
+            self.game_manager.drawAgentDead(surface, self.agent.score)
         else:
 
             self.game_manager.draw_environment(surface, self.environment, self.agent, self.current_action)
