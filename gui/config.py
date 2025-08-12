@@ -20,14 +20,14 @@ DESCRIPTION_BACKGROUND_IMAGE = 'gui/assets/description-bg.png'
 GAME_BACKGROUND_IMAGE = 'gui/assets/game-bg-2.png'
 #AGENT
 
-AGENT_VICTORY = 'gui/assets/agent_victory.png'
+AGENT_VICTORY = 'gui/assets/agent_victory_2.png'
 AGENT_LOST = 'gui/assets/agent_lost.png'
 AGENT_SIDE_IMAGE = 'gui/assets/agent_side.png'
 
 AGENT_LEFT = 'gui/assets/agent_left.png'
 AGENT_RIGHT = 'gui/assets/agent_right.png'
-AGENT_UP = 'gui/assets/agent_up.png'
-AGENT_DOWN = 'gui/assets/agent_down.png'
+AGENT_UP = 'gui/assets/agent_2.png'
+AGENT_DOWN = 'gui/assets/agent_3.png'
 CELL_WUMPUS = 'gui/assets/wumpus.png'
 ARROW_IMAGE = 'gui/assets/arrow.png'
 GLITTER = 'gui/assets/gold.png'

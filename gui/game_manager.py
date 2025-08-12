@@ -59,7 +59,7 @@ class GameManager:
 
     def get_font(self, size: str = 'normal') -> pygame.font.Font:
         return self.fonts.get(size, self.fonts['normal'])
-    def drawAgentWinning(self, surface: pygame.Surface):
+    def drawAgentWinning(self, surface: pygame.Surface, score: int = 0):
         img = self.get_image('agent_victory')
         if img:
             # Scale ảnh
@@ -78,9 +78,15 @@ class GameManager:
             text_x = (WIDTH - text_surface.get_width()) // 2
             text_y = y + new_height + 20  # cách ảnh 20px
             surface.blit(text_surface, (text_x, text_y))
+            # Hiển thị điểm số
+            score_text = font.render(f"Final Score: {score}", True, (255, 255, 255))  # trắng
+            score_x = (WIDTH - score_text.get_width()) // 2
+            score_y = text_y + 40  # cách chữ "Agent Win" 20px
+            surface.blit(score_text, (score_x, score_y))
 
 
-    def drawAgentLost(self, surface: pygame.Surface):
+
+    def drawAgentLost(self, surface: pygame.Surface, score: int = 0):
         img = self.get_image('agent_lost')
         if img:
             # Scale ảnh
@@ -99,6 +105,12 @@ class GameManager:
             text_x = (WIDTH - text_surface.get_width()) // 2
             text_y = y + new_height + 20
             surface.blit(text_surface, (text_x, text_y))
+            # Hiển thị điểm số
+            score_text = font.render(f"Final Score: {score}", True, (255, 255, 255))
+            score_x = (WIDTH - score_text.get_width()) // 2
+            score_y = text_y + 40
+            surface.blit(score_text, (score_x, score_y))
+            
 
 
 
