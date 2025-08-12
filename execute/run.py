@@ -30,7 +30,7 @@ def run_agent(agent, env):
         "score": agent.score,
         "time": round(end - start, 6),
         "steps": agent.action_count,
-        "win": agent.winning
+        "win": agent.climbed_out
     }
 
 

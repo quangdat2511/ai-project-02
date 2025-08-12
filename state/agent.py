@@ -16,7 +16,7 @@ class Agent:
         self.inference_engine = InferenceEngine(K=K)
         self.planner = Planner(self.inference_engine, self._neighbors)
         self.score = 0
-        self.winning = False
+        self.climbed_out = False
         self.K = K
         self.action_count = 0  
         self.N = -1     # the agent does not know the size at first
@@ -99,7 +99,12 @@ class Agent:
                         goal = random.choice(unvisited_neighbors)
                     else:
                         visited_neighbors = [pos for pos in neighbors if pos in self.inference_engine.visited]
-                        goal = random.choice(visited_neighbors)
+                        if visited_neighbors:
+                            goal = random.choice(visited_neighbors)
+                        else:
+                            if self.position == (0, 0):
+                                actions.append(Action.CLIMB)
+                                return actions
 
             else:
                 # goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
@@ -373,8 +378,10 @@ class Agent:
                         self.inference_engine.infer(-Literal("Wumpus", *neighbor))
         elif action == Action.CLIMB:
             if self.position == (0, 0) and self.has_gold:
-                self.winning = True
+                self.climbed_out = True
                 self.score += 1000
+            elif self.position == (0, 0) and not self.has_gold:
+                self.climbed_out = True
 
         self.is_alive = not environment.is_agent_dead(self.position)
         if percept.stench and not percept.breeze:
@@ -408,7 +415,7 @@ class Agent:
             self.inference_engine.infer(-Literal("Wumpus", *neighbor))
 
 
-        while self.is_alive and not self.winning:
+        while self.is_alive and not self.climbed_out:
             actions = self.get_actions(percept)
             for action in actions:
                 percept = self.perform_action(action, environment)
@@ -452,7 +459,7 @@ class RandomAgent:
         self.direction = Direction.EAST
         self.has_gold = False
         self.is_alive = True
-        self.winning = False
+        self.climbed_out = False
         self.score = 0
         self.action_count = 0
 
@@ -505,7 +512,7 @@ class RandomAgent:
             self.score += 10
         elif action == Action.CLIMB:
             if self.position == (0, 0) and self.has_gold:
-                self.winning = True
+                self.climbed_out = True
                 self.score += 1000
 
         self.is_alive = not environment.is_agent_dead(self.position)
@@ -517,7 +524,7 @@ class RandomAgent:
 
         self.display(environment)
         percept = environment.get_percept_in_cell(self.position)
-        while self.is_alive and not self.winning:
+        while self.is_alive and not self.climbed_out:
             action = self.get_random_action(percept)
             percept = self.perform_action(action, environment)
 

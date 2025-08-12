@@ -33,10 +33,10 @@ class Planner:
 
         # has pit
         if not self.data.infer(-Literal("Pit", x, y, False)):
-            score += 3
+            score += 1000
         # has wumpus
         if not self.data.infer(-Literal("Wumpus", x, y, False)):
-            score += 4
+            score += 1000
 
         return score
 

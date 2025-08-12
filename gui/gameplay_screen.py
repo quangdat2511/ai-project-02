@@ -72,9 +72,9 @@ class GameplayScreen:
             # (12, 2, 0.2, False, None),
             # (16, 2, 0.2, False, None),
             # (2, 2, 0.2, False, None)
-            (8, 10, 0.2, advanced_mode, None),
-            (12, 10, 0.2, advanced_mode, None),
-            (16, 10, 0.2, advanced_mode, None),
+            (8, 2, 0.1, advanced_mode, None),
+            (11, 3, 0.1, advanced_mode, None),
+            (14, 4, 0.1, advanced_mode, None),
             (2, 1, 0.2, advanced_mode, None)
         ]
 
@@ -103,11 +103,11 @@ class GameplayScreen:
         self.current_action = None  # Reset current action
         
     def update(self, dt: float):
-        if self.agent and self.environment and self.is_animating and not self.is_paused and self.agent.is_alive and not self.agent.winning:
-            self.animation_timer += dt
-            if self.animation_timer >= 1.0 / self.animation_speed:
-                self.animation_timer = 0.0
-                self.current_action = self.agent.play_one_action(self.environment)
+        if self.agent and self.environment and self.is_animating and not self.is_paused and self.agent.is_alive and not self.agent.climbed_out:
+            # self.animation_timer += dt
+            # if self.animation_timer >= 1.0 / self.animation_speed:
+            #     self.animation_timer = 0.0
+            self.current_action = self.agent.play_one_action(self.environment)
     def handle_event(self, event):
         if self.play_button.handle_event(event):
             self.start_animation()
@@ -144,7 +144,7 @@ class GameplayScreen:
             surface.fill((60, 60, 60))  # fallback background color
         self.menu_button.draw(surface)
         self.reset_button.draw(surface)
-        if self.agent.winning:
+        if self.agent.climbed_out:
             self.game_manager.drawAgentWinning(surface, self.agent.score)
         elif not self.agent.is_alive:
             self.game_manager.drawAgentLost(surface, self.agent.score)
