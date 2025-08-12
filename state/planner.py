@@ -14,7 +14,8 @@ class Planner:
         path = []
         current = goal
         while current != start:
-            path.append(current)
+            pos, _ = current
+            path.append(pos)
             if current not in came_from or came_from[current] is None:
                 return []
             current = came_from[current]
@@ -48,31 +49,61 @@ class Planner:
         # High risk high reward
         return 1
 
-    def a_star(self, start: Tuple[int, int], goal: Tuple[int, int], visited: Set[Tuple[int, int]]) -> List[Tuple[int, int]]:
+    def a_star(self, start: Tuple[int, int], goal: Tuple[int, int], visited: Set[Tuple[int, int]], start_dir: Direction) -> List[Tuple[int, int]]:
         frontier = []
-        heapq.heappush(frontier, (0, start))
-        came_from = {start: None}
-        cost_so_far = {start: 0}
+        counter = 0
+        start_state = (start, start_dir)
+        heapq.heappush(frontier, (0, counter, start_state))
+        counter += 1
+        came_from = {start_state: None}
+        cost_so_far = {start_state: 0}
+
+        closest_state = start_state
+        closest_dist = self.heuristic(start, goal)
 
         while frontier:
-            _, current = heapq.heappop(frontier)
-            if current == goal:
-                break
+            _, _, current_state = heapq.heappop(frontier)
+            current_pos, current_dir = current_state
 
-            for next_pos in self._neighbors(current):
+            dist_to_goal = self.heuristic(current_pos, goal)
+            if dist_to_goal < closest_dist:
+                closest_state = current_state
+                closest_dist = dist_to_goal
+
+            if current_pos == goal:
+                return self.reconstruct_path(came_from, start_state, current_state)
+
+            for next_pos in self._neighbors(current_pos):
+                # Tìm hướng mới
+                dx, dy = next_pos[0] - current_pos[0], next_pos[1] - current_pos[1]
+                for d in Direction:
+                    if d.value == (dx, dy):
+                        new_dir = d
+                        break
+
+                # Tính chi phí quay
+                turn_cost = 0
+                if new_dir != current_dir:
+                    if new_dir == current_dir.turn_left() or new_dir == current_dir.turn_right():
+                        turn_cost = 1
+                    else:
+                        turn_cost = 2
+
                 base_cost = 1
-                risk_penalty = self.risk_score(next_pos) # High risk high reward (con bạc)
-                utility_bonus = self.utility_score(next_pos, visited, start)
-
+                risk_penalty = self.risk_score(next_pos)
                 if risk_penalty == float('inf'):
                     continue
+                utility_bonus = self.utility_score(next_pos, visited, start)
 
-                new_cost = cost_so_far[current] + base_cost + risk_penalty - utility_bonus
+                new_cost = cost_so_far[current_state] + base_cost + turn_cost + risk_penalty - utility_bonus
+                next_state = (next_pos, new_dir)
 
-                if next_pos not in cost_so_far or new_cost < cost_so_far[next_pos]:
-                    cost_so_far[next_pos] = new_cost
+                if next_state not in cost_so_far or new_cost < cost_so_far[next_state]:
+                    cost_so_far[next_state] = new_cost
                     priority = new_cost + self.heuristic(next_pos, goal)
-                    heapq.heappush(frontier, (priority, next_pos))
-                    came_from[next_pos] = current
+                    heapq.heappush(frontier, (priority, counter, next_state))
+                    counter += 1
+                    came_from[next_state] = current_state
 
-        return self.reconstruct_path(came_from, start, goal)
+        # Không tìm được đường đến goal, trả về đường đến trạng thái gần goal nhất
+        return self.reconstruct_path(came_from, start_state, closest_state)

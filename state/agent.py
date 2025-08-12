@@ -110,7 +110,7 @@ class Agent:
                 )
 
         print(f"Current position: {self.position}, Goal: {goal}")
-        path = self.planner.a_star(start=self.position, goal=goal, visited=self.inference_engine.visited)
+        path = self.planner.a_star(start=self.position, goal=goal, visited=self.inference_engine.visited, start_dir=self.direction)
         print("Path: ", path)
         # next_pos = path[0] if len(path) > 0 else None
 
