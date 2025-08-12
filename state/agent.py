@@ -519,7 +519,7 @@ class RandomAgent:
         self.display(environment)
         return percept
 
-    def play(self, environment):
+    def play(self, environment: Environment):
         # start_time = time.perf_counter()
 
         self.display(environment)

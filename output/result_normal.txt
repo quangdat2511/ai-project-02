@@ -1,0 +1,27 @@
+=======================================================
+Experiment Result
+=======================================================
+Configure:
+ - Grid size(N): 8.
+ - Number of wumpus(K): 2.
+ - Pit density(p): 0.1.
+ - Mode: normal.
+ - Number of test (M): 2.
+=======================================================
+
+--------------------Smart Agent result--------------------
+Attempt 1: Win=False, Score=-96, Actions=87, Time=21.919174s
+Attempt 2: Win=True, Score=1004, Actions=19, Time=0.093557s
+--------------------Random Agent result--------------------
+Attempt 1: Win=False, Score=-74, Actions=74, Time=0.02547s
+Attempt 2: Win=False, Score=-21, Actions=21, Time=0.008113s
+
+
+=======================================================
+SUMMARY
+=======================================================
+Stats                |    Smart Agent     |    Random Agent   
+-------------------------------------------------------
+Win rate (%)         |        0.5         |        0.0        
+Average score        |       454.00       |       -47.50      
+=======================================================

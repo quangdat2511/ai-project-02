@@ -1,4 +1,5 @@
 from state import *
+from .experiment import *
 import argparse
 import time
 import copy
