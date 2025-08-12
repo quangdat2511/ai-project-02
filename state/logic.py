@@ -219,25 +219,52 @@ class InferenceEngine:
 
         return removed_positions
     
+    def remove_all_unit_stench_clause_in_range(self, x_min=None, x_max=None, y_min=None, y_max=None):
+        removed_positions = []
+        for clause in list(self.kb.clauses):  # copy để tránh thay đổi khi duyệt
+            if len(clause.literals) == 1:
+                lit = next(iter(clause.literals))
+                if lit.name == "Stench":
+                    x, y = lit.position
+                    if (x_min is None or x >= x_min) and \
+                    (x_max is None or x <= x_max) and \
+                    (y_min is None or y >= y_min) and \
+                    (y_max is None or y <= y_max):
+                        self.kb.clauses.discard(clause)
+                        removed_positions.append((x, y))
+
+        return removed_positions
+
+    def remove_unit_wumpus_clause(self):
+        for clause in list(self.kb.clauses): 
+            if len(clause.literals) == 1:
+                lit = next(iter(clause.literals))
+                if lit.name == "Wumpus":
+                    self.kb.clauses.discard(clause)
+    
     def handle_moving_wumpus(self):
         #Handle scream
         self.not_scream_helper.available = False
         self.remove_scream_clauses()
         #Handle stench
-        positions = self.remove_unit_stench_clause_in_range(None, None, None, None)
+        positions = self.remove_all_unit_stench_clause_in_range(None, None, None, None)
         for pos in positions:
             self.remove_stench_clauses(*pos)
-            self.visited.discard(pos)
+            # self.visited.discard(pos)
         #Handle has_wumpus
-        for pos in self.has_wumpus:
-            self.remove_unit_clause(Literal("Wumpus", *pos))
-            self.visited.discard(pos)
+        # for pos in self.has_wumpus:
+        #     self.remove_unit_clause(Literal("Wumpus", *pos))
+        #     self.visited.discard(pos)
+        # self.has_wumpus.clear()
+        # #Handle not_has_wumpus
+        # for pos in self.not_has_wumpus:
+        #     self.remove_unit_clause(-Literal("Wumpus", *pos))
+        #     self.visited.discard(pos)
+        # self.not_has_wumpus.clear()
+        self.remove_unit_wumpus_clause()
         self.has_wumpus.clear()
-        #Handle not_has_wumpus
-        for pos in self.not_has_wumpus:
-            self.remove_unit_clause(-Literal("Wumpus", *pos))
-            self.visited.discard(pos)
         self.not_has_wumpus.clear()
+        # self.visited.clear()
 
     def find_first_wumpus_on_path(self, start_x, start_y, direction):
         """
