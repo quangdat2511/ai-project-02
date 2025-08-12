@@ -103,6 +103,7 @@ class Environment:
             # Move the agent forward
             new_position = (x + dx, y + dy)
             percept = self.get_percept_in_cell(new_position)
+            position = new_position
 
         if action == Action.GRAB:
             self.grid[x][y].has_gold = False  # Agent grabs gold
