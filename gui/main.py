@@ -29,7 +29,7 @@ class App:
 
             self.draw()
 
-            if self.game_manager.current_state == "playing":
+            if self.game_manager.current_state == "normal" or self.game_manager.current_state == "advanced":
                 self.gameplay_screen.update(dt)
                 
             self.draw()
@@ -42,9 +42,8 @@ class App:
             if self.game_manager.current_state == "selecting":
                 if self.selection_screen.handle_event(event):
                     if self.selection_screen.game_started:
-                        self.game_manager.current_state = "playing"
-                        self.gameplay_screen.initialize()  # Thêm dòng này
-            elif self.game_manager.current_state == "playing":
+                        self.gameplay_screen.initialize(advanced_mode= self.game_manager.current_state == "advanced")
+            elif self.game_manager.current_state == "normal" or self.game_manager.current_state == "advanced":
                 self.gameplay_screen.handle_event(event)
     
     def draw(self):
@@ -52,8 +51,8 @@ class App:
         self.window.fill((50, 50, 50))  # tô nền xám để test
         if self.game_manager.current_state == "selecting":
             self.selection_screen.draw(self.window)
-        elif self.game_manager.current_state == "playing":
-            self.gameplay_screen.draw(self.window)
+        elif self.game_manager.current_state == "normal" or self.game_manager.current_state == "advanced":
+            self.gameplay_screen.draw(self.window, self.game_manager.current_state == "advanced")
         
         pygame.display.flip()
     

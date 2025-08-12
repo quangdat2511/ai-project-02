@@ -65,17 +65,17 @@ class GameplayScreen:
         #     "<<", (0, 150, 150), font=self.font, border_radius=5
         # )
         
-    def initialize(self):
+    def initialize(self, advanced_mode: bool = False):
         # Danh sách các cấu hình Environment
         env_configs = [
             # (8, 2, 0.2, False, None),
             # (12, 2, 0.2, False, None),
             # (16, 2, 0.2, False, None),
             # (2, 2, 0.2, False, None)
-            (8, 10, 0.5, False, None),
-            (12, 10, 0.5, False, None),
-            (16, 10, 0.5, False, None),
-            (2, 2, 0.2, False, None)
+            (8, 10, 0.2, advanced_mode, None),
+            (12, 10, 0.2, advanced_mode, None),
+            (16, 10, 0.2, advanced_mode, None),
+            (2, 2, 0.2, advanced_mode, None)
         ]
 
         # Chọn ngẫu nhiên một cấu hình
@@ -83,7 +83,7 @@ class GameplayScreen:
 
         # Tạo Environment và Agent
         self.environment = Environment(*config)
-        self.agent = Agent(2) 
+        self.agent = Agent(2)
                 
     def start_animation(self):
         if not self.is_animating:
@@ -135,7 +135,7 @@ class GameplayScreen:
         #     return True
             
         return False    
-    def draw(self, surface: pygame.Surface):
+    def draw(self, surface: pygame.Surface, advanced_mode: bool = False):
         # Draw background
         bg = self.game_manager.get_image('gamebackground')
         if bg is not None:
@@ -157,6 +157,7 @@ class GameplayScreen:
 
             # self.speed_up_button.draw(surface)
             # self.speed_down_button.draw(surface)
+            # Draw action info
 
     def draw_info_text(self, surface: pygame.Surface):
         pass

@@ -197,9 +197,13 @@ class GameManager:
             score_y = OFFSET_Y
 
             # Hiển thị Score
+            # Draw mode
+            mode_text = mode_text = font_large.render("Normal Mode", True, (255, 255, 255))
+            if env.advanced_mode:
+                mode_text = font_large.render("Advanced Mode", True, (255, 255, 255))
             score_text = font_large.render(f"Score: {agent.score}", True, (255, 255, 255))
-            surface.blit(score_text, (score_x, score_y))
-
+            surface.blit(score_text, (score_x, score_y + 30))
+            surface.blit(mode_text, (score_x, score_y))
             # Lấy percept hiện tại
             percept = env.get_percept_in_cell(agent.position)
                 #             glitter = percept.glitter
@@ -221,19 +225,19 @@ class GameManager:
             #     percept_images.append(self.get_image('cell_scream'))
             # Thêm chữ "Current Percept" trước các ảnh percept
             title_text = self.get_font('normal').render("Current Percept:", True, (255, 255, 0))
-            surface.blit(title_text, (score_x, score_y + 50))
+            surface.blit(title_text, (score_x, score_y + 80))
             # Nếu không có percept nào thì hiện "None"
             if not percept_images:
                 none_text = self.get_font('normal').render("None", True, (255, 255, 255))
-                surface.blit(none_text, (score_x, score_y + 80))
+                surface.blit(none_text, (score_x, score_y + 100))
             else:
                 # Hiển thị các hình percept ngay dưới dòng chữ
                 for i, img in enumerate(percept_images):
                     if img:
-                        surface.blit(img, (score_x, score_y + 80 + i * (CELL_SIZE + 5)))
+                        surface.blit(img, (score_x, score_y + 100 + i * (CELL_SIZE + 5)))
             # Hiển thị hành động hiện tại
             if current_action is not None:
                 action_text = self.get_font('normal').render(f"Last Action: {current_action.value}", True, (255, 255, 255))
-                surface.blit(action_text, (score_x, score_y + 80 + len(percept_images) * (CELL_SIZE + 5) + 20))
+                surface.blit(action_text, (score_x, score_y + 100 + len(percept_images) * (CELL_SIZE + 5) + 20))
 
 
