@@ -68,9 +68,13 @@ class GameplayScreen:
     def initialize(self):
         # Danh sách các cấu hình Environment
         env_configs = [
-            (8, 2, 0.2, False, None),
-            (12, 2, 0.2, False, None),
-            (16, 2, 0.2, False, None),
+            # (8, 2, 0.2, False, None),
+            # (12, 2, 0.2, False, None),
+            # (16, 2, 0.2, False, None),
+            # (2, 2, 0.2, False, None)
+            (8, 10, 0.5, False, None),
+            (12, 10, 0.5, False, None),
+            (16, 10, 0.5, False, None),
             (2, 2, 0.2, False, None)
         ]
 
@@ -139,6 +143,7 @@ class GameplayScreen:
         else:
             surface.fill((60, 60, 60))  # fallback background color
         self.menu_button.draw(surface)
+        self.reset_button.draw(surface)
         if self.agent.winning:
             self.game_manager.drawAgentWinning(surface, self.agent.score)
         elif not self.agent.is_alive:
@@ -149,7 +154,7 @@ class GameplayScreen:
             # Draw UI buttons
             self.play_button.draw(surface)
             self.pause_button.draw(surface)
-            self.reset_button.draw(surface)
+
             # self.speed_up_button.draw(surface)
             # self.speed_down_button.draw(surface)
 

@@ -29,6 +29,8 @@ class GameManager:
                 'cell_pit': CELL_PIT,
                 'gold': CELL_GOLD,
                 'glitter': GLITTER,
+                'bump': BUMP,
+                'scream': SCREAM,
                 'agent_left': AGENT_LEFT,
                 'agent_right': AGENT_RIGHT,
                 'agent_up': AGENT_UP,
@@ -153,6 +155,7 @@ class GameManager:
                 has_stench = percept.stench
                 has_breeze = percept.breeze
 
+
                 if is_wumpus:
                     img = self.get_image('cell_wumpus')
                     if img: surface.blit(img, rect.topleft)
@@ -199,13 +202,19 @@ class GameManager:
 
             # Lấy percept hiện tại
             percept = env.get_percept_in_cell(agent.position)
+                #             glitter = percept.glitter
+                # bump = percept.bump
             percept_images = []
             if percept.stench:
                 percept_images.append(self.get_image('cell_stench'))
             if percept.breeze:
                 percept_images.append(self.get_image('cell_breeze'))
-            if getattr(percept, "glitter", False):
+            if percept.glitter:
                 percept_images.append(self.get_image('glitter'))
+            if percept.bump:
+                percept_images.append(self.get_image('bump'))
+            if percept.scream:
+                percept_images.append(self.get_image('scream'))
             # if getattr(percept, "bump", False):
             #     percept_images.append(self.get_image('cell_bump'))
             # if getattr(percept, "scream", False):
