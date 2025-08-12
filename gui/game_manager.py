@@ -114,7 +114,15 @@ class GameManager:
             
 
 
+    def draw_cell_image(self, surface, img, rect, scale=0.4):
+        # Thu nhỏ ảnh theo tỉ lệ
+        new_w = int(rect.width * scale)
+        new_h = int(rect.height * scale)
+        img = pygame.transform.smoothscale(img, (new_w, new_h))
 
+        # Căn giữa ảnh trong ô
+        img_rect = img.get_rect(center=rect.center)
+        surface.blit(img, img_rect.topleft)
     def draw_environment(self, surface: pygame.Surface, env: Environment, agent: 'Agent' = None, current_action: Action = None):
         N = env.N  # Lưới NxN
         grid_width = CELL_SIZE * N
@@ -142,7 +150,9 @@ class GameManager:
                         img = self.get_image('agent_down')
                     elif agent.direction == Direction.WEST:
                         img = self.get_image('agent_left')
-                    if img: surface.blit(img, rect.topleft)
+                    if img:
+                        img_rect = img.get_rect(center=rect.center)
+                        surface.blit(img, img_rect.topleft)
                     continue  # Skip drawing the cell if agent is there
 
 
@@ -158,34 +168,39 @@ class GameManager:
 
                 if is_wumpus:
                     img = self.get_image('cell_wumpus')
-                    if img: surface.blit(img, rect.topleft)
+                    if img:
+                        img_rect = img.get_rect(center=rect.center)
+                        surface.blit(img, img_rect.topleft)
                 elif is_pit:
                     img = self.get_image('cell_pit')
-                    if img: surface.blit(img, rect.topleft)
+                    if img:
+                        img_rect = img.get_rect(center=rect.center)
+                        surface.blit(img, img_rect.topleft)
                 else:
-                    # if is_gold and has_stench and has_breeze:
-                    #     img = self.get_image('cell_breeze_stench_gold')
-                    #     if img: surface.blit(img, rect.topleft)
-                    # else:
-                    #     if has_stench and has_breeze:
-                    #         img = self.get_image('cell_breeze_stench')
-                    #         if img: surface.blit(img, rect.topleft)
-                    #     elif has_breeze and is_gold:
-                    #         img = self.get_image('cell_breeze_gold')
-                    #         if img: surface.blit(img, rect.topleft)
-                    #     elif has_stench and is_gold:
-                    #         img = self.get_image('cell_stench_gold')
-                    #         if img: surface.blit(img, rect.topleft)
-                    #     elif has_stench:
-                    #         img = self.get_image('cell_stench')
-                    #         if img: surface.blit(img, rect.topleft)
-                    #     elif has_breeze:
-                    #         img = self.get_image('cell_breeze')
-                    #         if img: surface.blit(img, rect.topleft)
-
-                        if is_gold:
-                            img = self.get_image('gold')
-                            if img: surface.blit(img, rect.topleft)
+                        if is_gold and has_stench and has_breeze:
+                            img = self.get_image('cell_breeze_stench_gold')
+                            if img: self.draw_cell_image(surface, img, rect, 0.6)
+                        else:
+                            if has_stench and has_breeze:
+                                img = self.get_image('cell_breeze_stench')
+                                if img: self.draw_cell_image(surface, img, rect, 0.6)
+                            elif has_breeze and is_gold:
+                                img = self.get_image('cell_breeze_gold')
+                                if img: self.draw_cell_image(surface, img, rect, 0.6)
+                            elif has_stench and is_gold:
+                                img = self.get_image('cell_stench_gold')
+                                if img: self.draw_cell_image(surface, img, rect, 0.6)
+                            elif has_stench:
+                                img = self.get_image('cell_stench')
+                                if img: self.draw_cell_image(surface, img, rect)
+                            elif has_breeze:
+                                img = self.get_image('cell_breeze')
+                                if img: self.draw_cell_image(surface, img, rect)
+                            if is_gold:
+                                img = self.get_image('gold')
+                                if img:
+                                    img_rect = img.get_rect(center=rect.center)
+                                    surface.blit(img, img_rect.topleft)
 
 
         # score, last action, last percept
