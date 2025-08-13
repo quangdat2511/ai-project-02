@@ -14,7 +14,7 @@ class Dropdown:
 
     def draw(self, screen):
         # Draw title
-        title_surf = self.font.render(self.title, True, (0, 0, 0))
+        title_surf = self.font.render(self.title, True, (255, 255, 255))
         screen.blit(title_surf, self.pos)
 
         # Draw main box

@@ -106,7 +106,11 @@ class GameplayScreen:
             self.is_paused = not self.is_paused
             
     def reset_animation(self):
-        self.initialize(self.environment.advanced_mode, selected_map=self.game_manager.selected_map)  # Reset environment and agent
+        self.initialize(
+            self.environment.advanced_mode,
+            selected_map=self.game_manager.selected_map,
+            selected_agent="Smart" if isinstance(self.agent, Agent) else "Random"
+        )
         self.is_animating = False
         self.is_paused = False
         self.animation_timer = 0.0
