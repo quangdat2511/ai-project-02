@@ -107,6 +107,7 @@ class Environment:
 
         if action == Action.GRAB:
             self.grid[x][y].has_gold = False  # Agent grabs gold
+            percept.glitter = False  # Gold is no longer in the cell
 
         if action == Action.SHOOT:
             for step in range(1, self.N):
@@ -172,20 +173,3 @@ class Environment:
             if self._valid(nx, ny):
                 neighbors.append((nx, ny))
         return neighbors
-
-    def __str__(self):
-        result = ""
-        for y in reversed(range(self.N)):  # từ trên xuống dưới
-            for x in range(self.N):
-                cell = self.grid[x][y]
-                content = "."
-                if cell.has_wumpus:
-                    content = "W"
-                elif cell.has_pit:
-                    content = "P"
-                elif cell.has_gold:
-                    content = "G"
-                result += f"{content} "
-            result += "\n"
-        result += "\n"
-        return result

@@ -61,7 +61,6 @@ class Agent:
                         self.inference_engine.shoot_position = visited_wumpus_neighbors[0]
 
                     if self.inference_engine.shoot_position == self.position:
-                        # nếu đang ở ô có Stench và không có Breeze, bắn Wumpus
                         neighbors = self._neighbors(self.position)
                         goal = None
                         for neighbor in neighbors:
@@ -91,7 +90,6 @@ class Agent:
                     goal = self.inference_engine.shoot_position
                 else:
                     # random neighbor
-                    # print("No safe unvisited positions, choosing a random neighbor.")
                     neighbors = self._neighbors(self.position)
                     unvisited_neighbors = [pos for pos in neighbors if pos not in self.inference_engine.visited and not self.inference_engine.infer(Literal("Pit", *pos, False)) and not self.inference_engine.infer(Literal("Wumpus", *pos, False))]
                     if unvisited_neighbors:
@@ -112,9 +110,7 @@ class Agent:
                     default=None
                 )
 
-        # print(f"Current position: {self.position}, Goal: {goal}")
         path = self.planner.a_star(start=self.position, goal=goal, visited=self.inference_engine.visited, start_dir=self.direction)
-        # print("Path: ", path)
 
         current_position = self.position
         current_direction = self.direction
@@ -161,11 +157,9 @@ class Agent:
         if value:
             # Breeze(x,y) => (P1 v P2 v ...)
             clause = Clause(pits)
-            # self.inference_engine.kb.tell(Clause([b]))
             self.inference_engine.kb.tell(clause)
         else:
             # NOT Breeze => tất cả các Pit kề đều False
-            # self.inference_engine.kb.tell(Clause([-b]))
             for p in pits:
                 self.inference_engine.kb.tell(Clause([-p]))
         
@@ -187,33 +181,23 @@ class Agent:
     
     def _add_scream_axioms(self, value: bool):
         #Mục tiêu của percept này là giúp cho agent có thêm thông tin ô kh có W.
-        #Vì vậy nếu W di chuyển sau 5 - k bước thì thông tin kh còn áp dụng được nữa.
-        #Các suy luận liên quan đến percept này nên được thiết kế để loại bỏ dễ dàng (nếu cần).
         if (value):
             nx, ny = self.position
             dx, dy = self.direction.value
             s = Literal("Scream", -1, -1)
-            #Đầu tiên là giảm K. Khi giảm K cần hết sức thận trọng, để kết luận kh bị sai thì nếu con
-            #W nằm trong has_wumpus thì ta phải xóa nó. Nếu biết vị trí của W bị bắn => Dễ, nếu kh biết
-            #thì tạm xóa 1 ô đầu tiên đã biết có W trên hướng đó, còn nếu trong has_wumpus chưa có ô nào trên
-            #hướng đó thì kh cần vì điều đó có nghĩa con W bị bắn này ch dc tính vào K.
+            
             while True:
                 nx += dx
                 ny += dy
                 lit = Literal("Wumpus", nx, ny)
                 a = self.inference_engine.infer(-lit)
-                if a:#đã biết chắc chắn kh có W thì mũi tên kh
-                    #dừng ở ô này
+                if a:#đã biết chắc chắn kh có W thì mũi tên kh dừng ở ô này
                     continue
                 elif self.inference_engine.infer(lit): #nếu bắt gặp 1 ô chắc chắn có W 
-                    #sau loạt ô chắc chắn kh có W thì => biết chính xác vị trí W bị bắn:
+                    
                     self.inference_engine.kb.tell(Clause([s]))
                     self.inference_engine.kb.tell(Clause([-s]) | Clause([-lit]))
-                    #Remove ô này trong set has_wumpus
-                    #thêm trong set no_has_wumpus, remove visited 4 ô xung quanh ô này,
-                    #xóa 4 mệnh đề stench và literal liên quan ở 4 ô xung quanh (nếu đang có trong KB)
-                    #Làm sao agent có thể đi lại 4 ô đó để kiểm tra?
-                    #Hiện tại thuật toán có cho agent đi lại ô visited kh? và khi nào đi
+                    
                     self.inference_engine.has_wumpus.discard((nx, ny))
                     self.inference_engine.remove_unit_clause(Literal("Wumpus", nx, ny))
                     self.inference_engine.not_has_wumpus.add((nx, ny))
@@ -225,12 +209,7 @@ class Agent:
                     if (self.position + self.direction.value == nx, ny):
                         self.inference_engine.visited.add(self.position)                    
                     break
-                else:#Nếu gặp ô chưa có kết luận thì có thêm Scream => not W ở ô đó. Xóa hết tất cả 
-                    #mệnh đề về stench ở hướng đó +-1 (là 3 cột hoặc 3 hàng với hàng agent đang đúng
-                    #làm trung tâm, đồng thời bỏ visited các ô đó). Đồng thời trên hướng bắn đó nếu
-                    #1 hay nhiều ô nào nằm trong has_wumpus thì tạm thời xóa ô đầu tiên gặp (vì có thể 
-                    # là con này bị bắn mà ta chưa thể kết luận ở đây, nếu nó còn thì agent sẽ 
-                    # tự visit và suy luận lại sau)
+                else:
                     self.inference_engine.kb.tell(Clause([s]))
                     self.inference_engine.kb.tell(Clause([-s]) | Clause([-lit]))
                     x_min = x_max = y_min = y_max = 0
@@ -260,16 +239,10 @@ class Agent:
                     if (self.position + self.direction.value == nx, ny):
                         self.inference_engine.visited.add(self.position)                    
                     break
-        else: #Nếu kh nghe scream thì:
-            #Nếu agent đang quay về South thì tất cả ô từ vị trí (x, y) -> (x, 0) đều kh có W
-            #Nếu agent đang quay về West thì tất cả ô từ vị trí (x, y) -> (0, y) đều kh có W
-            #Nếu agent đang quay về Est thì tất cả ô (x', y') sao cho y' = y và x' > x đều kh có W
-            #Nếu agent đang quay về North thì tất cả các ô (x', y') sao cho x' = x và y' > y đều kh có W
-            #Nên thêm 1 hàm riêng hỗ trợ suy luận has_wumpus dựa trên tập has_wumpus và suy luận này.
+        else: 
             self.inference_engine.not_scream_helper.available = True
             self.inference_engine.not_scream_helper.org_position = self.position
             self.inference_engine.not_scream_helper.shooting_direction = self.direction
-        #Tóm lại, nếu W di chuyển thì sau 5 bước nếu trong KB còn mệnh đề liên quan đến Scream thì xóa đi.
 
     def _valid(self, nx, ny):
         if self.N == -1:
@@ -315,7 +288,6 @@ class Agent:
 
         if self.is_moving_wumpus == True and self.action_count % 5 == 0:
             self.inference_engine.handle_moving_wumpus()
-            # self.add_percept(percept, *self.position)
 
         if action == Action.FORWARD:
             dx, dy = self.direction.value
@@ -334,7 +306,7 @@ class Agent:
                             self.inference_engine.infer(-Literal("Wumpus", *neighbor))
             else:
                 print("Bumped into a wall, cannot move forward.")
-                self.N = max(self.N, self.position[0] + 1, self.position[1] + 1)  # Cập nhật kích thước N
+                self.N = max(self.N, self.position[0] + 1, self.position[1] + 1)  # update N
                 # filter the valid positions in sets
                 self.inference_engine.not_has_pit = {pos for pos in self.inference_engine.not_has_pit if self._valid(*pos)}
                 self.inference_engine.not_has_wumpus = {pos for pos in self.inference_engine.not_has_wumpus if self._valid(*pos)}
@@ -344,17 +316,17 @@ class Agent:
             self.score -= 1  
         elif action == Action.TURN_LEFT:
             self.direction = self.direction.turn_left()
-            self.score -= 1  # Quay trái mất điểm
+            self.score -= 1  
         elif action == Action.TURN_RIGHT:
             self.direction = self.direction.turn_right()
-            self.score -= 1  # Quay phải mất điểm
+            self.score -= 1 
         elif action == Action.GRAB:
             self.has_gold = True
             self.score += 10
         elif action == Action.SHOOT:
             if self.has_arrow:
                 self.has_arrow = False
-                self.score -= 10  # Bắn mất mũi tên
+                self.score -= 10  
                 if percept.scream:
                     self.inference_engine.alive_wumpus_count -= 1
                 if self.is_moving_wumpus == False or (self.is_moving_wumpus == True and self.action_count % 5 != 0):
@@ -389,8 +361,6 @@ class Agent:
         return percept
 
     def play(self, environment: Environment):
-        # start_time = time.perf_counter()
-
         self.display(environment)
 
         # Get initial percept
@@ -414,11 +384,6 @@ class Agent:
             actions = self.get_actions(percept)
             for action in actions:
                 percept = self.perform_action(action, environment)
-
-        # end_time = time.perf_counter()
-        # elapsed = end_time - start_time
-        # print(f"Time: {elapsed: .4f} seconds")
-        # print(f"Score: {self.score}")
 
     def play_one_action(self, environment: Environment):
         if not self.current_percept:
@@ -533,15 +498,8 @@ class RandomAgent:
         return action
     
     def play(self, environment: Environment):
-        # start_time = time.perf_counter()
-
         self.display(environment)
         percept = environment.get_percept_in_cell(self.position)
         while self.is_alive and not self.climbed_out:
             action = self.get_random_action(percept)
             percept = self.perform_action(action, environment)
-
-        # end_time = time.perf_counter()
-        # elapsed = end_time - start_time
-        # print(f"Time: {elapsed: .4f} seconds")
-        # print(f"Score: {self.score}")

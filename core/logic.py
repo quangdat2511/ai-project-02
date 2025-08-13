@@ -85,9 +85,9 @@ class InferenceEngine:
         self.visited = set()
         self.alive_wumpus_count = K
         self.has_wumpus = set()
-        self.has_pit = set()  # các ô có Pit
-        self.not_has_wumpus = set()  # các ô không có Wumpus
-        self.not_has_pit = set()  # các ô không có Pit
+        self.has_pit = set()  
+        self.not_has_wumpus = set()  
+        self.not_has_pit = set()  
         self.shoot_position = (-1, -1)
         self.not_scream_helper = ScreamSupport()
 
@@ -185,10 +185,7 @@ class InferenceEngine:
                     return False
                 
     def remove_stench_clauses(self, x, y):
-        """
-        Xóa toàn bộ clause trong KB có chứa literal Stench tại tọa độ (x, y),
-        bất kể literal đó có dấu phủ định hay không.
-        """
+        # xóa toàn bộ clause trong KB có chứa literal Stench tại tọa độ (x, y), bất kể literal đó có dấu phủ định hay không.
         to_remove = {clause for clause in self.kb.clauses
                     if any(lit.name == "Stench" and lit.position == (x, y)
                             for lit in clause.literals)}
@@ -235,12 +232,6 @@ class InferenceEngine:
 
         return removed_positions
 
-    # def remove_unit_wumpus_clause(self):
-    #     for clause in list(self.kb.clauses): 
-    #         if len(clause.literals) == 1:
-    #             lit = next(iter(clause.literals))
-    #             if lit.name == "Wumpus":
-    #                 self.kb.clauses.discard(clause)
     def remove_wumpus_clauses(self):
         to_remove = {clause for clause in self.kb.clauses
                     if any(lit.name == "Wumpus" for lit in clause.literals)}
@@ -254,17 +245,7 @@ class InferenceEngine:
         positions = self.remove_all_unit_stench_clause_in_range(None, None, None, None)
         for pos in positions:
             self.remove_stench_clauses(*pos)
-            # self.visited.discard(pos)
-        #Handle has_wumpus
-        # for pos in self.has_wumpus:
-        #     self.remove_unit_clause(Literal("Wumpus", *pos))
-        #     self.visited.discard(pos)
-        # self.has_wumpus.clear()
-        # #Handle not_has_wumpus
-        # for pos in self.not_has_wumpus:
-        #     self.remove_unit_clause(-Literal("Wumpus", *pos))
-        #     self.visited.discard(pos)
-        # self.not_has_wumpus.clear()
+
         self.remove_wumpus_clauses()
         self.has_wumpus.clear()
         self.not_has_wumpus.clear()
@@ -272,10 +253,8 @@ class InferenceEngine:
         self.shoot_position = (-1, -1)
 
     def find_first_wumpus_on_path(self, start_x, start_y, direction):
-        """
-        Tìm vị trí Wumpus đầu tiên trên đường bắn từ (start_x, start_y)
-        theo hướng cho trước. Nếu không có trả về None.
-        """
+        # Tìm vị trí Wumpus đầu tiên trên đường bắn từ (start_x, start_y) theo hướng cho trước. Nếu không có trả về None.
+
         if direction == Direction.NORTH:
             # Cùng cột, y tăng dần
             candidates = [(x, y) for (x, y) in self.has_wumpus if x == start_x and y > start_y]
