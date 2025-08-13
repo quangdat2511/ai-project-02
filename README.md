@@ -42,7 +42,3 @@ If the program runs successfully, the initial game window will appear as shown b
 
 6. "Advanced" button (orange): Starts the game in Advanced Mode.
 <img width="1436" height="1021" alt="{C88F0794-7D65-403D-80B3-AF4E931256C0}" src="https://github.com/user-attachments/assets/65fe3e71-0ce1-4974-b500-8044b3b47873" />
-
-=======
-![alt text]({C88F0794-7D65-403D-80B3-AF4E931256C0}.png)
->>>>>>> Stashed changes
