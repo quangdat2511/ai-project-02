@@ -35,7 +35,7 @@ If the program runs successfully, the initial game window will appear as shown b
 
 3. "Select Map" dropdown (left side): Allows choosing the map (e.g., 1, 2, 3, 4, 5. Random).
 
-4. "Agent" dropdown (right side): Allows choosing the agent type (Smart, Random, etc.).
+4. "Agent" dropdown (right side): Allows choosing the agent type (Hybrid, Random, etc.).
 
 5. "Normal" button (blue): Starts the game in Normal Mode.
 

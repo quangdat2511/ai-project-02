@@ -10,12 +10,12 @@ class GameManager:
         self.images: Dict[str, pygame.Surface] = {}
         self.fonts: Dict[str, pygame.font.Font] = {}
         self.maps: List[str] = ["1", "2", "3", "4", "5", "Random"]
-        self.agents: List[str] = ["Smart", "Random"]
+        self.agents: List[str] = ["Hybrid", "Random"]
         self.load_assets()
         # game state
         self.current_state = "selecting"
         self.is_running = True
-        self.selected_agent = "Smart"
+        self.selected_agent = "Hybrid"
         self.selected_map = "1"
     def load_assets(self):
         try:
@@ -145,6 +145,26 @@ class GameManager:
                     CELL_SIZE
                 )
                 pygame.draw.rect(surface, GRID_COLOR, rect, 3)
+                if agent is not None and hasattr(agent, "inference_engine"):
+                    visited_cells = getattr(agent.inference_engine, "visited", set())
+                    not_has_wumpus = getattr(agent.inference_engine, "not_has_wumpus", set())
+                    not_has_pit = getattr(agent.inference_engine, "not_has_pit", set())
+                    
+                    safe_cells = not_has_wumpus & not_has_pit  # giao 2 tập
+
+                    # Chọn màu theo trạng thái
+                    if (x, y) in visited_cells and (x, y) in safe_cells:
+                        color = COLOR_SAFE_AND_VISITED  # xanh lá nhạt
+                    elif (x, y) in safe_cells:
+                        color = COLOR_SAFE_ONLY  # vàng nhạt
+                    elif (x, y) in visited_cells:
+                        color = COLOR_VISITED_ONLY  # xanh dương nhạt
+                    else:
+                        color = None
+
+                    if color:
+                        visited_rect = pygame.Rect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4)
+                        pygame.draw.rect(surface, color, visited_rect)
                 if agent is not None and agent.position == (x, y):
                     if agent.direction == Direction.NORTH:
                         img = self.get_image('agent_up')
@@ -245,11 +265,17 @@ class GameManager:
                 True,
                 COLOR_SCORE
             )
-
+            # Direction
+            direction_text = font_large.render(
+                f"Direction: {agent.direction.name}",
+                True,
+                (255, 255, 0)  # màu vàng nổi bật
+            )
             # Vẽ các thông tin khác
             surface.blit(mode_text, (score_x, score_y + 60))
             surface.blit(score_text, (score_x, score_y + 90))
             surface.blit(action_count_text, (score_x, score_y + 120))
+            surface.blit(direction_text, (score_x, score_y + 150))
             # print(type(agent))
             # print(isinstance(agent, Agent))
             # Percept
@@ -270,14 +296,14 @@ class GameManager:
                         percept_list.append(("Scream", self.get_image('scream')))
 
                     title_text = font_normal.render("Current Percept:", True, COLOR_PERCEPT_TITLE)
-                    surface.blit(title_text, (score_x, score_y + 150))
+                    surface.blit(title_text, (score_x, score_y + 180))
 
                     if not percept_list:
                         none_text = font_normal.render("None", True, COLOR_PERCEPT_NONE)
-                        surface.blit(none_text, (score_x, score_y + 180))
+                        surface.blit(none_text, (score_x, score_y + 210))
                     else:
                         for i, (label, img) in enumerate(percept_list):
-                            y_pos = score_y + 180 + i * (CELL_SIZE + 5)
+                            y_pos = score_y + 210 + i * (CELL_SIZE + 5)
                             if img:
                                 surface.blit(img, (score_x, y_pos))
                             label_text = font_normal.render(label, True, (255, 255, 255))
@@ -286,11 +312,28 @@ class GameManager:
             # Last action
             if current_action is not None:
                 action_text = font_normal.render(
-                    f"Last Action: {current_action.value}",
+                    f"Action: {current_action.value}",
                     True,
                     COLOR_LAST_ACTION
                 )
-                surface.blit(action_text, (score_x, score_y + 180 + len(percept_list) * (CELL_SIZE + 5) + 20))
+                surface.blit(action_text, (score_x, score_y + 210 + len(percept_list) * (CELL_SIZE + 5) + 20))
+                # === Legend cho màu ô ===
+            legend_start_y = score_y + 260 + len(percept_list) * (CELL_SIZE + 5)
+
+            # 1. Ô Safe (chỉ an toàn)
+            pygame.draw.rect(surface, COLOR_SAFE_ONLY, (score_x, legend_start_y, CELL_SIZE, CELL_SIZE))
+            surface.blit(font_normal.render("Only Safe Cell", True, (255, 255, 255)),
+                        (score_x + CELL_SIZE + 5, legend_start_y + CELL_SIZE // 4))
+
+            # 2. Ô Visited (chỉ đã đi qua)
+            pygame.draw.rect(surface, COLOR_VISITED_ONLY, (score_x, legend_start_y + CELL_SIZE + 5, CELL_SIZE, CELL_SIZE))
+            surface.blit(font_normal.render("Only Visited Cell", True, (255, 255, 255)),
+                        (score_x + CELL_SIZE + 5, legend_start_y + CELL_SIZE + 5 + CELL_SIZE // 4))
+
+            # 3. Ô Safe & Visited (cả an toàn và đã đi qua)
+            pygame.draw.rect(surface, COLOR_SAFE_AND_VISITED, (score_x, legend_start_y + 2*(CELL_SIZE + 5), CELL_SIZE, CELL_SIZE))
+            surface.blit(font_normal.render("Both Safe & Visited Cell", True, (255, 255, 255)),
+                        (score_x + CELL_SIZE + 5, legend_start_y + 2*(CELL_SIZE + 5) + CELL_SIZE // 4))
             
 
 

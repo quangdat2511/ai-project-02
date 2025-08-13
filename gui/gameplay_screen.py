@@ -72,7 +72,7 @@ class GameplayScreen:
         self.input_box_P = InputBox(indent + 200, input_y, 80, 30, text='', font=self.small_font)
 
         
-    def initialize(self, advanced_mode: bool = True, selected_map: str = "Random", selected_agent: str = "Smart"):
+    def initialize(self, advanced_mode: bool = True, selected_map: str = "Random", selected_agent: str = "Hybrid"):
         # Lấy giá trị người dùng nhập (nếu có)
         def get_input_value(input_box, default):
             try:
@@ -116,7 +116,7 @@ class GameplayScreen:
             raise ValueError(f"Invalid selected_map value: {selected_map}")
 
         # Khởi tạo Agent
-        if selected_agent == "Smart":
+        if selected_agent == "Hybrid":
             self.agent = Agent(K=self.environment.K, is_moving_wumpus=self.environment.advanced_mode)
         elif selected_agent == "Random":
             self.agent = RandomAgent()
@@ -133,14 +133,10 @@ class GameplayScreen:
             self.is_paused = not self.is_paused
             
     def reset_animation(self):
-        # N = self.input_box_N.get_value(default=8)
-        # K = self.input_box_K.get_value(default=2)
-        # P = self.input_box_P.get_value(default=0.2)
-
         self.initialize(
             self.environment.advanced_mode,
             selected_map=self.game_manager.selected_map,
-            selected_agent="Smart" if isinstance(self.agent, Agent) else "Random"
+            selected_agent="Hybrid" if isinstance(self.agent, Agent) else "Random"
         )
         self.is_animating = False
         self.is_paused = False

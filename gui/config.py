@@ -53,4 +53,7 @@ CELL_BREEZE_STENCH_GOLD = 'gui/assets/breeze_stench_gold.png'
 BG_COLOR = (240, 240, 240)  # xám nhạt
 TEXT_COLOR = (0, 0, 0)      # đen
 HOVER_COLOR = (200, 200, 255)  # xanh nhạt khi hover
+COLOR_SAFE_ONLY = (0, 200, 0)       # Xanh lá đậm – an toàn
+COLOR_VISITED_ONLY = (0, 102, 204)  # Xanh dương đậm – đã đi qua
+COLOR_SAFE_AND_VISITED = (255, 165, 0)  # Cam – vừa an toàn vừa đã đi qua
 
