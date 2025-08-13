@@ -40,4 +40,5 @@ If the program runs successfully, the initial game window will appear as shown b
 5. "Normal" button (blue): Starts the game in Normal Mode.
 
 6. "Advanced" button (orange): Starts the game in Advanced Mode.
-<img width="1436" height="1021" alt="{C88F0794-7D65-403D-80B3-AF4E931256C0}" src="https://github.com/user-attachments/assets/65fe3e71-0ce1-4974-b500-8044b3b47873" />
+<img width="1436" height="1021" alt="{0057B281-F0C4-4773-8E1D-9EC85F217695}" src="https://github.com/user-attachments/assets/58e4ab43-1fc4-4685-bb63-dfa2e49a125b" />
+
