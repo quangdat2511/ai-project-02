@@ -36,20 +36,20 @@ class Agent:
         # count number of actions left until wumpus is moved for advanced mode
         actions_left = 5 - (self.action_count % 5)
 
-        print(f"Not has pit: ", self.inference_engine.not_has_pit)
-        print(f"Not has wumpus: ", self.inference_engine.not_has_wumpus)
-        print(f"Has wumpus: ", self.inference_engine.has_wumpus)
-        print(f"Has pit: ", self.inference_engine.has_pit)
-        print(f"Visited: ", self.inference_engine.visited)
+        # print(f"Not has pit: ", self.inference_engine.not_has_pit)
+        # print(f"Not has wumpus: ", self.inference_engine.not_has_wumpus)
+        # print(f"Has wumpus: ", self.inference_engine.has_wumpus)
+        # print(f"Has pit: ", self.inference_engine.has_pit)
+        # print(f"Visited: ", self.inference_engine.visited)
         if self.has_gold:
             goal = (0, 0)  
         else:
             safe_unvisited_pos = [pos for pos in self.inference_engine.not_has_pit if pos in self.inference_engine.not_has_wumpus and pos not in self.inference_engine.visited]
-            print(f"Safe unvisited positions: {safe_unvisited_pos}")
+            # print(f"Safe unvisited positions: {safe_unvisited_pos}")
             # goal is the closest unvisited cell that is safe
             if not safe_unvisited_pos:
-                print("shoot position: ", self.inference_engine.shoot_position)
-                print("Has arrow: ", self.has_arrow)
+                # print("shoot position: ", self.inference_engine.shoot_position)
+                # print("Has arrow: ", self.has_arrow)
                 if self.has_arrow and (len(self.inference_engine.has_wumpus) > 0 or self.inference_engine.shoot_position != (-1, -1)):
                     if len(self.inference_engine.has_wumpus) > 0:
                         # get the nearest wumpus from current position
@@ -91,7 +91,7 @@ class Agent:
                     goal = self.inference_engine.shoot_position
                 else:
                     # random neighbor
-                    print("No safe unvisited positions, choosing a random neighbor.")
+                    # print("No safe unvisited positions, choosing a random neighbor.")
                     neighbors = self._neighbors(self.position)
                     unvisited_neighbors = [pos for pos in neighbors if pos not in self.inference_engine.visited and not self.inference_engine.infer(Literal("Pit", *pos, False)) and not self.inference_engine.infer(Literal("Wumpus", *pos, False))]
                     if unvisited_neighbors:
@@ -112,9 +112,9 @@ class Agent:
                     default=None
                 )
 
-        print(f"Current position: {self.position}, Goal: {goal}")
+        # print(f"Current position: {self.position}, Goal: {goal}")
         path = self.planner.a_star(start=self.position, goal=goal, visited=self.inference_engine.visited, start_dir=self.direction)
-        print("Path: ", path)
+        # print("Path: ", path)
 
         current_position = self.position
         current_direction = self.direction

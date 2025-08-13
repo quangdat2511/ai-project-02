@@ -1,0 +1,30 @@
+Map size: 8x8
+. . P . . . . . 
+. . W . W . . . 
+P P . P . . . P 
+. . . . . . P . 
+. . . P . . . P 
+. . . . . . . . 
+W G . . . . . . 
+A P . . . . . . 
+
+Performing action: Action.SHOOT at position (0, 0) facing Direction.EAST
+. . P . . . . . 
+. . W . W . . . 
+P P . P . . . P 
+. . . . . . P . 
+. . . P . . . P 
+. . . . . . . . 
+W G . . . . . . 
+A P . . . . . . 
+
+Performing action: Action.CLIMB at position (0, 0) facing Direction.EAST
+. . P . . . . . 
+. . W . W . . . 
+P P . P . . . P 
+. . . . . . P . 
+. . . P . . . P 
+. . . . . . . . 
+W G . . . . . . 
+A P . . . . . . 
+

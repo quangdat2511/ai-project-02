@@ -1,0 +1,650 @@
+Map size: 8x8
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+A . . . W . P . 
+
+Performing action: Action.FORWARD at position (1, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. A . . W . P . 
+
+Performing action: Action.TURN_LEFT at position (1, 0) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. A . . W . P . 
+
+Performing action: Action.FORWARD at position (1, 1) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. A P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_LEFT at position (1, 1) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. A P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (0, 1) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+A . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_RIGHT at position (0, 1) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+A . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (0, 2) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+A . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_RIGHT at position (0, 2) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+A . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (1, 2) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_RIGHT at position (1, 2) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_RIGHT at position (1, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (0, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+A . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_RIGHT at position (0, 2) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+A . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (0, 3) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+A P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_RIGHT at position (0, 3) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+A P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.TURN_RIGHT at position (0, 3) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+A P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (0, 2) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+A . . . . . P . 
+. . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (0, 1) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+A . P . . P . . 
+. . . . W . P . 
+
+Performing action: Action.FORWARD at position (0, 0) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+A . . . W . P . 
+
+Performing action: Action.TURN_LEFT at position (0, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+A . . . W . P . 
+
+Performing action: Action.FORWARD at position (1, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. A . . W . P . 
+
+Performing action: Action.FORWARD at position (2, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . A . W . P . 
+
+Performing action: Action.FORWARD at position (3, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . A W . P . 
+
+Performing action: Action.SHOOT at position (3, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . A . . P . 
+
+Performing action: Action.FORWARD at position (4, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . A . P . 
+
+Performing action: Action.FORWARD at position (5, 0) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . A P . 
+
+Performing action: Action.TURN_RIGHT at position (5, 0) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . A P . 
+
+Performing action: Action.TURN_RIGHT at position (5, 0) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . A P . 
+
+Performing action: Action.FORWARD at position (4, 0) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . A . P . 
+
+Performing action: Action.TURN_RIGHT at position (4, 0) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . A . P . 
+
+Performing action: Action.FORWARD at position (4, 1) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . A P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_LEFT at position (4, 1) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . A P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (3, 1) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P A . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (3, 1) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P A . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (3, 2) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . A . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (3, 2) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . A . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (4, 2) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . A . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (4, 2) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . A . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (4, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . A . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (3, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . A . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (3, 2) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . A . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (3, 3) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W A P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (3, 3) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W A P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (3, 3) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W A P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (3, 2) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . A . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (3, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . A . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (2, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . A . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (1, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (1, 2) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (1, 2) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (2, 2) facing Direction.EAST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . A . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (2, 2) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . A . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (2, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . A . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (1, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_LEFT at position (1, 2) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (1, 1) facing Direction.SOUTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. A P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (1, 1) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. A P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (1, 1) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. A P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (1, 2) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_LEFT at position (1, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+. A . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (0, 2) facing Direction.WEST
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+A . . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.TURN_RIGHT at position (0, 2) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+. P W . P . . . 
+A . . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (0, 3) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+P . . . . . . P 
+A P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+
+Performing action: Action.FORWARD at position (0, 4) facing Direction.NORTH
+. . . . . . . P 
+P . . . G . . P 
+. . . . . . . P 
+A . . . . . . P 
+. P W . P . . . 
+. . . . . . P . 
+. . P . . P . . 
+. . . . . . P . 
+

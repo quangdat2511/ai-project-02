@@ -45,13 +45,43 @@ def main():
     print("Running Smart Agent")
     env_for_smart = copy.deepcopy(env_original)
     smart_agent = Agent(K=args.k)
-    smart_result = run_agent(smart_agent, env_for_smart)
+    # smart_result = run_agent(smart_agent, env_for_smart)
 
-    print("Running Random Agent")
-    env_for_random = copy.deepcopy(env_original)
-    random_agnet = RandomAgent()
-    random_result = run_agent(random_agnet, env_for_random)
+    output_dir = "testcases"
+    filename = os.path.join(output_dir, f"testcase{args.map_id}.txt")
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(f"Map size: {env_for_smart.N}x{env_for_smart.N}\n")
+        
+        def display(agent: Agent, env: Environment):
+            grid_str = ""
+            N = env.N
+            for y in reversed(range(N)):
+                for x in range(N):
+                    if (x, y) == agent.position:
+                        grid_str += "A "  # Agent
+                    else:
+                        c = env.grid[x][y]
+                        if c.has_wumpus: grid_str += "W "
+                        elif c.has_pit:  grid_str += "P "
+                        elif c.has_gold: grid_str += "G "
+                        else:             grid_str += ". "
+                grid_str += "\n"
+            f.write(grid_str)
+
+        action = smart_agent.play_one_action(env_for_smart)
+        display(smart_agent, env_for_smart)
+        f.write("\n")
+        while not smart_agent.climbed_out and smart_agent.is_alive:
+            action = smart_agent.play_one_action(env_for_smart)
+            f.write(f"Performing action: {action} at position {smart_agent.position} facing {smart_agent.direction}\n")
+            display(smart_agent, env_for_smart)
+            f.write("\n")
+
+    # print("Running Random Agent")
+    # env_for_random = copy.deepcopy(env_original)
+    # random_agnet = RandomAgent()
+    # random_result = run_agent(random_agnet, env_for_random)
 
     print("\n=====COMPARISON=======")
-    print(f"Smart Agent: {smart_result}")
-    print(f"Random Agent: {random_result}")
+    # print(f"Smart Agent: {smart_result}")
+    # print(f"Random Agent: {random_result}")
