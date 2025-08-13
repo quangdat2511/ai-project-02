@@ -25,5 +25,18 @@ This is a Wumpus World agent implementation with a graphical user interface (GUI
 ## How to Run
 Run the main.py file
 ## Expected outputs
+If the program runs successfully, the initial game window will appear as shown below:
+
+1. Window title: Project 02 – Wumpus World Agent
+
+2. Background: A space-themed scene with stars, galaxies, a UFO, an alien character, and an astronaut.
+
+3. "Select Map" dropdown (left side): Allows choosing the map (e.g., 1, 2, 3, 4, 5. Random).
+
+4. "Agent" dropdown (right side): Allows choosing the agent type (Smart, Random, etc.).
+
+5. "Normal" button (blue): Starts the game in Normal Mode.
+
+6. "Advanced" button (orange): Starts the game in Advanced Mode.
 <img width="1436" height="1021" alt="{C88F0794-7D65-403D-80B3-AF4E931256C0}" src="https://github.com/user-attachments/assets/65fe3e71-0ce1-4974-b500-8044b3b47873" />
 
