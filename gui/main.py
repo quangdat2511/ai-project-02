@@ -55,7 +55,7 @@ class App:
         if self.game_manager.current_state == "selecting":
             self.selection_screen.draw(self.window)
         elif self.game_manager.current_state == "normal" or self.game_manager.current_state == "advanced":
-            self.gameplay_screen.draw(self.window, self.game_manager.current_state == "advanced")
+            self.gameplay_screen.draw(self.window, self.game_manager.current_state == "advanced", selected_map=self.game_manager.selected_map)
         
         pygame.display.flip()
     
