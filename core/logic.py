@@ -118,6 +118,7 @@ class InferenceEngine:
             x2, y2 = query.position
             vx, vy = x2 - x1, y2 - y1
             if (dx == 0 and vx == 0 and dy * vy > 0) or (dy == 0 and vy == 0 and dx * vx > 0):
+                #Positions on shooting direction, not wumpus
                 if query.position not in self.not_has_wumpus:
                     self.not_has_wumpus.add(query.position)
                     self.kb.tell(Clause([-Literal("Wumpus", *query.position)]))
@@ -185,7 +186,7 @@ class InferenceEngine:
                     return False
                 
     def remove_stench_clauses(self, x, y):
-        # xóa toàn bộ clause trong KB có chứa literal Stench tại tọa độ (x, y), bất kể literal đó có dấu phủ định hay không.
+        # Delete all clauses in KB that contain the Stench literal at coordinates (x, y), regardless of whether negation sign or not.
         to_remove = {clause for clause in self.kb.clauses
                     if any(lit.name == "Stench" and lit.position == (x, y)
                             for lit in clause.literals)}
@@ -202,7 +203,7 @@ class InferenceEngine:
 
     def remove_unit_stench_clause_in_range(self, x_min=None, x_max=None, y_min=None, y_max=None):
         removed_positions = []
-        for clause in list(self.kb.clauses):  # copy để tránh thay đổi khi duyệt
+        for clause in list(self.kb.clauses):  #Copy to avoid changes
             if len(clause.literals) == 1:
                 lit = next(iter(clause.literals))
                 if lit.name == "Stench" and not lit.is_negated:
@@ -218,7 +219,7 @@ class InferenceEngine:
     
     def remove_all_unit_stench_clause_in_range(self, x_min=None, x_max=None, y_min=None, y_max=None):
         removed_positions = []
-        for clause in list(self.kb.clauses):  # copy để tránh thay đổi khi duyệt
+        for clause in list(self.kb.clauses):  #Copy to avoid changes
             if len(clause.literals) == 1:
                 lit = next(iter(clause.literals))
                 if lit.name == "Stench":
@@ -253,25 +254,24 @@ class InferenceEngine:
         self.shoot_position = (-1, -1)
 
     def find_first_wumpus_on_path(self, start_x, start_y, direction):
-        # Tìm vị trí Wumpus đầu tiên trên đường bắn từ (start_x, start_y) theo hướng cho trước. Nếu không có trả về None.
-
+        # Finds the first Wumpus position on the firing line from (start_x, start_y) in the given direction. If not, returns None.
         if direction == Direction.NORTH:
-            # Cùng cột, y tăng dần
+            #Same column, y increases
             candidates = [(x, y) for (x, y) in self.has_wumpus if x == start_x and y > start_y]
             return min(candidates, key=lambda pos: pos[1], default=None)
 
         elif direction == Direction.SOUTH:
-            # Cùng cột, y giảm dần
+            #Same column, y decreases
             candidates = [(x, y) for (x, y) in self.has_wumpus if x == start_x and y < start_y]
             return max(candidates, key=lambda pos: pos[1], default=None)
 
         elif direction == Direction.EAST:
-            # Cùng hàng, x tăng dần
+            #Same row, x increases
             candidates = [(x, y) for (x, y) in self.has_wumpus if y == start_y and x > start_x]
             return min(candidates, key=lambda pos: pos[0], default=None)
 
         elif direction == Direction.WEST:
-            # Cùng hàng, x giảm dần
+            #Same column, x decreases
             candidates = [(x, y) for (x, y) in self.has_wumpus if y == start_y and x < start_x]
             return max(candidates, key=lambda pos: pos[0], default=None)
 

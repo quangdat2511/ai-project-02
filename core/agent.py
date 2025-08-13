@@ -153,13 +153,13 @@ class Agent:
         neighbors = self._neighbors((x, y))
         b = Literal("Breeze", x, y)
         pits = [Literal("Pit", nx, ny) for (nx, ny) in neighbors]
-        self.inference_engine.kb.tell(Clause([-Literal("Pit", x, y)]))  # Thêm ô hiện tại là không có Pit
+        self.inference_engine.kb.tell(Clause([-Literal("Pit", x, y)]))  #Thêm ô hiện tại là không có Pit
         if value:
-            # Breeze(x,y) => (P1 v P2 v ...)
+            #Breeze(x,y) => (P1 v P2 v ...)
             clause = Clause(pits)
             self.inference_engine.kb.tell(clause)
         else:
-            # NOT Breeze => tất cả các Pit kề đều False
+            #NOT Breeze => tất cả các Pit kề đều False
             for p in pits:
                 self.inference_engine.kb.tell(Clause([-p]))
         
@@ -167,14 +167,14 @@ class Agent:
         neighbors = self._neighbors((x, y))
         s = Literal("Stench", x, y)
         wumps = [Literal("Wumpus", nx, ny, False) for (nx,ny) in neighbors]
-        self.inference_engine.kb.tell(Clause([-Literal("Wumpus", x, y)]))  # Thêm ô hiện tại là không có Wumpus
+        self.inference_engine.kb.tell(Clause([-Literal("Wumpus", x, y)]))  #Thêm ô hiện tại là không có Wumpus
         if value:
-            # Stench => (W1 v W2 v ...)
+            #Stench => (W1 v W2 v ...)
             clause = Clause(wumps)
             self.inference_engine.kb.tell(Clause([s]))
             self.inference_engine.kb.tell(Clause([-s]) | clause)
         else:
-            # NOT Stench => tất cả Wumpus kề đều False
+            #NOT Stench => tất cả Wumpus kề đều False
             self.inference_engine.kb.tell(Clause([-s]))
             for w in wumps:
                 self.inference_engine.kb.tell(Clause([s]) | Clause([-w]))
@@ -210,6 +210,7 @@ class Agent:
                         self.inference_engine.visited.add(self.position)                    
                     break
                 else:
+                    #Không chắc có Wumpus hay không
                     self.inference_engine.kb.tell(Clause([s]))
                     self.inference_engine.kb.tell(Clause([-s]) | Clause([-lit]))
                     x_min = x_max = y_min = y_max = 0
@@ -225,14 +226,17 @@ class Agent:
                     elif self.direction == Direction.SOUTH:
                         x_min, x_max = nx - 1, nx + 1
                         y_min, y_max = None, ny
+                    #Tìm thử đã biết wumpus nào nằm trên hướng bắn chưa
                     the_sus_wumpus = self.inference_engine.find_first_wumpus_on_path(nx, ny, self.direction)
                     if (the_sus_wumpus != None):
                         sx, sy = the_sus_wumpus
                         self.inference_engine.has_wumpus.discard((sx, sy))
                         self.inference_engine.remove_unit_clause(Literal("Wumpus", sx, sy))
+                    #Xóa Stench unit clause trong phạm vi
                     removed_positions = self.inference_engine.remove_unit_stench_clause_in_range(x_min, x_max, y_min, y_max)
                     if (self.position + self.direction.value == nx, ny):
                         removed_positions.append(self.position)
+                    #Xóa tiếp các mệnh đề -Stench or Wumpux.... khi đã xóa Stench của nó ở trên
                     for pos in removed_positions:
                         self.inference_engine.remove_stench_clauses(pos[0], pos[1])
                         self.inference_engine.visited.discard(pos)
