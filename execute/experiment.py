@@ -2,8 +2,8 @@ import copy
 import time
 import os
 from dataclasses import dataclass
-from state.environment import *
-from state.agent import *
+from core.environment import *
+from core.agent import *
 from typing import List
 
 @dataclass
@@ -101,12 +101,49 @@ def run_and_save_results(N: int, K: int, p: float, mode: str, M: int):
         success_rate_smart = sum(1 for r in smart_results if r.success) / num_runs
         avg_score_random = sum(r.score for r in random_results) / num_runs
         success_rate_random = sum(1 for r in random_results if r.success) / num_runs
+        avg_time_smart = sum(r.time for r in smart_results) / num_runs
+        avg_time_random = sum(r.time for r in random_results) / num_runs
+        avg_actions_smart = sum(r.actions for r in smart_results) / num_runs
+        avg_actions_random = sum(r.actions for r in random_results) / num_runs
 
         f.write("\n\n" + "="*55 + "\n")
         f.write("SUMMARY\n")
         f.write("="*55 + "\n")
         f.write(f"{'Stats':<20} | {'Smart Agent':^18} | {'Random Agent':^18}\n")
         f.write("-" * 55 + "\n")
-        f.write(f"{'Win rate (%)':<20} | {success_rate_smart:^18.1f} | {success_rate_random:^18.1f}\n")
+        f.write(f"{'Win rate (%)':<20} | {success_rate_smart:^18.3f} | {success_rate_random:^18.3f}\n")
         f.write(f"{'Average score':<20} | {avg_score_smart:^18.2f} | {avg_score_random:^18.2f}\n")
+        f.write(f"{'Average time (s)':<20} | {avg_time_smart:^18.6f} | {avg_time_random:^18.6f}\n")
+        f.write(f"{'Average actions':<20} | {avg_actions_smart:^18.2f} | {avg_actions_random:^18.2f}\n")
+
         f.write("="*55 + "\n") 
+
+        # stats for win cases
+        smart_win_results = [r for r in smart_results if r.success]
+        random_win_results = [r for r in random_results if r.success]
+
+        f.write(f"{'Number of wins':<20} | {len(smart_win_results):^18} | {len(random_win_results):^18}\n")
+        avg_win_score_smart = (sum(r.score for r in smart_win_results if r.success) / len(smart_win_results)) if smart_win_results else -1
+        avg_win_score_random = (sum(r.score for r in random_win_results if r.success) / len(random_win_results)) if random_win_results else -1
+        f.write(f"{'Average win score':<20} | {avg_win_score_smart:^18.2f} | {avg_win_score_random:^18.2f}\n")
+        avg_win_time_smart = (sum(r.time for r in smart_win_results if r.success) / len(smart_win_results)) if smart_win_results else -1
+        avg_win_time_random = (sum(r.time for r in random_win_results if r.success) / len(random_win_results)) if random_win_results else -1
+        f.write(f"{'Average win time (s)':<20} | {avg_win_time_smart:^18.6f} | {avg_win_time_random:^18.6f}\n")
+        avg_win_actions_smart = (sum(r.actions for r in smart_win_results if r.success) / len(smart_win_results)) if smart_win_results else -1
+        avg_win_actions_random = (sum(r.actions for r in random_win_results if r.success) / len(random_win_results)) if random_win_results else -1
+        f.write(f"{'Average win actions':<20} | {avg_win_actions_smart:^18.2f} | {avg_win_actions_random:^18.2f}\n")
+
+        # stats for loss cases
+        smart_loss_results = [r for r in smart_results if not r.success]
+        random_loss_results = [r for r in random_results if not r.success]
+
+        f.write(f"{'Number of losses':<20} | {len(smart_loss_results):^18} | {len(random_loss_results):^18}\n")
+        avg_loss_score_smart = (sum(r.score for r in smart_loss_results) / len(smart_loss_results)) if smart_loss_results else -1
+        avg_loss_score_random = (sum(r.score for r in random_loss_results) / len(random_loss_results)) if random_loss_results else -1
+        f.write(f"{'Average loss score':<20} | {avg_loss_score_smart:^18.2f} | {avg_loss_score_random:^18.2f}\n")
+        avg_loss_time_smart = (sum(r.time for r in smart_loss_results) / len(smart_loss_results)) if smart_loss_results else -1
+        avg_loss_time_random = (sum(r.time for r in random_loss_results) / len(random_loss_results)) if random_loss_results else -1
+        f.write(f"{'Average loss time (s)':<20} | {avg_loss_time_smart:^18.6f} | {avg_loss_time_random:^18.6f}\n")
+        avg_loss_actions_smart = (sum(r.actions for r in smart_loss_results) / len(smart_loss_results)) if smart_loss_results else -1
+        avg_loss_actions_random = (sum(r.actions for r in random_loss_results) / len(random_loss_results)) if random_loss_results else -1
+        f.write(f"{'Average loss actions':<20} | {avg_loss_actions_smart:^18.2f} | {avg_loss_actions_random:^18.2f}\n")

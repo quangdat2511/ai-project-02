@@ -2,7 +2,7 @@
 import pygame
 import sys
 
-from state import *                     # file này nằm ở thư mục gốc
+from core import *                     # file này nằm ở thư mục gốc
 from gui.config import *                     # sử dụng absolute import
 from gui.game_manager import GameManager
 from gui.selection_screen import SelectionScreen

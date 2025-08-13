@@ -3,8 +3,8 @@ from typing import List, Tuple, Optional, Union
 from gui.config import *
 from .button import Button
 from .inputbox import InputBox
-from state.environment import *
-from state.agent import *
+from core.environment import *
+from core.agent import *
 import copy
 import random
 class GameplayScreen:

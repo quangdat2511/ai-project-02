@@ -1,8 +1,8 @@
 import pygame
 from typing import Dict, Union
 from gui.config import *
-from state.environment import *
-from state.agent import *
+from core.environment import *
+from core.agent import *
 
 class GameManager:
     def __init__(self):

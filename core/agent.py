@@ -12,7 +12,6 @@ class Agent:
         self.has_arrow = True
         self.check_scream = False
         self.is_alive = True
-        # self.kb = KnowledgeBase(K=K)
         self.inference_engine = InferenceEngine(K=K)
         self.planner = Planner(self.inference_engine, self._neighbors)
         self.score = 0
@@ -28,7 +27,7 @@ class Agent:
         actions = []
         if percept.glitter:
             actions.append(Action.GRAB)
-            return actions  # ưu tiên lấy vàng
+            return actions  
         
         if self.has_gold and self.position == (0, 0):
             actions.append(Action.CLIMB)
@@ -43,7 +42,7 @@ class Agent:
         print(f"Has pit: ", self.inference_engine.has_pit)
         print(f"Visited: ", self.inference_engine.visited)
         if self.has_gold:
-            goal = (0, 0)  # nếu có vàng thì luôn hướng về góc trên bên trái
+            goal = (0, 0)  
         else:
             safe_unvisited_pos = [pos for pos in self.inference_engine.not_has_pit if pos in self.inference_engine.not_has_wumpus and pos not in self.inference_engine.visited]
             print(f"Safe unvisited positions: {safe_unvisited_pos}")
@@ -107,7 +106,6 @@ class Agent:
                                 return actions
 
             else:
-                # goal = min(safe_unvisited_pos, key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]), default=None)
                 goal = min(
                     (pos for pos in safe_unvisited_pos if pos != self.position),
                     key=lambda pos: abs(pos[0] - self.position[0]) + abs(pos[1] - self.position[1]),
@@ -117,10 +115,7 @@ class Agent:
         print(f"Current position: {self.position}, Goal: {goal}")
         path = self.planner.a_star(start=self.position, goal=goal, visited=self.inference_engine.visited, start_dir=self.direction)
         print("Path: ", path)
-        # next_pos = path[0] if len(path) > 0 else None
 
-        # check making turns
-        # if next_pos:
         current_position = self.position
         current_direction = self.direction
         for next_pos in path:
