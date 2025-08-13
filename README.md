@@ -27,7 +27,6 @@ This is a Wumpus World agent implementation with a graphical user interface (GUI
 ## How to Run
 Run the main.py file
 ## Expected outputs
-<<<<<<< Updated upstream
 If the program runs successfully, the initial game window will appear as shown below:
 
 1. Window title: Project 02 – Wumpus World Agent
